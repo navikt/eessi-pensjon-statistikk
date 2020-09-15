@@ -41,10 +41,10 @@ spec:
     requests:
       cpu: 400m
       memory: 4024Mi
-  vault:
-    enabled: true
-    paths:
+#  vault:
+#    enabled: true
+#    paths:
 #      - kvPath: {{serviceuserkv}}
 #        mountPath: /var/run/secrets/nais.io/srveessio
-      - kvPath: /apikey/appdynamics/prod
-        mountPath: /var/run/secrets/nais.io/vault
+#      - kvPath: /apikey/appdynamics/prod
+#        mountPath: /var/run/secrets/nais.io/vault
