@@ -11,12 +11,12 @@ import java.util.*
 
 @Configuration
 class RestTemplateConfig(private val meterRegistry: MeterRegistry) {
-
-    @Value("\${srvusername}")
-    lateinit var username: String
-
-    @Value("\${srvpassword}")
-    lateinit var password: String
+//
+//    @Value("\${srvusername}")
+//    lateinit var username: String
+//
+//    @Value("\${srvpassword}")
+//    lateinit var password: String
 
 
 
