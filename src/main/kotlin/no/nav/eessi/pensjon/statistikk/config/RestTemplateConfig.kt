@@ -10,7 +10,7 @@ import org.springframework.http.client.*
 import java.util.*
 
 @Configuration
-class RestTemplateConfig(private val meterRegistry: MeterRegistry, private val stsService: STSService) {
+class RestTemplateConfig(private val meterRegistry: MeterRegistry) {
 
     @Value("\${srvusername}")
     lateinit var username: String
