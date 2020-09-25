@@ -20,14 +20,14 @@ import java.time.Duration
 @Configuration
 class KafkaConfig {
 
-//    @Bean
-//    fun sedSendtAuthRetry(registry: KafkaListenerEndpointRegistry): ApplicationRunner? {
-//        return ApplicationRunner {
-//            val sedSendtListenerContainer = registry.getListenerContainer("sedSendtListener")
-//            sedSendtListenerContainer.containerProperties.authorizationExceptionRetryInterval = Duration.ofSeconds(4L)
-//            sedSendtListenerContainer.start()
-//        }
-//    }
+    @Bean
+    fun sedSendtAuthRetry(registry: KafkaListenerEndpointRegistry): ApplicationRunner? {
+        return ApplicationRunner {
+            val statisikkListener = registry.getListenerContainer("statistikkListener")
+            statisikkListener.containerProperties.authorizationExceptionRetryInterval = Duration.ofSeconds(4L)
+            statisikkListener.start()
+        }
+    }
 
     @Bean
     fun kafkaListenerContainerFactory(configurer: ConcurrentKafkaListenerContainerFactoryConfigurer,

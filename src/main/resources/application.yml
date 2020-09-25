@@ -17,6 +17,14 @@ spring:
 securityTokenService:
   discoveryUrl: ${SECURITY_TOKEN_SERVICE_OPENID_CONFIGURATION_URL}
 
+kafka:
+  statistikk-inn:
+    topic: ${KAFKA_STATISTIKK_TOPIC_INN}
+    groupid: eessi-pensjon-group
+
+  statistikk-ut:
+    topic: ${KAFKA_STATISTIKK_TOPIC_UT}
+    groupid: eessi-pensjon-group
 
 #Metrics
 management:

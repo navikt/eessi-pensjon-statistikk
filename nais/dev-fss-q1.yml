@@ -9,12 +9,17 @@ spec:
   env:
     - name: SPRING_PROFILES_ACTIVE
       value: test
-    - name: KAFKA_BOOTSTRAP_SERVERS_URL
-      value: SSL://b27apvl00045.preprod.local:8443,SSL://b27apvl00046.preprod.local:8443,SSL://b27apvl00047.preprod.local:8443
     - name: SECURITY_TOKEN_SERVICE_OPENID_CONFIGURATION_URL
       value: https://security-token-service.nais.preprod.local/rest/v1/sts/.well-known/openid-configuration
     - name: SECURITYTOKENSERVICE_URL
       value: https://sts-q1.preprod.local/SecurityTokenServiceProvider/
+    - name: KAFKA_BOOTSTRAP_SERVERS_URL
+      value: SSL://b27apvl00045.preprod.local:8443,SSL://b27apvl00046.preprod.local:8443,SSL://b27apvl00047.preprod.local:8443
+    - name: KAFKA_STATISTIKK_TOPICNAME_INN
+      value: privat-eessipensjon-statistikk-q1
+    - name: KAFKA_STATISTIKK_TOPICNAME_UT
+      value: eessipensjon-statistikk-q1
+
   image: {{ image }}
   ingresses:
     - https://eessi-pensjon-statistikk-q1.nais.preprod.local
