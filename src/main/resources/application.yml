@@ -19,11 +19,11 @@ securityTokenService:
 
 kafka:
   statistikk-inn:
-    topic: ${KAFKA_STATISTIKK_TOPIC_INN}
+    topic: ${KAFKA_STATISTIKK_TOPICNAME_INN}
     groupid: eessi-pensjon-group
 
   statistikk-ut:
-    topic: ${KAFKA_STATISTIKK_TOPIC_UT}
+    topic: ${KAFKA_STATISTIKK_TOPICNAME_UT}
     groupid: eessi-pensjon-group
 
 #Metrics
