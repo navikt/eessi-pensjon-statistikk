@@ -19,6 +19,7 @@ spec:
       value: https://security-token-service.nais.preprod.local/rest/v1/sts/.well-known/openid-configuration
     - name: SECURITYTOKENSERVICE_URL
       value: https://sts-q2.preprod.local/SecurityTokenServiceProvider/
+
   image: {{ image }}
   ingresses:
     - https://eessi-pensjon-statistikk.nais.preprod.local
@@ -47,8 +48,8 @@ spec:
       memory: 4024Mi
   vault:
     enabled: true
-#    paths:
-#      - kvPath: {{serviceuserkv}}
-#        mountPath: /var/run/secrets/nais.io/srveessio
+    paths:
+      - kvPath: {{serviceuserkv}}
+        mountPath: /var/run/secrets/nais.io/srveessipensjonstats
 #      - kvPath: /apikey/appdynamics/dev
 #        mountPath: /var/run/secrets/nais.io/vault
