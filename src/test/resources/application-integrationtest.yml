@@ -6,8 +6,8 @@ kafka:
   statistikk-ut:
     topic: eessi-pensjon-statistikk-ut
     groupid: eessi-pensjon-group
-
-namespace: 'test'
+  statistikk:
+    topic: eessi-int-test-topic
 
 spring:
   kafka:
