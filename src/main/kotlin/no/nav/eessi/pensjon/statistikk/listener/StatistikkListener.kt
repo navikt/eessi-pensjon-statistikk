@@ -15,7 +15,7 @@ import java.util.concurrent.CountDownLatch
 
 @Component
 class StatistikkListener (private val kafkaTemplate: KafkaTemplate<String, String>,
-                          @Value("\${kafka.statistikk-inn.topic}") private val statistikkTopic: String) {
+                          @Value("\${kafka.statistikk-ut.topic}") private val statistikkUtTopic: String) {
 
     private val logger = LoggerFactory.getLogger(StatistikkListener::class.java)
 
@@ -49,7 +49,7 @@ class StatistikkListener (private val kafkaTemplate: KafkaTemplate<String, Strin
     }
 
     private fun produserKafkaMelding(melding: StatistikkMelding) {
-        logger.info("Produserer melding på kafka: $statistikkTopic  melding: $melding")
-        kafkaTemplate.send(statistikkTopic, melding.toJson()).get()
+        logger.info("Produserer melding på kafka: $statistikkUtTopic  melding: $melding")
+        kafkaTemplate.send(statistikkUtTopic, melding.toJson()).get()
     }
 }
