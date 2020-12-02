@@ -14,7 +14,7 @@ import java.util.concurrent.CountDownLatch
 
 @Component
 class StatistikkListener (private val kafkaTemplate: KafkaTemplate<String, String>,
-                          @Value("\${kafka.statistikk.topic}") private val statistikkTopic: String) {
+                          @Value("\${kafka.statistikk-inn.topic}") private val statistikkTopic: String) {
 
     private val logger = LoggerFactory.getLogger(StatistikkListener::class.java)
 
