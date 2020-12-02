@@ -15,6 +15,10 @@ spec:
       value: privat-eessipensjon-statistikk-q2
     - name: KAFKA_STATISTIKK_TOPICNAME_UT
       value: eessipensjon-statistikk-q2
+    - name: KAFKA_SEDSENDT_TOPIC
+      value: eessi-basis-sedSendt-v1-q2
+    - name: KAFKA_SEDMOTTATT_TOPIC
+      value: eessi-basis-sedMottatt-v1-q2
     - name: SECURITY_TOKEN_SERVICE_OPENID_CONFIGURATION_URL
       value: https://security-token-service.nais.preprod.local/rest/v1/sts/.well-known/openid-configuration
     - name: SECURITYTOKENSERVICE_URL
