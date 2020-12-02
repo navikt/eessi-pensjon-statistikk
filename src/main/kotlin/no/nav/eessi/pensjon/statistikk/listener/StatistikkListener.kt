@@ -1,5 +1,6 @@
 package no.nav.eessi.pensjon.statistikk.listener
 
+import no.nav.eessi.pensjon.statistikk.json.toJson
 import no.nav.eessi.pensjon.statistikk.models.StatistikkMelding
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.slf4j.LoggerFactory
@@ -48,9 +49,7 @@ class StatistikkListener (private val kafkaTemplate: KafkaTemplate<String, Strin
     }
 
     private fun produserKafkaMelding(melding: StatistikkMelding) {
-        kafkaTemplate.defaultTopic = statistikkTopic
-
-        logger.info("Produserer melding på kafka: ${kafkaTemplate.defaultTopic}  melding: $melding")
-        kafkaTemplate.send(melding).get()
+        logger.info("Produserer melding på kafka: $statistikkTopic  melding: $melding")
+        kafkaTemplate.send(statistikkTopic, melding.toJson()).get()
     }
 }
