@@ -49,22 +49,22 @@ class StatistikkListener (private val kafkaTemplate: KafkaTemplate<String, Strin
         }
     }
 
-    @KafkaListener(id = "sedSendtListener",
+    /*@KafkaListener(id = "sedSendtListener",
             idIsGroup = false,
             topics = ["\${kafka.statistikk-sed-sendt.topic}"],
             groupId = "\${kafka.statistikk-sed-sendt.groupid}",
-            autoStartup = "false")
+            autoStartup = "false")*/
     fun consumeSedSendt(hendelse: String, cr: ConsumerRecord<String, String>, acknowledgment: Acknowledgment) {
         MDC.putCloseable("x_request_id", UUID.randomUUID().toString()).use {
             receiveSed(cr, hendelse)
         }
     }
 
-    @KafkaListener(id = "sedMottattListener",
+   /* @KafkaListener(id = "sedMottattListener",
             idIsGroup = false,
             topics = ["\${kafka.statistikk-sed-mottatt.topic}"],
             groupId = "\${kafka.statistikk-sed-mottatt.groupid}",
-            autoStartup = "false")
+            autoStartup = "false")*/
     fun consumeSedMottatt(hendelse: String, cr: ConsumerRecord<String, String>, acknowledgment: Acknowledgment) {
         MDC.putCloseable("x_request_id", UUID.randomUUID().toString()).use {
             receiveSed(cr, hendelse)
