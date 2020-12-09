@@ -48,7 +48,7 @@ class ArchitectureTest {
         val ROOT = "statistikk"
         val Config = "statistikk.Config"
         val Health = "statistikk.Health"
-     //   val Listeners = "statistikk.listeners"
+        val Listeners = "statistikk.listener"
         val JSON = "statistikk.json"
   //      val Logging = "statistikk.logging"
       //  val Metrics = "statistikk.metrics"
@@ -58,8 +58,8 @@ class ArchitectureTest {
                 ROOT to root,
                 Config to "$root.config",
                 Health to "$root.health",
-                JSON to "$root.json"
-           //     Listeners to "$root.listeners",
+                JSON to "$root.json",
+                Listeners to "$root.listener"
             //    STS to "$root.security.sts",
          //       Logging to "$root.logging"
            //     Metrics to "$root.metrics"
@@ -75,13 +75,15 @@ class ArchitectureTest {
                 .layer(Config).definedBy(packages[Config])
                 .layer(Health).definedBy(packages[Health])
                 .layer(JSON).definedBy(packages[JSON])
-               // .layer(Listeners).definedBy(packages[Listeners])
+                .layer(Listeners).definedBy(packages[Listeners])
               //  .layer(Logging).definedBy(packages[Logging])
              //   .layer(Metrics).definedBy(packages[Metrics])
 //                .layer(STS).definedBy(packages[STS])
                 //define rules
                 .whereLayer(ROOT).mayNotBeAccessedByAnyLayer()
                 .whereLayer(Health).mayNotBeAccessedByAnyLayer()
+                .whereLayer(Listeners).mayNotBeAccessedByAnyLayer()
+
                // .whereLayer(STS).mayOnlyBeAccessedByLayers(Config)
              //   .whereLayer(Logging).mayOnlyBeAccessedByLayers(Config, STS)
                 //Verify rules
