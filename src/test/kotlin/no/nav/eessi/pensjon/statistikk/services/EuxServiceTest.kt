@@ -58,13 +58,10 @@ internal class EuxServiceTest {
                 eq("/buc/$mockEuxRinaid"),
                 eq(String::class.java))
 
-        val datetime = euxService.getTimeStampFromSedMetaDataInBuc(mockEuxRinaid, mockEuxDocumentId)
+        val offsetDateTime = euxService.getTimeStampFromSedMetaDataInBuc(mockEuxRinaid, mockEuxDocumentId)
 
-        assertEquals(datetime, "2020")
+        assertEquals("2020-12-08T09:53:36.241Z", offsetDateTime.toString())
      }
-
-
-
 
     private fun getResource(resourcePath: String): String? =
         javaClass.classLoader.getResource(resourcePath)!!.readText()
