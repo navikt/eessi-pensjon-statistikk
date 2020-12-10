@@ -2,7 +2,9 @@ package no.nav.eessi.pensjon.statistikk.listener
 
 import no.nav.eessi.pensjon.statistikk.json.toJson
 import no.nav.eessi.pensjon.statistikk.models.SedHendelseModel
-import no.nav.eessi.pensjon.statistikk.models.StatistikkMelding
+import no.nav.eessi.pensjon.statistikk.models.StatistikkMeldingInn
+import no.nav.eessi.pensjon.statistikk.models.StatistikkMeldingUt
+import no.nav.eessi.pensjon.statistikk.services.EuxService
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.slf4j.LoggerFactory
 import org.slf4j.MDC
@@ -16,7 +18,8 @@ import java.util.concurrent.CountDownLatch
 
 @Component
 class StatistikkListener (private val kafkaTemplate: KafkaTemplate<String, String>,
-                          @Value("\${kafka.statistikk-ut.topic}") private val statistikkUtTopic: String) {
+                          @Value("\${kafka.statistikk-ut.topic}") private val statistikkUtTopic: String,
+                          private val euxService: EuxService) {
 
     private val logger = LoggerFactory.getLogger(StatistikkListener::class.java)
 
@@ -36,7 +39,7 @@ class StatistikkListener (private val kafkaTemplate: KafkaTemplate<String, Strin
 
             try {
                 logger.debug("Hendelse : $hendelse")
-                val melding = StatistikkMelding.fromJson(hendelse)
+                val melding = StatistikkMeldingInn.fromJson(hendelse)
 
                 produserKafkaMelding(melding)
                 acknowledgment.acknowledge()
@@ -87,8 +90,20 @@ class StatistikkListener (private val kafkaTemplate: KafkaTemplate<String, Strin
         latch.countDown()
     }
 
-    private fun produserKafkaMelding(melding: StatistikkMelding) {
-        logger.info("Produserer melding på kafka: $statistikkUtTopic  melding: $melding")
-        kafkaTemplate.send(statistikkUtTopic, melding.toJson()).get()
+    private fun produserKafkaMelding(meldingInn: StatistikkMeldingInn) {
+        logger.info("Produserer melding på kafka: $statistikkUtTopic  melding: $meldingInn")
+
+        val dokumentId = meldingInn.dokumentId
+
+        //buc opprettet
+        if(dokumentId == null){
+            kafkaTemplate.send(statistikkUtTopic, meldingInn.toJson()).get()
+        }
+        //sed opprettet
+        else {
+            val dokumentOpprettetDato = euxService.getTimeStampFromSedMetaDataInBuc(meldingInn.rinaid, dokumentId)
+            val meldingUt = StatistikkMeldingUt(meldingInn, dokumentOpprettetDato.toString())
+            kafkaTemplate.send(statistikkUtTopic, meldingUt.toJson()).get()
+        }
     }
 }
