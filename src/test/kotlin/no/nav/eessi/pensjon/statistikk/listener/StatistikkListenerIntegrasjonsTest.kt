@@ -110,4 +110,5 @@ class StatistikkListenerIntegrasjonsTest {
             return random.nextInt(to - from) + from
         }
     }
+
 }
