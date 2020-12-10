@@ -92,8 +92,18 @@ class StatistikkListener (private val kafkaTemplate: KafkaTemplate<String, Strin
 
     private fun produserKafkaMelding(meldingInn: StatistikkMeldingInn) {
         logger.info("Produserer melding på kafka: $statistikkUtTopic  melding: $meldingInn")
-        val bucMetadata = euxService.getBucMetadata(meldingInn.rinaid)
-        val meldingUt = StatistikkMeldingUt(meldingInn)
-        kafkaTemplate.send(statistikkUtTopic, meldingInn.toJson()).get()
+
+        val dokumentId = meldingInn.dokumentId
+
+        //buc opprettet
+        if(dokumentId == null){
+            kafkaTemplate.send(statistikkUtTopic, meldingInn.toJson()).get()
+        }
+        //sed opprettet
+        else {
+            val dokumentOpprettetDato = euxService.getTimeStampFromSedMetaDataInBuc(meldingInn.rinaid, dokumentId)
+            val meldingUt = StatistikkMeldingUt(meldingInn, dokumentOpprettetDato.toString())
+            kafkaTemplate.send(statistikkUtTopic, meldingUt.toJson()).get()
+        }
     }
 }

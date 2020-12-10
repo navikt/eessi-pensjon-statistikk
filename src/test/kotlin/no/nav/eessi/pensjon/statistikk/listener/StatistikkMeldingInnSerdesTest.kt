@@ -10,7 +10,7 @@ import org.skyscreamer.jsonassert.JSONCompareMode
 
 class StatistikkMeldingInnSerdesTest {
     @Test
-    fun `Sjekk at serialisering virker`() {
+    fun `Sjekker at serialisering virker`() {
         val model = StatistikkMeldingInn(hendelseType = HendelseType.OPPRETTBUC, rinaid =  "1208875", dokumentId = "djksdfsdl3435kj3452")
         val serialized = model.toJson()
 

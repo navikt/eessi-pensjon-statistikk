@@ -16,12 +16,12 @@ class EuxService(private val euxKlient: EuxKlient){
 
     private val offsetTimeDatePattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
 
-    fun getBucMetadata(rinaSakId: String) : BucMetadata{
+    private fun getBucMetadata(rinaSakId: String) : BucMetadata{
         val response =  euxKlient.getBucMetadata(rinaSakId = rinaSakId)
         return  mapJsonToAny(response, typeRefs())
     }
 
-    fun getTimeStampFromSedMetaDataInBuc(rinaSakId: String, dokumentId : String) : OffsetDateTime {
+    fun getTimeStampFromSedMetaDataInBuc(rinaSakId: String, dokumentId : String) : OffsetDateTime? {
         val bucMetadata : BucMetadata = getBucMetadata(rinaSakId)
         val dokument : Optional<Document> = bucMetadata.documents.stream().filter { it.id == dokumentId }.findFirst()
 
