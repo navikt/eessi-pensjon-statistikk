@@ -4,6 +4,7 @@ buildscript {
         kotlinVersion = '1.3.72'
         springBootVersion = '2.3.2.RELEASE'
         logstashLogbackVersion = '6.4'
+        tokenSupportVersion = '1.1.6'
     }
 
     repositories {
@@ -126,7 +127,7 @@ repositories {
 
     mavenCentral()
 
-    ["maven-release", "ep-metrics"].each { repo ->
+    ["maven-release","tjenestespesifikasjoner","ep-metrics", "ep-security-sts"].each { repo ->
         String token = System.getenv("GITHUB_TOKEN") ?: project.findProperty("gpr.key")
         if (!token) throw new NullPointerException("Missing token, you have to set GITHUB_TOKEN or gpr.key, see README")
         maven {
