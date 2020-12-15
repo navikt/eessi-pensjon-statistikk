@@ -8,7 +8,6 @@ import org.springframework.http.HttpEntity
 import org.springframework.http.HttpMethod
 import org.springframework.stereotype.Component
 import org.springframework.web.client.RestTemplate
-import java.rmi.ServerException
 import javax.annotation.PostConstruct
 
 /**
@@ -32,19 +31,24 @@ class EuxKlient(
         hentBucMetadata = metricsHelper.init("hentBucMetadata")
     }
 
-    fun getBucMetadata(rinaSakId: String): String {
+    fun getBucMetadata(rinaSakId: String): String? {
         logger.info("Henter BUC metadata for rinasakId: $rinaSakId")
 
 /*        val response = euxOidcRestTemplate.getForEntity(
             "/buc/$rinaSakId",
             String::class.java)*/
 
-        val response = euxOidcRestTemplate.exchange("/buc/$rinaSakId",
-            HttpMethod.GET,
-            HttpEntity(""),
-            String::class.java)
-
-        return response.body ?: throw ServerException("Feil ved henting av Buc metadata for rinasakId: $rinaSakId")
+        return try {
+            euxOidcRestTemplate.exchange(
+                "/buc/$rinaSakId",
+                HttpMethod.GET,
+                HttpEntity(""),
+                String::class.java).body
+        }
+        catch (ex: Exception) {
+            logger.error("Feil ved henting av Buc metadata for rinasakId: $rinaSakId")
+            throw ex
+        }
     }
 }
 
