@@ -1,10 +1,10 @@
 package no.nav.eessi.pensjon.statistikk.listener
 
-import no.nav.eessi.pensjon.statistikk.json.toJson
+import no.nav.eessi.pensjon.eux.EuxService
+import no.nav.eessi.pensjon.json.toJson
 import no.nav.eessi.pensjon.statistikk.models.SedHendelseModel
 import no.nav.eessi.pensjon.statistikk.models.StatistikkMeldingInn
 import no.nav.eessi.pensjon.statistikk.models.StatistikkMeldingUt
-import no.nav.eessi.pensjon.statistikk.services.EuxService
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.slf4j.LoggerFactory
 import org.slf4j.MDC

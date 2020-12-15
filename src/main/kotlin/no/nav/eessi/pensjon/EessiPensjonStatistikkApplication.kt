@@ -1,4 +1,4 @@
-package no.nav.eessi.pensjon.statistikk
+package no.nav.eessi.pensjon
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication

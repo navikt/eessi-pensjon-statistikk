@@ -1,9 +1,8 @@
-package no.nav.eessi.pensjon.statistikk.services
+package no.nav.eessi.pensjon.eux
 
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.whenever
-import no.nav.eessi.pensjon.statistikk.clients.EuxKlient
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

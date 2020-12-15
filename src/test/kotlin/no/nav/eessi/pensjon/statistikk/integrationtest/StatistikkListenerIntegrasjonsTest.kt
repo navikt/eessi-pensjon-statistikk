@@ -1,6 +1,7 @@
-package no.nav.eessi.pensjon.statistikk.listener
+package no.nav.eessi.pensjon.statistikk.integrationtest
 
 import no.nav.eessi.pensjon.security.sts.STSService
+import no.nav.eessi.pensjon.statistikk.listener.StatistikkListener
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest

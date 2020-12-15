@@ -1,4 +1,4 @@
-package no.nav.eessi.pensjon.statistikk.json
+package no.nav.eessi.pensjon.json
 
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.core.JsonParseException

@@ -1,4 +1,4 @@
-package no.nav.eessi.pensjon.statistikk.config
+package no.nav.eessi.pensjon.config
 
 import org.apache.kafka.clients.consumer.Consumer
 import org.apache.kafka.clients.consumer.ConsumerRecord

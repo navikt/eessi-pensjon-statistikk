@@ -1,4 +1,4 @@
-package no.nav.eessi.pensjon.statistikk.models
+package no.nav.eessi.pensjon.eux
 
 class BucSedResponse(euxCaseId: String, body: String) {
 

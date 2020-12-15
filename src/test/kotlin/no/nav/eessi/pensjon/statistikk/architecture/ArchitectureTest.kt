@@ -6,7 +6,7 @@ import com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses
 import com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noMethods
 import com.tngtech.archunit.library.Architectures.layeredArchitecture
 import com.tngtech.archunit.library.dependencies.SlicesRuleDefinition.slices
-import no.nav.eessi.pensjon.statistikk.EessiPensjonStatistikkApplication
+import no.nav.eessi.pensjon.EessiPensjonStatistikkApplication
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
@@ -50,18 +50,20 @@ class ArchitectureTest {
         val Health = "statistikk.Health"
         val Listeners = "statistikk.listener"
         val JSON = "statistikk.json"
-  //      val Logging = "statistikk.logging"
+        val Logging = "statistikk.logging"
       //  val Metrics = "statistikk.metrics"
         val STS = "statistikk.security.sts"
+        val Integrationtest = "statistikk.integrationtest"
 
         val packages: Map<String, String> = mapOf(
                 ROOT to root,
                 Config to "$root.config",
                 Health to "$root.health",
                 JSON to "$root.json",
-                Listeners to "$root.listener"
-            //    STS to "$root.security.sts",
-         //       Logging to "$root.logging"
+                Listeners to "$root.statistikk.listener",
+                STS to "$root.security.sts",
+                Logging to "$root.logging",
+                Integrationtest to "$root.statistikk.integrationtest"
            //     Metrics to "$root.metrics"
         )
 
@@ -76,16 +78,16 @@ class ArchitectureTest {
                 .layer(Health).definedBy(packages[Health])
                 .layer(JSON).definedBy(packages[JSON])
                 .layer(Listeners).definedBy(packages[Listeners])
-              //  .layer(Logging).definedBy(packages[Logging])
+                .layer(Logging).definedBy(packages[Logging])
+                .layer(Integrationtest).definedBy(packages[Integrationtest])
              //   .layer(Metrics).definedBy(packages[Metrics])
-//                .layer(STS).definedBy(packages[STS])
+                .layer(STS).definedBy(packages[STS])
                 //define rules
                 .whereLayer(ROOT).mayNotBeAccessedByAnyLayer()
                 .whereLayer(Health).mayNotBeAccessedByAnyLayer()
-                .whereLayer(Listeners).mayNotBeAccessedByAnyLayer()
-
-               // .whereLayer(STS).mayOnlyBeAccessedByLayers(Config)
-             //   .whereLayer(Logging).mayOnlyBeAccessedByLayers(Config, STS)
+                .whereLayer(Listeners).mayOnlyBeAccessedByLayers(Integrationtest)
+                .whereLayer(STS).mayOnlyBeAccessedByLayers(Config, Integrationtest)
+                .whereLayer(Logging).mayOnlyBeAccessedByLayers(Config, STS)
                 //Verify rules
                 .check(classesToAnalyze)
     }

@@ -1,7 +1,7 @@
 package no.nav.eessi.pensjon.statistikk.listener
 
-import no.nav.eessi.pensjon.statistikk.json.mapAnyToJson
-import no.nav.eessi.pensjon.statistikk.json.toJson
+import no.nav.eessi.pensjon.json.mapAnyToJson
+import no.nav.eessi.pensjon.json.toJson
 import no.nav.eessi.pensjon.statistikk.models.HendelseType
 import no.nav.eessi.pensjon.statistikk.models.StatistikkMeldingInn
 import org.junit.jupiter.api.Test

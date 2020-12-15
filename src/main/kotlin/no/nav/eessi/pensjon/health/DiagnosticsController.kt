@@ -1,4 +1,4 @@
-package no.nav.eessi.pensjon.statistikk.health
+package no.nav.eessi.pensjon.health
 
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory

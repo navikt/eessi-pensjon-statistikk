@@ -1,10 +1,7 @@
-package no.nav.eessi.pensjon.statistikk.services
+package no.nav.eessi.pensjon.eux
 
-import no.nav.eessi.pensjon.statistikk.clients.EuxKlient
-import no.nav.eessi.pensjon.statistikk.json.mapJsonToAny
-import no.nav.eessi.pensjon.statistikk.json.typeRefs
-import no.nav.eessi.pensjon.statistikk.models.BucMetadata
-import no.nav.eessi.pensjon.statistikk.models.Document
+import no.nav.eessi.pensjon.json.mapJsonToAny
+import no.nav.eessi.pensjon.json.typeRefs
 import org.springframework.stereotype.Service
 import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
@@ -16,7 +13,7 @@ class EuxService(private val euxKlient: EuxKlient){
 
     private val offsetTimeDatePattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
 
-    private fun getBucMetadata(rinaSakId: String) : BucMetadata{
+    private fun getBucMetadata(rinaSakId: String) : BucMetadata {
         val response =  euxKlient.getBucMetadata(rinaSakId = rinaSakId)
         return  mapJsonToAny(response, typeRefs())
     }
