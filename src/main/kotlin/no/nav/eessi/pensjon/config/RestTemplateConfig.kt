@@ -1,6 +1,5 @@
 package no.nav.eessi.pensjon.config
 
-import io.micrometer.core.instrument.MeterRegistry
 import no.nav.eessi.pensjon.logging.RequestIdHeaderInterceptor
 import no.nav.eessi.pensjon.logging.RequestResponseLoggerInterceptor
 import no.nav.eessi.pensjon.security.sts.STSService
@@ -15,7 +14,7 @@ import org.springframework.web.client.DefaultResponseErrorHandler
 import org.springframework.web.client.RestTemplate
 
 @Configuration
-class RestTemplateConfig(private val securityTokenExchangeService: STSService, private val meterRegistry: MeterRegistry) {
+class RestTemplateConfig(private val securityTokenExchangeService: STSService) {
 
     @Value("\${EUX_RINA_API_V1_URL}")
     lateinit var euxUrl: String
