@@ -31,7 +31,7 @@ class EuxKlient(
         hentBucMetadata = metricsHelper.init("hentBucMetadata")
     }
 
-    fun getBucMetadata(rinaSakId: String): String? {
+    fun getBucMetadata(rinaSakId: String): String {
         logger.info("Henter BUC metadata for rinasakId: $rinaSakId")
 
 /*        val response = euxOidcRestTemplate.getForEntity(
@@ -43,7 +43,7 @@ class EuxKlient(
                 "/buc/$rinaSakId",
                 HttpMethod.GET,
                 HttpEntity(""),
-                String::class.java).body
+                String::class.java).body!!
         }
         catch (ex: Exception) {
             logger.error("Feil ved henting av Buc metadata for rinasakId: $rinaSakId")
