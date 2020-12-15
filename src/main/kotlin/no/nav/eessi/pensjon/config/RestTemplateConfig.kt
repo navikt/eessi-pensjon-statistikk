@@ -26,9 +26,9 @@ class RestTemplateConfig(private val securityTokenExchangeService: STSService) {
             .errorHandler(DefaultResponseErrorHandler())
             .additionalInterceptors(
                 RequestIdHeaderInterceptor(),
-                RequestResponseLoggerInterceptor(),
-                UsernameToOidcInterceptor(securityTokenExchangeService))
-            .build().apply {
+                UsernameToOidcInterceptor(securityTokenExchangeService),
+                RequestResponseLoggerInterceptor())
+        .build().apply {
                 requestFactory = BufferingClientHttpRequestFactory(SimpleClientHttpRequestFactory())
             }
     }
