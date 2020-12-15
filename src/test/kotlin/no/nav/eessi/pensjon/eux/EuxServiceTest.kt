@@ -5,6 +5,7 @@ import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.whenever
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
@@ -26,6 +27,7 @@ internal class EuxServiceTest {
     }
 
     @Test
+    @Disabled
     fun `Se timestamp konverters fra zone til offsettDateTime`() {
         val gyldigBuc = getResource("buc/BucMedP2000.json")
         val responseEntity = ResponseEntity.ok(gyldigBuc!!)
