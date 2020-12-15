@@ -4,6 +4,8 @@ import io.micrometer.core.instrument.simple.SimpleMeterRegistry
 import no.nav.eessi.pensjon.metrics.MetricsHelper
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpEntity
+import org.springframework.http.HttpMethod
 import org.springframework.stereotype.Component
 import org.springframework.web.client.RestTemplate
 import java.rmi.ServerException
@@ -33,8 +35,13 @@ class EuxKlient(
     fun getBucMetadata(rinaSakId: String): String {
         logger.info("Henter BUC metadata for rinasakId: $rinaSakId")
 
-        val response = euxOidcRestTemplate.getForEntity(
+/*        val response = euxOidcRestTemplate.getForEntity(
             "/buc/$rinaSakId",
+            String::class.java)*/
+
+        val response = euxOidcRestTemplate.exchange("/buc/$rinaSakId",
+            HttpMethod.GET,
+            HttpEntity(""),
             String::class.java)
 
         return response.body ?: throw ServerException("Feil ved henting av Buc metadata for rinasakId: $rinaSakId")
