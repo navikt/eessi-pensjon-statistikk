@@ -4,7 +4,9 @@ import io.micrometer.core.instrument.simple.SimpleMeterRegistry
 import no.nav.eessi.pensjon.metrics.MetricsHelper
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Component
+import org.springframework.web.client.HttpClientErrorException
 import org.springframework.web.client.RestTemplate
 import javax.annotation.PostConstruct
 
@@ -28,16 +30,21 @@ class EuxKlient(
         hentBucMetadata = metricsHelper.init("hentBucMetadata")
     }
 
-    fun getBucMetadata(rinaSakId: String): String {
+    fun getBucMetadata(rinaSakId: String): BucMetadata? {
         logger.info("Henter BUC metadata for rinasakId: $rinaSakId")
 
         return try {
-            euxOidcRestTemplate.getForEntity(
+            euxOidcRestTemplate.getForObject(
             "/buc/$rinaSakId",
-            String::class.java).body!!
+            BucMetadata::class.java)
         }
-        catch (ex: Exception) {
+        catch (ex: HttpClientErrorException) {
             logger.error("Feil ved henting av Buc metadata for rinasakId: $rinaSakId")
+
+            if(ex.statusCode == HttpStatus.NOT_FOUND){
+                logger.error("RinasakId: $rinaSakId ikke funnet")
+                return null
+            }
             throw ex
         }
     }

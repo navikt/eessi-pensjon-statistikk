@@ -102,7 +102,7 @@ class StatistikkListener (private val kafkaTemplate: KafkaTemplate<String, Strin
         //sed opprettet
         else {
             val dokumentOpprettetDato = euxService.getTimeStampFromSedMetaDataInBuc(meldingInn.rinaid, dokumentId)
-            val meldingUt = StatistikkMeldingUt(meldingInn, dokumentOpprettetDato.toString())
+            val meldingUt = StatistikkMeldingUt(meldingInn, dokumentOpprettetDato)
             kafkaTemplate.send(statistikkUtTopic, meldingUt.toJson()).get()
         }
     }
