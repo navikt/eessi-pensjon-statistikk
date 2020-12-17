@@ -39,12 +39,11 @@ class EuxKlient(
             BucMetadata::class.java)
         }
         catch (ex: HttpClientErrorException) {
-            logger.error("Feil ved henting av Buc metadata for rinasakId: $rinaSakId")
-
             if(ex.statusCode == HttpStatus.NOT_FOUND){
-                logger.error("RinasakId: $rinaSakId ikke funnet")
+                logger.warn("RinasakId: $rinaSakId ikke funnet")
                 return null
             }
+            logger.error("Feil ved henting av Buc metadata for rinasakId: $rinaSakId")
             throw ex
         }
     }

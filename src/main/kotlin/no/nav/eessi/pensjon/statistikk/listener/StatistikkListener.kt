@@ -98,10 +98,16 @@ class StatistikkListener (private val kafkaTemplate: KafkaTemplate<String, Strin
         //buc opprettet
         if(dokumentId == null){
             kafkaTemplate.send(statistikkUtTopic, meldingInn.toJson()).get()
+            return
+        }
+
+        val dokumentOpprettetDato = euxService.getTimeStampFromSedMetaDataInBuc(meldingInn.rinaid, dokumentId)
+        //mangler gyldig opprettetdato, avslutter
+        if(dokumentOpprettetDato == null){
+            logger.warn("Finner ikke opprettetdato for RinaId: $dokumentId")
         }
         //sed opprettet
         else {
-            val dokumentOpprettetDato = euxService.getTimeStampFromSedMetaDataInBuc(meldingInn.rinaid, dokumentId)
             val meldingUt = StatistikkMeldingUt(meldingInn, dokumentOpprettetDato)
             kafkaTemplate.send(statistikkUtTopic, meldingUt.toJson()).get()
         }
