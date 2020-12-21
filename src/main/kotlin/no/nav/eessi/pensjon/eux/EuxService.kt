@@ -23,7 +23,7 @@ class EuxService(private val euxKlient: EuxKlient){
 
         logger.debug("Dokument: ${dokument?.toJson()}")
 
-        val creationDate = dokument?.creationDate
+        val creationDate = dokument?.creationDate ?: return null
 
         val offsetDateTime = OffsetDateTime.parse(creationDate, DateTimeFormatter.ofPattern(offsetTimeDatePattern))
         return offsetDateTime?.toString().orEmpty()
