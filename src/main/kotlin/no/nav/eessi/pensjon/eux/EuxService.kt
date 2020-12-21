@@ -23,6 +23,7 @@ class EuxService(private val euxKlient: EuxKlient){
 
         logger.debug("Dokument: ${dokument?.toJson()}")
 
+        //TODO Dette er bare midlertidig fordi man får parentDocumentID istedet for ny sed documentID ( bug i eux-rina-api )
         val creationDate = dokument?.creationDate ?: return null
 
         val offsetDateTime = OffsetDateTime.parse(creationDate, DateTimeFormatter.ofPattern(offsetTimeDatePattern))
