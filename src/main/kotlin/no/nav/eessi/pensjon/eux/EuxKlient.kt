@@ -47,5 +47,24 @@ class EuxKlient(
             throw ex
         }
     }
+
+    fun getSed(rinaSakId: String, rinaDokumentId: String): Sed? {
+        logger.info("Henter BUC metadata for rinasakId: $rinaSakId")
+
+        return try {
+            euxOidcRestTemplate.getForObject(
+                "/buc/$rinaSakId/sed/$rinaDokumentId",
+                Sed::class.java)
+        }
+        catch (ex: HttpClientErrorException) {
+            if(ex.statusCode == HttpStatus.NOT_FOUND){
+                logger.warn("Fant ikke SED for rinasakId: $rinaSakId rinaDokumentId $rinaDokumentId")
+                return null
+            }
+            logger.error("Feil ved henting av SED metadata for rinasakId: $rinaSakId rinaDokumentId $rinaDokumentId")
+            throw ex
+        }
+    }
+
 }
 

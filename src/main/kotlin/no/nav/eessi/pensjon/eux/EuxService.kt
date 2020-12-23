@@ -29,4 +29,21 @@ class EuxService(private val euxKlient: EuxKlient){
         val offsetDateTime = OffsetDateTime.parse(creationDate, DateTimeFormatter.ofPattern(offsetTimeDatePattern))
         return offsetDateTime?.toString().orEmpty()
     }
+
+    /**
+     * Henter norsk sakID fra SED
+     *
+     * 1.1.[1].2. Case number
+     *
+     * Tjenesten går ut ifra at kun en norsk sakID er oppgitt i listen av sakIder
+     * Returnerer null dersom det ikke finnes noen norske sakIder i listen
+     *
+     */
+    fun getSakIdFraSed(rinaSakId: String, dokumentId : String) : String? {
+        val sed : Sed? = euxKlient.getSed(rinaSakId, dokumentId)
+
+        logger.debug("Dokument: ${sed?.toJson()}")
+
+     return sed?.nav?.eessisak?.firstOrNull { sak -> sak?.land == "NO" }?.saksnummer
+    }
 }
