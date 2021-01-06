@@ -38,7 +38,7 @@ class StatistikkListener (private val kafkaTemplate: KafkaTemplate<String, Strin
     @KafkaListener(   //id="statistikkListener",
         //idIsGroup = false,
       //  autoStartup = "false",
-        groupId = "\${kafka.statistikk-inn.groupid}-recover",
+        groupId = "\${kafka.statistikk-inn.groupid}-x",
         topicPartitions = [TopicPartition(topic = "\${kafka.statistikk-inn.topic}",
             partitionOffsets = [PartitionOffset(partition = "0", initialOffset = "1091")])])
     fun consumeBuc(hendelse: String, cr: ConsumerRecord<String, String>, acknowledgment: Acknowledgment) {
