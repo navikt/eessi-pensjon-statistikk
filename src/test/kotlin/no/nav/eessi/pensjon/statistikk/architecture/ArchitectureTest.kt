@@ -1,3 +1,4 @@
+/*
 package no.nav.eessi.pensjon.statistikk.architecture
 
 import com.tngtech.archunit.core.domain.JavaClasses
@@ -67,10 +68,12 @@ class ArchitectureTest {
            //     Metrics to "$root.metrics"
         )
 
-        /*
+        */
+/*
         TODO do something about the dependencies surrounding STS, but there is a bit too much black magic there for me ...
         TODO look at/refactor the relationship between journalforing.JournalpostModel and services.journalpost.JournalpostService ...
-         */
+         *//*
+
         layeredArchitecture()
                 //Define components
                 .layer(ROOT).definedBy(packages[ROOT])
@@ -126,3 +129,4 @@ class ArchitectureTest {
                         .check(classesToAnalyze)
     }
 }
+*/
