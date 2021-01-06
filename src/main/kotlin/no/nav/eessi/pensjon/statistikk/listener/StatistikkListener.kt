@@ -38,13 +38,16 @@ class StatistikkListener (private val kafkaTemplate: KafkaTemplate<String, Strin
     @KafkaListener(   //id="statistikkListener",
         //idIsGroup = false,
       //  autoStartup = "false",
-        groupId = "\${kafka.statistikk-inn.groupid}",
+        groupId = "\${kafka.statistikk-inn.groupid}-recover",
         topicPartitions = [TopicPartition(topic = "\${kafka.statistikk-inn.topic}",
             partitionOffsets = [PartitionOffset(partition = "0", initialOffset = "1091")])])
     fun consumeBuc(hendelse: String, cr: ConsumerRecord<String, String>, acknowledgment: Acknowledgment) {
         MDC.putCloseable("x_request_id", UUID.randomUUID().toString()).use {
             logger.info("Innkommet statistikk hendelse i partisjon: ${cr.partition()}, med offset: ${cr.offset()}")
             logger.debug(hendelse)
+            if(cr.offset() != 1091L) {
+                throw java.lang.RuntimeException("Stopper prosessering")
+            }
 
             try {
                 logger.debug("Hendelse : $hendelse")
