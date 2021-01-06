@@ -37,7 +37,7 @@ class StatistikkListener (private val kafkaTemplate: KafkaTemplate<String, Strin
 
     @KafkaListener(   id="statistikkListener",
         idIsGroup = false,
-        autoStartup = "false",
+      //  autoStartup = "false",
         groupId = "\${kafka.statistikk-inn.groupid}",
         topicPartitions = [TopicPartition(topic = "\${kafka.statistikk-inn.topic}",
             partitionOffsets = [PartitionOffset(partition = "0", initialOffset = "1091")])])
