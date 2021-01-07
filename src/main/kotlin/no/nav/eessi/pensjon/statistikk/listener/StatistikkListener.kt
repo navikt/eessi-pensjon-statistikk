@@ -10,8 +10,6 @@ import org.slf4j.LoggerFactory
 import org.slf4j.MDC
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.kafka.annotation.KafkaListener
-import org.springframework.kafka.annotation.PartitionOffset
-import org.springframework.kafka.annotation.TopicPartition
 import org.springframework.kafka.core.KafkaTemplate
 import org.springframework.kafka.support.Acknowledgment
 import org.springframework.stereotype.Component
@@ -29,25 +27,15 @@ class StatistikkListener (private val kafkaTemplate: KafkaTemplate<String, Strin
 
     fun getLatch() = latch
 
-/*    @KafkaListener(id="statistikkListener",
+    @KafkaListener(id="statistikkListener",
             idIsGroup = false,
             topics = ["\${kafka.statistikk-inn.topic}"],
             groupId = "\${kafka.statistikk-inn.groupid}",
-            autoStartup = "false")*/
-
-    @KafkaListener(   //id="statistikkListener",
-        //idIsGroup = false,
-      //  autoStartup = "false",
-        groupId = "\${kafka.statistikk-inn.groupid}-x",
-        topicPartitions = [TopicPartition(topic = "\${kafka.statistikk-inn.topic}",
-            partitionOffsets = [PartitionOffset(partition = "0", initialOffset = "1091")])])
+            autoStartup = "false")
     fun consumeBuc(hendelse: String, cr: ConsumerRecord<String, String>, acknowledgment: Acknowledgment) {
         MDC.putCloseable("x_request_id", UUID.randomUUID().toString()).use {
             logger.info("Innkommet statistikk hendelse i partisjon: ${cr.partition()}, med offset: ${cr.offset()}")
             logger.debug(hendelse)
-            if(cr.offset() != 1091L) {
-                throw java.lang.RuntimeException("Stopper prosessering")
-            }
 
             try {
                 logger.debug("Hendelse : $hendelse")

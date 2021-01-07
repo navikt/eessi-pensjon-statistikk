@@ -43,7 +43,6 @@
         <logger name="no.nav" level="DEBUG"/>
         <logger name="no.nav.security" level="DEBUG"/>
         <logger name="no.nav.eessi" level="DEBUG"/>
-        <logger name="org.springframework.kafka" level="TRACE"/>
 
     </springProfile>
 

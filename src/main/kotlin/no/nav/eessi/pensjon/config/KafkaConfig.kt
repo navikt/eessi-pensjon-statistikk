@@ -3,28 +3,31 @@ package no.nav.eessi.pensjon.config
 import org.apache.kafka.clients.consumer.Consumer
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.slf4j.LoggerFactory
+import org.springframework.boot.ApplicationRunner
 import org.springframework.boot.autoconfigure.kafka.ConcurrentKafkaListenerContainerFactoryConfigurer
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory
+import org.springframework.kafka.config.KafkaListenerEndpointRegistry
 import org.springframework.kafka.core.ConsumerFactory
 import org.springframework.kafka.listener.ContainerAwareErrorHandler
 import org.springframework.kafka.listener.ContainerStoppingErrorHandler
 import org.springframework.kafka.listener.MessageListenerContainer
 import java.io.PrintWriter
 import java.io.StringWriter
+import java.time.Duration
 
 @Configuration
 class KafkaConfig {
 
-    /*@Bean
+    @Bean
     fun sedSendtAuthRetry(registry: KafkaListenerEndpointRegistry): ApplicationRunner? {
         return ApplicationRunner {
             val statisikkListener = registry.getListenerContainer("statistikkListener")
             statisikkListener.containerProperties.authorizationExceptionRetryInterval = Duration.ofSeconds(4L)
-           // statisikkListener.start()
+            statisikkListener.start()
         }
-    }*/
+    }
 
     @Bean
     fun kafkaListenerContainerFactory(configurer: ConcurrentKafkaListenerContainerFactoryConfigurer,

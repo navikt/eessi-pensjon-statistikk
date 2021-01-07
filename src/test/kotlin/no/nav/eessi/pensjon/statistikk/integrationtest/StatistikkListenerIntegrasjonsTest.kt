@@ -1,9 +1,7 @@
-/*
 package no.nav.eessi.pensjon.statistikk.integrationtest
 
 import no.nav.eessi.pensjon.security.sts.STSService
 import no.nav.eessi.pensjon.statistikk.listener.StatistikkListener
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -42,7 +40,6 @@ class StatistikkListenerIntegrasjonsTest {
     lateinit var stsService: STSService
 
     @Test
-    @Disabled
     fun `Når en sedMottatt hendelse blir konsumert skal det opprettes journalføringsoppgave for pensjon SEDer`() {
 
         // Vent til kafka er klar
@@ -116,4 +113,3 @@ class StatistikkListenerIntegrasjonsTest {
     }
 
 }
-*/
