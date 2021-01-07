@@ -1,7 +1,6 @@
 package no.nav.eessi.pensjon.statistikk.listener
 
-import no.nav.eessi.pensjon.statistikk.models.SedHendelseMottat
-import no.nav.eessi.pensjon.statistikk.models.SedHendelseSendt
+import no.nav.eessi.pensjon.statistikk.models.SedHendelseRina
 import no.nav.eessi.pensjon.statistikk.models.StatistikkMeldingInn
 import no.nav.eessi.pensjon.statistikk.services.InfoService
 import no.nav.eessi.pensjon.statistikk.services.StatistikkPublisher
@@ -58,10 +57,10 @@ class StatistikkListener(
         MDC.putCloseable("x_request_id", UUID.randomUUID().toString()).use {
             try {
                 val offset = cr.offset()
-                val sedHendelse = SedHendelseSendt.fromJson(hendelse)
+                val sedHendelse = SedHendelseRina.fromJson(hendelse)
                 logger.info("*** Starter behandling av SED ${sedHendelse.sedType} BUCtype: ${sedHendelse.bucType} bucid: ${sedHendelse.rinaSakId} ***")
-                sedInfoService.aggregateSedData(sedHendelse)
-      //          kafkaTemplate.send(statistikkUtTopic, sedHendelse.toJson()).get()
+                val sedHendelseSendt = sedInfoService.aggregateSedData(sedHendelse)
+                statistikkPublisher.publiserSedHendelse(sedHendelseSendt)
                 logger.info("Acket statistikk (sed sendt) med offset: ${cr.offset()} i partisjon ${cr.partition()}")
             } catch (ex: Exception) {
                 logger.error("Noe gikk galt under behandling av statistikk-sed-hendelse:\n $hendelse \n", ex)
@@ -80,7 +79,7 @@ class StatistikkListener(
         MDC.putCloseable("x_request_id", UUID.randomUUID().toString()).use {
             try {
                 val offset = cr.offset()
-                val sedHendelse = SedHendelseMottat.fromJson(hendelse)
+                val sedHendelse = SedHendelseRina.fromJson(hendelse)
                 logger.info("*** Starter behandling av SED ${sedHendelse.sedType} BUCtype: ${sedHendelse.bucType} bucid: ${sedHendelse.rinaSakId} ***")
         //        kafkaTemplate.send(statistikkUtTopic, sedHendelse.toJson()).get()
                 logger.info("Acket statistikk (sed mottatt) med offset: ${cr.offset()} i partisjon ${cr.partition()}")

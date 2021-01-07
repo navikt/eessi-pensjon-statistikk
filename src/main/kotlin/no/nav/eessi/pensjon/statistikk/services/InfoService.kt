@@ -1,8 +1,10 @@
 package no.nav.eessi.pensjon.statistikk.services
 
 import no.nav.eessi.pensjon.eux.EuxService
+import no.nav.eessi.pensjon.json.toJson
 import no.nav.eessi.pensjon.statistikk.models.BucOpprettetHendelseUt
-import no.nav.eessi.pensjon.statistikk.models.SedHendelseModel
+import no.nav.eessi.pensjon.statistikk.models.SedHendelse
+import no.nav.eessi.pensjon.statistikk.models.SedHendelseRina
 import no.nav.eessi.pensjon.statistikk.models.StatistikkMeldingInn
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
@@ -12,8 +14,15 @@ class InfoService(private val euxService: EuxService) {
 
     private val logger = LoggerFactory.getLogger(InfoService::class.java)
 
-    fun aggregateSedData(sedHendelse: SedHendelseModel) {
+    fun aggregateSedData(sedHendelseRina: SedHendelseRina): SedHendelse {
 
+        val sedhendelse = SedHendelse.fromJson(sedHendelseRina.toJson())
+
+        val dokumentOpprettetDato = euxService.getTimeStampFromSedMetaDataInBuc(sedHendelseRina.rinaSakId, sedHendelseRina.rinaDokumentId)
+        val saksId = euxService.getSakIdFraSed(sedHendelseRina.rinaSakId, sedHendelseRina.rinaDokumentId)
+        sedhendelse.pesysSakId = saksId
+        sedhendelse.opprettetDato = dokumentOpprettetDato
+        return sedhendelse
     }
 
     fun aggregateBucData(statistikkMeldingInn: StatistikkMeldingInn): BucOpprettetHendelseUt {

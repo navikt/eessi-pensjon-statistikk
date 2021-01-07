@@ -2,6 +2,7 @@ package no.nav.eessi.pensjon.statistikk.services
 
 import no.nav.eessi.pensjon.json.toJson
 import no.nav.eessi.pensjon.statistikk.models.BucOpprettetHendelseUt
+import no.nav.eessi.pensjon.statistikk.models.SedHendelse
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.kafka.core.KafkaTemplate
@@ -19,4 +20,12 @@ class StatistikkPublisher(private val kafkaTemplate: KafkaTemplate<String, Strin
 
         kafkaTemplate.send(statistikkUtTopic, bucOpprettet.toJson()).get()
     }
+
+    fun publiserSedHendelse(sedHendelse: SedHendelse) {
+        logger.info("Produserer sed hendelse melding på kafka: $statistikkUtTopic  melding: $sedHendelse")
+
+        kafkaTemplate.send(statistikkUtTopic, sedHendelse.toJson()).get()
+
+    }
+
 }

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 
-data class SedHendelseModel (
+data class SedHendelseRina (
         val id: Long? = 0,
         val sedId: String? = null,
         val sektorKode: String,
@@ -24,7 +24,7 @@ data class SedHendelseModel (
     companion object {
         private val sedMapper: ObjectMapper = jacksonObjectMapper().configure(DeserializationFeature.READ_UNKNOWN_ENUM_VALUES_AS_NULL, true)
 
-        fun fromJson(json: String): SedHendelseModel = sedMapper.readValue(json, SedHendelseModel::class.java)
+        fun fromJson(json: String): SedHendelseRina = sedMapper.readValue(json, SedHendelseRina::class.java)
     }
 }
 
