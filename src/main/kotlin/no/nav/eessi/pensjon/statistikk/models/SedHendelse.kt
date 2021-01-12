@@ -1,9 +1,11 @@
 package no.nav.eessi.pensjon.statistikk.models
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 data class SedHendelse (
     val id: Long? = 0,
     val sedId: String? = null,
