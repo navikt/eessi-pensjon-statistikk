@@ -46,6 +46,10 @@ apply plugin: 'org.openrepose.gradle.plugins.jaxb'
 group = 'no.nav.eessi.pensjon'
 version = '0.0.1-SNAPSHOT'
 
+configurations {
+    xsd
+}
+
 dependencies {
 
     // Spring-boot
@@ -97,6 +101,21 @@ dependencies {
     implementation group: 'org.slf4j', name: 'jcl-over-slf4j'
     implementation("no.nav.eessi.pensjon:ep-logging:0.0.16")
 
+    implementation group: 'com.google.guava', name: 'guava', version: '30.1-jre'
+
+    //eessi pensjon libs
+    implementation("no.nav.eessi.pensjon:ep-personoppslag:7.0.7")
+
+    //pensjonsinformasjon
+    xsd("no.nav.tjenestespesifikasjoner:pensjonsinformasjon-v1-tjenestespesifikasjon:1.2020.09.21-09.58-dde2f6764e92")
+
+    implementation("com.sun.xml.ws:jaxws-ri:2.3.2")
+    jaxb ('org.glassfish.jaxb:jaxb-xjc:2.3.2')
+    jaxb ('org.glassfish.jaxb:jaxb-runtime:2.3.2')
+}
+
+tasks.named("xsd-dependency-tree").configure {
+    outputs.upToDateWhen { false }
 }
 
 test {
@@ -122,11 +141,13 @@ compileTestKotlin {
     }
 }
 
+
+
 repositories {
 
     mavenCentral()
 
-    ["maven-release","ep-metrics", "ep-security-sts"].each { repo ->
+    ["maven-release","ep-metrics", "ep-security-sts", "ep-personoppslag"].each { repo ->
         String token = System.getenv("GITHUB_TOKEN") ?: project.findProperty("gpr.key")
         if (!token) throw new NullPointerException("Missing token, you have to set GITHUB_TOKEN or gpr.key, see README")
         maven {
@@ -139,6 +160,44 @@ repositories {
     }
 
 }
+
+processResources.doFirst {
+    delete "${projectDir}/src/main/resources/schemas"
+    delete "${projectDir}/src/main/resources/xsdtemp"
+}
+
+ext.xsdTemp = "${buildDir}/xsdtemp"
+ext.schemasDir = "${buildDir}/schemas"
+ext.xsdArtifactName = "pensjonsinformasjon-xsd.jar"
+
+ext.pensjonsinformasjonDir = "${schemasDir}"
+
+task copyPensjonsinformasjonXsd(type: Copy) {
+    from(configurations.xsd) {
+        rename '^pensjonsinformasjon.*', 'pensjonsinformasjon-xsd.jar'
+    }
+    into xsdTemp
+}
+
+task copyPensjonsinformasjonXsdsFromArtifacts(type: Copy) {
+    with copyPensjonsinformasjonXsd
+    includeEmptyDirs = false
+    from zipTree( xsdTemp + "/" + xsdArtifactName)
+    include '**/*.xsd'
+    into pensjonsinformasjonDir
+}
+
+jaxb {
+    xsdDir = pensjonsinformasjonDir
+}
+
+copyPensjonsinformasjonXsdsFromArtifacts.dependsOn tasks["copyPensjonsinformasjonXsd"]
+xjc.dependsOn tasks["copyPensjonsinformasjonXsdsFromArtifacts"]
+compileKotlin.dependsOn tasks["xjc"]
+
+sourceSets["main"].resources.srcDir(schemasDir)
+sourceSets["main"].java.srcDir("${buildDir}/generated-sources/xjc")
+
 
 wrapper {
     distributionType = Wrapper.DistributionType.ALL

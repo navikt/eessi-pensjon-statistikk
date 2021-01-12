@@ -34,6 +34,7 @@ import org.springframework.kafka.test.utils.ContainerTestUtils
 import org.springframework.kafka.test.utils.KafkaTestUtils
 import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.ActiveProfiles
+import org.springframework.web.client.RestTemplate
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.util.*
@@ -51,6 +52,9 @@ class StatistikkListenerIntegrasjonsTest {
     @Suppress("SpringJavaInjectionPointsAutowiringInspection")
     @Autowired
     lateinit var embeddedKafka: EmbeddedKafkaBroker
+
+    @MockBean(name = "pensjonsinformasjonOidcRestTemplate")
+    lateinit var restEuxTemplate: RestTemplate
 
     @Autowired
     lateinit var statistikkListener: StatistikkListener

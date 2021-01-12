@@ -2,6 +2,7 @@ package no.nav.eessi.pensjon.statistikk.services
 
 import no.nav.eessi.pensjon.eux.EuxService
 import no.nav.eessi.pensjon.json.toJson
+import no.nav.eessi.pensjon.pesys.PensjonsinformasjonClient
 import no.nav.eessi.pensjon.statistikk.models.BucOpprettetHendelseUt
 import no.nav.eessi.pensjon.statistikk.models.SedHendelse
 import no.nav.eessi.pensjon.statistikk.models.SedHendelseRina
@@ -10,7 +11,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 
 @Component
-class InfoService(private val euxService: EuxService) {
+class InfoService(private val euxService: EuxService, private val penService: PensjonsinformasjonClient) {
 
     private val logger = LoggerFactory.getLogger(InfoService::class.java)
 
@@ -20,6 +21,7 @@ class InfoService(private val euxService: EuxService) {
 
         val dokumentOpprettetDato = euxService.getTimeStampFromSedMetaDataInBuc(sedHendelseRina.rinaSakId, sedHendelseRina.rinaDokumentId)
         val saksId = euxService.getSakIdFraSed(sedHendelseRina.rinaSakId, sedHendelseRina.rinaDokumentId)
+        //penService.hentAltPaaAktoerId(sedHendelseRina.)
         sedhendelse.pesysSakId = saksId
         sedhendelse.opprettetDato = dokumentOpprettetDato
         return sedhendelse
