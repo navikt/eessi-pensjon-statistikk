@@ -21,6 +21,10 @@ spec:
       value: https://sts.adeo.no/SecurityTokenServiceProvider/
     - name: EUX_RINA_API_V1_URL
       value: https://eux-rina-api.nais.adeo.no/cpi
+    - name: S3_FSS_URL
+      value: http://objectstore.rook-ceph.svc.nais.local
+    - name: EESSI_PENSJON_STATISTIKK_S3_CREDS_USERNAME
+      value: 7XBV68T6HNRIE3FMB20C
 
   image: {{ image }}
   ingresses:
