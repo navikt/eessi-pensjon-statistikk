@@ -39,6 +39,7 @@ eessi.pensjon.statistikk:
   s3:
     bucket.name: 'eessipensjon_statistikk'
 
+S3_REGION: us-east-1
 
 #Metrics
 management:
