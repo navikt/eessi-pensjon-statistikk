@@ -1,1 +1,4 @@
-{}
+{
+  "serviceuserkv": "/serviceuser/data/dev/srveessipensjon",
+  "appsecrets": "/kv/preprod/fss/eessi-pensjon-statistikk/q1"
+}
