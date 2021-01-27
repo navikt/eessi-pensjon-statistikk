@@ -31,6 +31,8 @@ spec:
       value: 6CM9IETIVLHPA21OCIWT
     - name: ENV
       value: q2
+    - name: PENSJONSINFORMASJON_URL
+      value: https://pensjon-pen-q2.nais.preprod.local/pen/api/pensjonsinformasjon/v1
 
 
   image: {{ image }}

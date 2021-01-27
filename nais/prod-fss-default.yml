@@ -27,6 +27,8 @@ spec:
       value: 4BCDP6BBQVV56JZDIGL3
     - name: ENV
       value: p
+    - name: PENSJONSINFORMASJON_URL
+      value: https://pensjon-pen.nais.adeo.no/pen/api/pensjonsinformasjon/v1
 
   image: {{ image }}
   ingresses:
