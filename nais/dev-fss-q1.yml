@@ -59,7 +59,7 @@ spec:
   vault:
     enabled: true
     paths:
-      - kvPath: credential/data/dev/eessi-pensjon-fss
+      - kvPath: {{serviceuserkv}}
+        mountPath: /var/run/secrets/nais.io/srveessipensjonstats
+      - kvPath: {{appsecrets}}
         mountPath: /var/run/secrets/nais.io/appcredentials
-     - kvPath: {{appsecrets}}
-        mountPath: /var/run/secrets/nais.io/appsecrets
