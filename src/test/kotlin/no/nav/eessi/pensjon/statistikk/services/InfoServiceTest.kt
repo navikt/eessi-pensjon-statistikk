@@ -3,7 +3,6 @@ package no.nav.eessi.pensjon.statistikk.services
 import io.mockk.every
 import io.mockk.mockk
 import no.nav.eessi.pensjon.eux.EuxService
-import no.nav.eessi.pensjon.personoppslag.aktoerregister.AktoerregisterService
 import no.nav.eessi.pensjon.pesys.PensjonsinformasjonClient
 import no.nav.eessi.pensjon.statistikk.models.HendelseType
 import no.nav.eessi.pensjon.statistikk.models.SedHendelseRina
@@ -16,9 +15,8 @@ internal class InfoServiceTest {
 
     var euxService = mockk<EuxService>(relaxed = true)
     var penService = mockk<PensjonsinformasjonClient>(relaxed = true)
-    var aktorRegisterService = mockk<AktoerregisterService>(relaxed = true)
 
-    var infoService = InfoService(euxService, penService, aktorRegisterService)
+    var infoService = InfoService(euxService, penService)
 
     @Test
     fun aggregateSedData() {
