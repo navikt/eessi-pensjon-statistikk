@@ -41,7 +41,7 @@ internal class InfoServiceTest {
 
         every { euxService.getTimeStampFromSedMetaDataInBuc(any(), any()) } returns opprettetDato
 
-        val statMelding =  StatistikkMeldingInn(hendelseType = HendelseType.OPPRETTBUC,  rinaid = rinaid, dokumentId = dokumentId)
+        val statMelding =  StatistikkMeldingInn(hendelseType = HendelseType.OPPRETTBUC,  rinaid = rinaid, dokumentId = dokumentId, vedtaksId = null)
         assertEquals(infoService.aggregateBucData(statMelding).dokumentOpprettetDato, opprettetDato)
 
     }

@@ -102,7 +102,7 @@ class StatistikkListenerIntegrasjonsTest {
 
     private fun produserSedHendelser(statistikkMottattProducerTemplate: KafkaTemplate<Int, String>) {
         // Sender 1 BUC opprettet hendelse
-        statistikkMottattProducerTemplate.sendDefault(StatistikkMeldingInn(HendelseType.OPPRETTBUC, "123", "d740047e730f475aa34ae59f62e3bb99").toJson())
+        statistikkMottattProducerTemplate.sendDefault(StatistikkMeldingInn(HendelseType.OPPRETTBUC, "123", "d740047e730f475aa34ae59f62e3bb99", null).toJson())
 
     }
 
