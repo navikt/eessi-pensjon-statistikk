@@ -29,6 +29,8 @@ spec:
       value: http://objectstore.rook-ceph.svc.nais.local
     - name: EESSI_PENSJON_STATISTIKK_S3_CREDS_USERNAME
       value: 6CM9IETIVLHPA21OCIWT
+    - name: ENV
+      value: q1
 
   image: {{ image }}
   ingresses:
