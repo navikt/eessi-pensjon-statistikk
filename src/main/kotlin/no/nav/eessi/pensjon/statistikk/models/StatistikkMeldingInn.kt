@@ -7,7 +7,8 @@ import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 data class StatistikkMeldingInn(
     val hendelseType: HendelseType,
     val rinaid: String,
-    val dokumentId: String?
+    val dokumentId: String?,
+    val vedtaksId: String?
 ){
     companion object {
         private val sedMapper: ObjectMapper = jacksonObjectMapper().configure(DeserializationFeature.READ_UNKNOWN_ENUM_VALUES_AS_NULL, true)
