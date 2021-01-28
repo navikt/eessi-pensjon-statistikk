@@ -4,7 +4,6 @@ import io.mockk.mockk
 import io.mockk.spyk
 import io.mockk.verify
 import no.nav.eessi.pensjon.json.toJson
-import no.nav.eessi.pensjon.personoppslag.aktoerregister.AktoerregisterService
 import no.nav.eessi.pensjon.security.sts.STSService
 import no.nav.eessi.pensjon.statistikk.listener.StatistikkListener
 import no.nav.eessi.pensjon.statistikk.models.HendelseType
@@ -56,9 +55,6 @@ class StatistikkListenerIntegrasjonsTest {
 
     @MockBean(name = "pensjonsinformasjonOidcRestTemplate")
     lateinit var restEuxTemplate: RestTemplate
-
-    @MockBean
-    lateinit var aktorRegsterService: AktoerregisterService
 
     @MockBean
     lateinit var stsService: STSService

@@ -103,12 +103,12 @@ dependencies {
     implementation("net.logstash.logback:logstash-logback-encoder:${logstashLogbackVersion}")
     configurations { all*.exclude group: 'commons-logging', module: 'commons-logging' }
     implementation group: 'org.slf4j', name: 'jcl-over-slf4j'
-    implementation("no.nav.eessi.pensjon:ep-logging:0.0.16")
 
     implementation group: 'com.google.guava', name: 'guava', version: '30.1-jre'
 
     //eessi pensjon libs
-    implementation("no.nav.eessi.pensjon:ep-personoppslag:7.0.7")
+    implementation("no.nav.eessi.pensjon:ep-logging:1.0.6")
+    implementation("no.nav.eessi.pensjon:ep-personoppslag:7.1.2")
 
     //pensjonsinformasjon
     xsd("no.nav.tjenestespesifikasjoner:pensjonsinformasjon-v1-tjenestespesifikasjon:1.2020.09.21-09.58-dde2f6764e92")

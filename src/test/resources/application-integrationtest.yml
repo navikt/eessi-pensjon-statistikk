@@ -31,27 +31,26 @@ spring:
       enable-auto-commit: false
     bootstrap-servers: ${spring.embedded.kafka.brokers}
     properties:
-      security.protocol: PLAINTEXT
+      security.protocol: plaintext
   main:
     allow-bean-definition-overriding: true
 
-securityTokenService:
-  discoveryUrl: http://localhost:${mockServerport}/.well-known/openid-configuration
+securitytokenservice:
+  discoveryurl: http://localhost:${mockserverport}/.well-known/openid-configuration
 
-NAIS_APP_NAME: eessi-pensjon-journalforing
-
-EUX_RINA_API_V1_URL: http://localhost:${mockServerport}
+nais_app_name: eessi-pensjon-journalforing
+eux_rina_api_v1_url: http://localhost:${mockserverport}
 securitytokenservice.url: http://someurl
 srvusername: someuser
 srvpassword: somepass
-oppgave.oppgaver.url: http://localhost:${mockServerport}
-JOURNALPOST_V1_URL: http://localhost:${mockServerport}
-aktoerregister.api.v1.url: http://localhost:${mockServerport}
+oppgave.oppgaver.url: http://localhost:${mockserverport}
+journalpost_v1_url: http://localhost:${mockserverport}
+aktoerregister.api.v1.url: http://localhost:${mockserverport}
 virksomhet.person.v3:
-  endpointurl: http://localhost:${mockServerport}
-EESSI_PENSJON_FAGMODUL_URL: http://localhost:${mockServerport}
-NORG2_URL: http://localhost:${mockServerport}
-BestemSak_URL: http://localhost:${mockServerport}
-pdl_url: http://localhost:${mockServerport}
+  endpointurl: http://localhost:${mockserverport}
+eessi_pensjon_fagmodul_url: http://localhost:${mockserverport}
+norg2_url: http://localhost:${mockserverport}
+bestemsak_url: http://localhost:${mockserverport}
 pensjonsinformasjon:
   url: 'http://example.com:8099'
+PDL_URL: http://localhost:${mockserverport}

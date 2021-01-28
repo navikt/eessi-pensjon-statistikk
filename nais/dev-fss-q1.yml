@@ -33,8 +33,6 @@ spec:
       value: q1
     - name: PENSJONSINFORMASJON_URL
       value: https://pensjon-pen-q1.nais.preprod.local/pen/api/pensjonsinformasjon/v1
-    - name: AKTOERREGISTER_API_V1_URL
-      value: https://app-q1.adeo.no/aktoerregister/api/v1
     - name: VIRKSOMHET_PERSON_V3_ENDPOINTURL
       value: https://app-q1.adeo.no/tpsws-aura/ws/Person/v3
     - name: PDL_URL

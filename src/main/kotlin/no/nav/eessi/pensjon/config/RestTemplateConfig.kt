@@ -16,7 +16,7 @@ import org.springframework.web.client.RestTemplate
 @Configuration
 class RestTemplateConfig(private val securityTokenExchangeService: STSService) {
 
-    @Value("\${EUX_RINA_API_V1_URL}")
+    @Value("\${eux_rina_api_v1_url}")
     lateinit var euxUrl: String
 
     @Bean
