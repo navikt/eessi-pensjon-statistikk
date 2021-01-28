@@ -5,6 +5,7 @@ import io.mockk.spyk
 import io.mockk.verify
 import no.nav.eessi.pensjon.json.toJson
 import no.nav.eessi.pensjon.security.sts.STSService
+import no.nav.eessi.pensjon.services.storage.amazons3.S3StorageService
 import no.nav.eessi.pensjon.statistikk.listener.StatistikkListener
 import no.nav.eessi.pensjon.statistikk.models.HendelseType
 import no.nav.eessi.pensjon.statistikk.models.StatistikkMeldingInn
@@ -55,6 +56,9 @@ class StatistikkListenerIntegrasjonsTest {
 
     @MockBean(name = "pensjonsinformasjonOidcRestTemplate")
     lateinit var restEuxTemplate: RestTemplate
+
+    @MockBean
+    lateinit var s3StorageService: S3StorageService
 
     @MockBean
     lateinit var stsService: STSService

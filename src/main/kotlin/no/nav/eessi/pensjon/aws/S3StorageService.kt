@@ -18,16 +18,11 @@ import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.util.stream.Collectors.joining
 
-private val logger = LoggerFactory.getLogger(S3Storage::class.java)
+private val logger = LoggerFactory.getLogger(S3StorageService::class.java)
 
 @Component
 @Profile("!integrationtest")
-class S3Storage(private val s3: AmazonS3){
-
-/*
-    @Value("\${eessi_pensjon_s3_crypto_password}")
-    lateinit var passphrase: String
-*/
+class S3StorageService(private val s3: AmazonS3){
 
     @Value("\${eessi.pensjon.statistikk.s3.bucket.name}")
     lateinit var bucketname: String

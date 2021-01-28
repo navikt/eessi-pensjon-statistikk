@@ -4,6 +4,7 @@ import io.mockk.every
 import io.mockk.mockk
 import no.nav.eessi.pensjon.eux.EuxService
 import no.nav.eessi.pensjon.pesys.PensjonsinformasjonClient
+import no.nav.eessi.pensjon.services.storage.amazons3.S3StorageService
 import no.nav.eessi.pensjon.statistikk.models.HendelseType
 import no.nav.eessi.pensjon.statistikk.models.SedHendelseRina
 import no.nav.eessi.pensjon.statistikk.models.SedType
@@ -11,11 +12,12 @@ import no.nav.eessi.pensjon.statistikk.models.StatistikkMeldingInn
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
-internal class InfoServiceTest {
+internal class HendelsesAggregeringsServiceTest {
 
     var euxService = mockk<EuxService>(relaxed = true)
     var penService = mockk<PensjonsinformasjonClient>(relaxed = true)
-    var infoService = InfoService(euxService, penService)
+    var s3Service = mockk<S3StorageService>(relaxed = true)
+    var infoService = HendelsesAggregeringsService(euxService, penService, s3Service)
 
     @Test
     fun aggregateSedData() {
@@ -26,7 +28,7 @@ internal class InfoServiceTest {
         every { euxService.getSakIdFraSed(any(), any()) } returns pesysSaksID
 
         val sedHendelserina = SedHendelseRina( rinaSakId = "111", rinaDokumentId = "222", sedType = SedType.P2100, navBruker = "010101", sektorKode = "333")
-        val sedHendelse = infoService.aggregateSedData(sedHendelserina);
+        val sedHendelse = infoService.aggregateSedOpprettetData(sedHendelserina);
 
         assertEquals(sedHendelse.pesysSakId, pesysSaksID)
         assertEquals(sedHendelse.opprettetDato, opprettetDato)

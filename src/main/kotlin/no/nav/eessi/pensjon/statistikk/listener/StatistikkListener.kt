@@ -2,7 +2,7 @@ package no.nav.eessi.pensjon.statistikk.listener
 
 import no.nav.eessi.pensjon.statistikk.models.SedHendelseRina
 import no.nav.eessi.pensjon.statistikk.models.StatistikkMeldingInn
-import no.nav.eessi.pensjon.statistikk.services.InfoService
+import no.nav.eessi.pensjon.statistikk.services.HendelsesAggregeringsService
 import no.nav.eessi.pensjon.statistikk.services.StatistikkPublisher
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.slf4j.LoggerFactory
@@ -15,7 +15,7 @@ import java.util.concurrent.CountDownLatch
 
 @Component
 class StatistikkListener(
-    private val sedInfoService: InfoService,
+    private val sedInfoService: HendelsesAggregeringsService,
     private val statistikkPublisher: StatistikkPublisher) {
 
     private val logger = LoggerFactory.getLogger(StatistikkListener::class.java)
@@ -59,7 +59,7 @@ class StatistikkListener(
                 val offset = cr.offset()
                 val sedHendelse = SedHendelseRina.fromJson(hendelse)
                 logger.info("*** Starter behandling av SED ${sedHendelse.sedType} BUCtype: ${sedHendelse.bucType} bucid: ${sedHendelse.rinaSakId} ***")
-                val sedHendelseSendt = sedInfoService.aggregateSedData(sedHendelse)
+                val sedHendelseSendt = sedInfoService.aggregateSedOpprettetData(sedHendelse)
                 statistikkPublisher.publiserSedHendelse(sedHendelseSendt)
                 logger.info("Acket statistikk (sed sendt) med offset: ${cr.offset()} i partisjon ${cr.partition()}")
             } catch (ex: Exception) {
