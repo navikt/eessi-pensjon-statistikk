@@ -16,7 +16,6 @@ import org.mockserver.model.Header
 import org.mockserver.model.HttpRequest
 import org.mockserver.model.HttpResponse
 import org.mockserver.model.HttpStatusCode
-import org.mockserver.verify.VerificationTimes
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.context.TestConfiguration
@@ -86,13 +85,6 @@ class StatistikkListenerIntegrasjonsTest {
 
         // Venter på at sedListener skal consumeSedSendt meldingene
         statistikkListener.getLatch().await(15000, TimeUnit.MILLISECONDS)
-
-        // Verifiserer at det har blitt forsøkt å opprette en journalpost
-        mockServer.verify(
-            HttpRequest.request()
-                .withMethod(HttpMethod.GET.name)
-                .withPath("/buc/123"),
-            VerificationTimes.atLeast(1))
 
         verify(exactly = 1) { statistikkPublisher.publiserBucOpprettetStatistikk(any()) }
 

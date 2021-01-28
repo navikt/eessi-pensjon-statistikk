@@ -38,12 +38,14 @@ internal class HendelsesAggregeringsServiceTest {
     fun aggregateBucData() {
         val rinaid = "12345"
         val dokumentId = "111111"
+/*
         val opprettetDato = "2020-01-01"
+*/
 
-        every { euxService.getTimeStampFromSedMetaDataInBuc(any(), any()) } returns opprettetDato
+        //every { euxService.getTimeStampFromSedMetaDataInBuc(any(), any()) } returns opprettetDato
 
         val statMelding =  StatistikkMeldingInn(hendelseType = HendelseType.OPPRETTBUC,  rinaid = rinaid, dokumentId = dokumentId, vedtaksId = null)
-        assertEquals(infoService.aggregateBucData(statMelding).dokumentOpprettetDato, opprettetDato)
+        assertEquals(infoService.aggregateBucData(statMelding).dokumentOpprettetDato, null)
 
     }
 }

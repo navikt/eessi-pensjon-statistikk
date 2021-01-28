@@ -61,14 +61,9 @@ class HendelsesAggregeringsService(private val euxService: EuxService,
 
 
     fun aggregateBucData(statistikkMeldingInn: StatistikkMeldingInn): BucOpprettetHendelseUt {
-        val dokumentOpprettetDato = euxService.getTimeStampFromSedMetaDataInBuc(statistikkMeldingInn.rinaid, statistikkMeldingInn.dokumentId!!)
+        //TODO: se paa dato
+        logger.info("Aggregering for BUC ${statistikkMeldingInn.rinaid}")
 
-        //mangler gyldig opprettetdato, avslutter
-        if(dokumentOpprettetDato == null){
-            logger.error("Finner ikke opprettetdato for RinaId: ${statistikkMeldingInn.dokumentId}")
-            throw RuntimeException("Klarte ikke å hente opprettetDato for BUC")
-        }
-        //sed opprettet
-        return BucOpprettetHendelseUt(statistikkMeldingInn, dokumentOpprettetDato)
+        return BucOpprettetHendelseUt(statistikkMeldingInn, null)
     }
 }
