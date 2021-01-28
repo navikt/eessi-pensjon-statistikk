@@ -2,6 +2,9 @@ package no.nav.eessi.pensjon.statistikk.services
 
 import no.nav.eessi.pensjon.eux.EuxService
 import no.nav.eessi.pensjon.json.toJson
+import no.nav.eessi.pensjon.personoppslag.aktoerregister.AktoerregisterService
+import no.nav.eessi.pensjon.personoppslag.aktoerregister.IdentGruppe
+import no.nav.eessi.pensjon.personoppslag.aktoerregister.NorskIdent
 import no.nav.eessi.pensjon.pesys.PensjonsinformasjonClient
 import no.nav.eessi.pensjon.statistikk.models.BucOpprettetHendelseUt
 import no.nav.eessi.pensjon.statistikk.models.SedHendelse
@@ -12,7 +15,8 @@ import org.springframework.stereotype.Component
 
 @Component
 class InfoService(private val euxService: EuxService,
-                  private val penService: PensjonsinformasjonClient) {
+                  private val penService: PensjonsinformasjonClient,
+                  private val aktorRegisterService: AktoerregisterService) {
 
     private val logger = LoggerFactory.getLogger(InfoService::class.java)
 
@@ -42,7 +46,7 @@ class InfoService(private val euxService: EuxService,
         return BucOpprettetHendelseUt(statistikkMeldingInn, dokumentOpprettetDato)
     }
 
-/*    private fun finnVedtaksId(
+    private fun finnVedtaksId(
         sedHendelseRina: SedHendelseRina,
         saksId: String?
     ): String? {
@@ -53,5 +57,5 @@ class InfoService(private val euxService: EuxService,
                 it.sakId.toString() == saksId }
             return saker.toString()
         }
-    }*/
+    }
 }
