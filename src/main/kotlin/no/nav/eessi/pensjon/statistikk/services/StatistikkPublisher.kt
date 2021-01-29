@@ -22,6 +22,7 @@ class StatistikkPublisher(private val kafkaTemplate: KafkaTemplate<String, Strin
     }
 
     fun publiserSedHendelse(sedHendelse: SedHendelse) {
+        logger.debug(sedHendelse.toJson())
         logger.info("Produserer sed hendelse melding på kafka: $statistikkUtTopic  melding: $sedHendelse")
 
         kafkaTemplate.send(statistikkUtTopic, sedHendelse.toJson()).get()
