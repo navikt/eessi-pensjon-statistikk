@@ -1,5 +1,6 @@
 package no.nav.eessi.pensjon.statistikk.listener
 
+import no.nav.eessi.pensjon.json.toJson
 import no.nav.eessi.pensjon.statistikk.models.SedHendelseRina
 import no.nav.eessi.pensjon.statistikk.models.StatistikkMeldingInn
 import no.nav.eessi.pensjon.statistikk.services.HendelsesAggregeringsService
@@ -108,6 +109,7 @@ class StatistikkListener(
 
                 sedInfoService.hentLagretSedhendelse(sedHendelseRina.rinaSakId, sedHendelseRina.rinaDokumentId).let {
                     if (it != null) {
+                        logger.debug(it.toJson())
                         statistikkPublisher.publiserSedHendelse(it)
                     }
                     else{
