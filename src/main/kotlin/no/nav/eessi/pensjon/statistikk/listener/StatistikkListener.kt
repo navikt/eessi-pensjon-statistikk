@@ -50,18 +50,20 @@ class StatistikkListener(
 
     @KafkaListener(id = "sedSendtListener",
             idIsGroup = false,
-            topics = ["\${kafka.statistikk-sed-sendt.topic}"],
-            groupId = "\${kafka.statistikk-sed-sendt.groupid}",
+            topics = ["\${kafka.statistikk-inn.topic}"],
+            groupId = "\${kafka.statistikk-inn.groupid}",
             autoStartup = "false")
-    fun consumeSedSendt(hendelse: String, cr: ConsumerRecord<String, String>, acknowledgment: Acknowledgment) {
+    fun consumeSedOpprettet(hendelse: String, cr: ConsumerRecord<String, String>, acknowledgment: Acknowledgment) {
         MDC.putCloseable("x_request_id", UUID.randomUUID().toString()).use {
             try {
-                val offset = cr.offset()
-                val sedHendelse = SedHendelseRina.fromJson(hendelse)
-                logger.info("*** Starter behandling av SED ${sedHendelse.sedType} BUCtype: ${sedHendelse.bucType} bucid: ${sedHendelse.rinaSakId} ***")
-                val sedHendelseSendt = sedInfoService.aggregateSedOpprettetData(sedHendelse)
-                statistikkPublisher.publiserSedHendelse(sedHendelseSendt)
-                logger.info("Acket statistikk (sed sendt) med offset: ${cr.offset()} i partisjon ${cr.partition()}")
+                val melding = StatistikkMeldingInn.fromJson(hendelse)
+                logger.info("*** Starter behandling av SED ${melding.hendelseType}  bucid: ${melding.rinaid} ***")
+
+                sedInfoService.aggregateSedOpprettetData(melding)?.let {
+                    statistikkPublisher.publiserSedHendelse(it)
+                    logger.info("Acket statistikk (sed sendt) med offset: ${cr.offset()} i partisjon ${cr.partition()}")
+                }
+
             } catch (ex: Exception) {
                 logger.error("Noe gikk galt under behandling av statistikk-sed-hendelse:\n $hendelse \n", ex)
                 throw RuntimeException(ex.message)
@@ -70,7 +72,7 @@ class StatistikkListener(
         }
     }
 
-   @KafkaListener(id = "sedMottattListener",
+/*   @KafkaListener(id = "sedMottattListener",
             idIsGroup = false,
             topics = ["\${kafka.statistikk-sed-mottatt.topic}"],
             groupId = "\${kafka.statistikk-sed-mottatt.groupid}",
@@ -78,10 +80,12 @@ class StatistikkListener(
     fun consumeSedMottatt(hendelse: String, cr: ConsumerRecord<String, String>, acknowledgment: Acknowledgment) {
         MDC.putCloseable("x_request_id", UUID.randomUUID().toString()).use {
             try {
-                val offset = cr.offset()
-                val sedHendelse = SedHendelseRina.fromJson(hendelse)
+                val sedHendelse = SedHendelse.fromJson(hendelse)
                 logger.info("*** Starter behandling av SED ${sedHendelse.sedType} BUCtype: ${sedHendelse.bucType} bucid: ${sedHendelse.rinaSakId} ***")
-        //        kafkaTemplate.send(statistikkUtTopic, sedHendelse.toJson()).get()
+
+                val sedHendelseAgg = sedInfoService.aggregateSedSendtData(sedHendelse)
+                statistikkPublisher.publiserSedHendelse(sedHendelseAgg)
+
                 logger.info("Acket statistikk (sed mottatt) med offset: ${cr.offset()} i partisjon ${cr.partition()}")
 
             } catch (ex: Exception) {
@@ -90,5 +94,33 @@ class StatistikkListener(
             }
             latch.countDown()
         }
+    }*/
+
+    @KafkaListener(id = "sedMottattListener",
+        idIsGroup = false,
+        topics = ["\${kafka.statistikk-sed-sendt.topic}"],
+        groupId = "\${kafka.statistikk-sed-sendt.groupid}",
+        autoStartup = "false")
+    fun consumeSedSendt(hendelse: String, cr: ConsumerRecord<String, String>, acknowledgment: Acknowledgment) {
+        MDC.putCloseable("x_request_id", UUID.randomUUID().toString()).use {
+            try {
+                val sedHendelseRina = SedHendelseRina.fromJson(hendelse)
+
+                sedInfoService.hentLagretSedhendelse(sedHendelseRina.rinaSakId, sedHendelseRina.rinaDokumentId).let {
+                    if (it != null) {
+                        statistikkPublisher.publiserSedHendelse(it)
+                    }
+                    else{
+                        logger.error("Noe gikk galt under behandling av statistikk-sed-hendelse:\n $hendelse \n", sedHendelseRina)
+                    }
+                }
+
+            } catch (ex: Exception) {
+                logger.error("Noe gikk galt under behandling av statistikk-sed-hendelse:\n $hendelse \n", ex)
+                throw RuntimeException(ex.message)
+            }
+            latch.countDown()
+        }
     }
+
 }
