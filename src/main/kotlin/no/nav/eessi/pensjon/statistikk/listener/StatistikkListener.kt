@@ -1,6 +1,7 @@
 package no.nav.eessi.pensjon.statistikk.listener
 
 import no.nav.eessi.pensjon.json.toJson
+import no.nav.eessi.pensjon.statistikk.models.HendelseType
 import no.nav.eessi.pensjon.statistikk.models.SedHendelseRina
 import no.nav.eessi.pensjon.statistikk.models.StatistikkMeldingInn
 import no.nav.eessi.pensjon.statistikk.services.HendelsesAggregeringsService
@@ -30,15 +31,26 @@ class StatistikkListener(
             topics = ["\${kafka.statistikk-inn.topic}"],
             groupId = "\${kafka.statistikk-inn.groupid}",
             autoStartup = "false")
-    fun consumeBuc(hendelse: String, cr: ConsumerRecord<String, String>, acknowledgment: Acknowledgment) {
+    fun consumeHendelse(hendelse: String, cr: ConsumerRecord<String, String>, acknowledgment: Acknowledgment) {
         MDC.putCloseable("x_request_id", UUID.randomUUID().toString()).use {
             logger.info("Innkommet statistikk hendelse i partisjon: ${cr.partition()}, med offset: ${cr.offset()}")
 
             try {
-                logger.debug("Hendelse : $hendelse")
+                logger.debug("Hendelse : ${hendelse.toJson()}")
                 val melding = StatistikkMeldingInn.fromJson(hendelse)
-                val bucHendelse = sedInfoService.aggregateBucData(melding)
-                statistikkPublisher.publiserBucOpprettetStatistikk(bucHendelse)
+
+                when(melding.hendelseType){
+                    HendelseType.OPPRETTBUC -> {
+                        val bucHendelse = sedInfoService.aggregateBucData(melding)
+                        statistikkPublisher.publiserBucOpprettetStatistikk(bucHendelse)
+                    }
+                    HendelseType.OPPRETTSED -> {
+                        val sedHendelse = sedInfoService.aggregateSedOpprettetData(melding)
+                        if (sedHendelse != null) {
+                            statistikkPublisher.publiserSedHendelse(sedHendelse)
+                        }
+                    }
+                }
                 acknowledgment.acknowledge()
                 logger.info("Acket statistikk melding med offset: ${cr.offset()} i partisjon ${cr.partition()}")
             } catch (ex: Exception) {
@@ -49,29 +61,6 @@ class StatistikkListener(
         }
     }
 
-    @KafkaListener(id = "sedSendtListener",
-            idIsGroup = false,
-            topics = ["\${kafka.statistikk-inn.topic}"],
-            groupId = "\${kafka.statistikk-inn.groupid}",
-            autoStartup = "false")
-    fun consumeSedOpprettet(hendelse: String, cr: ConsumerRecord<String, String>, acknowledgment: Acknowledgment) {
-        MDC.putCloseable("x_request_id", UUID.randomUUID().toString()).use {
-            try {
-                val melding = StatistikkMeldingInn.fromJson(hendelse)
-                logger.info("*** Starter behandling av SED ${melding.hendelseType}  bucid: ${melding.rinaid} ***")
-
-                sedInfoService.aggregateSedOpprettetData(melding)?.let {
-                    statistikkPublisher.publiserSedHendelse(it)
-                    logger.info("Acket statistikk (sed sendt) med offset: ${cr.offset()} i partisjon ${cr.partition()}")
-                }
-
-            } catch (ex: Exception) {
-                logger.error("Noe gikk galt under behandling av statistikk-sed-hendelse:\n $hendelse \n", ex)
-                throw RuntimeException(ex.message)
-            }
-            latch.countDown()
-        }
-    }
 
 /*   @KafkaListener(id = "sedMottattListener",
             idIsGroup = false,
