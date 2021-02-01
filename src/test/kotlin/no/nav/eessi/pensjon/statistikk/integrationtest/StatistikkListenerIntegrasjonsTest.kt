@@ -3,6 +3,7 @@ package no.nav.eessi.pensjon.statistikk.integrationtest
 import io.mockk.mockk
 import io.mockk.spyk
 import io.mockk.verify
+import no.nav.eessi.pensjon.eux.EuxService
 import no.nav.eessi.pensjon.json.toJson
 import no.nav.eessi.pensjon.security.sts.STSService
 import no.nav.eessi.pensjon.services.storage.amazons3.S3StorageService
@@ -10,6 +11,8 @@ import no.nav.eessi.pensjon.statistikk.listener.StatistikkListener
 import no.nav.eessi.pensjon.statistikk.models.HendelseType
 import no.nav.eessi.pensjon.statistikk.models.StatistikkMeldingInn
 import no.nav.eessi.pensjon.statistikk.services.StatistikkPublisher
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockserver.integration.ClientAndServer
 import org.mockserver.model.Header
@@ -41,12 +44,17 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 
 private const val STATISTIKK_TOPIC = "eessi-pensjon-statistikk-inn"
-private lateinit var mockServer : ClientAndServer
+private lateinit var mockServer: ClientAndServer
 
 @SpringBootTest
 @ActiveProfiles("integrationtest")
 @DirtiesContext
-@EmbeddedKafka(controlledShutdown = true, partitions = 1, topics = [STATISTIKK_TOPIC], brokerProperties= ["log.dir=out/embedded-kafkamottatt"])
+@EmbeddedKafka(
+    controlledShutdown = true,
+    partitions = 1,
+    topics = [STATISTIKK_TOPIC],
+    brokerProperties = ["log.dir=out/embedded-kafkamottatt"]
+)
 class StatistikkListenerIntegrasjonsTest {
 
     @Suppress("SpringJavaInjectionPointsAutowiringInspection")
@@ -55,6 +63,9 @@ class StatistikkListenerIntegrasjonsTest {
 
     @MockBean(name = "pensjonsinformasjonOidcRestTemplate")
     lateinit var restEuxTemplate: RestTemplate
+
+    @MockBean
+    lateinit var euxService: EuxService
 
     @MockBean
     lateinit var s3StorageService: S3StorageService
@@ -68,34 +79,41 @@ class StatistikkListenerIntegrasjonsTest {
     @Autowired
     lateinit var statistikkPublisher: StatistikkPublisher
 
+    lateinit var container: KafkaMessageListenerContainer<String, String>
+    lateinit var sedMottattProducerTemplate: KafkaTemplate<Int, String>
 
-    @Test
-    fun `Når en sedMottatt hendelse blir konsumert skal det opprettes journalføringsoppgave for pensjon SEDer`() {
-
-        // Vent til kafka er klar
-        val container = settOppUtitlityConsumer(STATISTIKK_TOPIC)
+    @BeforeEach
+    fun setup() {
+        container = settOppUtitlityConsumer(STATISTIKK_TOPIC)
         container.start()
         ContainerTestUtils.waitForAssignment(container, embeddedKafka.partitionsPerTopic)
 
-        // Sett opp producer
-        val sedMottattProducerTemplate = settOppProducerTemplate()
+        sedMottattProducerTemplate = settOppProducerTemplate()
+    }
 
-        // produserer sedSendt meldinger på kafka
-        produserSedHendelser(sedMottattProducerTemplate)
-
-        // Venter på at sedListener skal consumeSedSendt meldingene
-        statistikkListener.getLatch().await(15000, TimeUnit.MILLISECONDS)
-
-        verify(exactly = 1) { statistikkPublisher.publiserBucOpprettetStatistikk(any()) }
-
-        // Shutdown
+    @AfterEach
+    fun after() {
         shutdown(container)
     }
 
-    private fun produserSedHendelser(statistikkMottattProducerTemplate: KafkaTemplate<Int, String>) {
-        // Sender 1 BUC opprettet hendelse
-        statistikkMottattProducerTemplate.sendDefault(StatistikkMeldingInn(HendelseType.OPPRETTBUC, "123", "d740047e730f475aa34ae59f62e3bb99", null).toJson())
+    @Test
+    fun `En buc-hendelse skal sendes videre til riktig kanal  `() {
 
+        val budMelding = StatistikkMeldingInn(
+            hendelseType = HendelseType.OPPRETTBUC,
+            rinaid = "123",
+            dokumentId = "d740047e730f475aa34ae59f62e3bb99",
+            vedtaksId = null
+        )
+
+        sendMelding(budMelding).let {
+            statistikkListener.getLatch().await(15000, TimeUnit.MILLISECONDS)
+        }
+        verify(exactly = 1) { statistikkPublisher.publiserBucOpprettetStatistikk(any()) }
+    }
+
+    private fun sendMelding(melding: StatistikkMeldingInn) {
+        sedMottattProducerTemplate.sendDefault(melding.toJson())
     }
 
     private fun shutdown(container: KafkaMessageListenerContainer<String, String>) {
@@ -112,9 +130,11 @@ class StatistikkListenerIntegrasjonsTest {
     }
 
     private fun settOppUtitlityConsumer(topicNavn: String): KafkaMessageListenerContainer<String, String> {
-        val consumerProperties = KafkaTestUtils.consumerProps("eessi-pensjon-group2",
-                "false",
-                embeddedKafka)
+        val consumerProperties = KafkaTestUtils.consumerProps(
+            "eessi-pensjon-group2",
+            "false",
+            embeddedKafka
+        )
         consumerProperties["auto.offset.reset"] = "earliest"
 
         val consumerFactory = DefaultKafkaConsumerFactory<String, String>(consumerProperties)
@@ -137,25 +157,27 @@ class StatistikkListenerIntegrasjonsTest {
             mockServer.`when`(
                 HttpRequest.request()
                     .withMethod(HttpMethod.GET.name)
-                    .withQueryStringParameter("grant_type", "client_credentials"))
+                    .withQueryStringParameter("grant_type", "client_credentials")
+            )
                 .respond(
                     HttpResponse.response()
-                    .withHeader(Header("Content-Type", "application/json; charset=utf-8"))
-                    .withStatusCode(HttpStatusCode.OK_200.code())
-                    .withBody(String(Files.readAllBytes(Paths.get("src/test/resources/STStoken.json"))))
+                        .withHeader(Header("Content-Type", "application/json; charset=utf-8"))
+                        .withStatusCode(HttpStatusCode.OK_200.code())
+                        .withBody(String(Files.readAllBytes(Paths.get("src/test/resources/STStoken.json"))))
                 )
 
             mockServer.`when`(
                 HttpRequest.request()
                     .withMethod(HttpMethod.GET.name)
-                    .withPath("/buc/123"))
-                .respond(HttpResponse.response()
-                    .withHeader(Header("Content-Type", "application/json; charset=utf-8"))
-                    .withStatusCode(HttpStatusCode.OK_200.code())
-                    .withBody(String(Files.readAllBytes(Paths.get("src/test/resources/buc/BucMedP2000.json"))))
+                    .withPath("/buc/123")
+            )
+                .respond(
+                    HttpResponse.response()
+                        .withHeader(Header("Content-Type", "application/json; charset=utf-8"))
+                        .withStatusCode(HttpStatusCode.OK_200.code())
+                        .withBody(String(Files.readAllBytes(Paths.get("src/test/resources/buc/BucMedP2000.json"))))
                 )
         }
-
 
 
         private fun randomFrom(from: Int = 1024, to: Int = 65535): Int {
@@ -165,7 +187,7 @@ class StatistikkListenerIntegrasjonsTest {
     }
 
     @TestConfiguration
-    class TestConfig{
+    class TestConfig {
 
         @Bean
         fun statistikkPublisher(): StatistikkPublisher {
