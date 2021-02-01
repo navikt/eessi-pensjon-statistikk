@@ -39,11 +39,10 @@ class EuxService(private val euxKlient: EuxKlient){
      * Returnerer null dersom det ikke finnes noen norske sakIder i listen
      *
      */
-    fun getSakIdFraSed(rinaSakId: String, dokumentId : String) : String? {
+    fun getSed(rinaSakId: String, dokumentId : String) : Sed? {
         val sed : Sed? = euxKlient.getSed(rinaSakId, dokumentId)
 
         logger.debug("Dokument: ${sed?.toJson()}")
-
-     return sed?.nav?.eessisak?.firstOrNull { sak -> sak?.land == "NO" }?.saksnummer
+        return sed
     }
 }

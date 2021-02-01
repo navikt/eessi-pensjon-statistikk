@@ -3,8 +3,9 @@ package no.nav.eessi.pensjon.eux
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.whenever
-import no.nav.eessi.pensjon.json.mapJsonToAny
-import no.nav.eessi.pensjon.json.typeRefs
+import no.nav.eessi.pensjon.ResourceHelper
+import no.nav.eessi.pensjon.ResourceHelper.Companion.getResourceBucMetadata
+import no.nav.eessi.pensjon.ResourceHelper.Companion.getResourceSed
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -53,9 +54,10 @@ internal class EuxServiceTest {
                 eq("/buc/$mockEuxRinaid/sed/$mockEuxDocumentId"),
                 eq(Sed::class.java))
 
-        val sakId = euxService.getSakIdFraSed(mockEuxRinaid, mockEuxDocumentId)
+        val sed = euxService.getSed(mockEuxRinaid, mockEuxDocumentId)
+        val saksNummer = hentSaksNummer(sed)
 
-        assertEquals("123456", sakId)
+        assertEquals("123456", saksNummer)
     }
 
     @Test
@@ -69,14 +71,18 @@ internal class EuxServiceTest {
                 eq("/buc/$mockEuxRinaid/sed/$mockEuxDocumentId"),
                 eq(Sed::class.java))
 
-        val sakId = euxService.getSakIdFraSed(mockEuxRinaid, mockEuxDocumentId)
+        val sed = euxService.getSed(mockEuxRinaid, mockEuxDocumentId)
+        val sakId = hentSaksNummer(sed)
 
         assertEquals(null, sakId)
     }
 
+    private fun hentSaksNummer(sed: Sed?) =
+        sed?.nav?.eessisak?.firstOrNull { sak -> sak?.land == "NO" }?.saksnummer
+
     @Test
     fun `Gitt en SED når ingen sakId er utfylt så returner null`() {
-        val gyldigBuc : Sed = getResourceSed("sed/P2000-minimal-uten-sakId.json")
+        val gyldigBuc : Sed = ResourceHelper.getResourceSed("sed/P2000-minimal-uten-sakId.json")
         val mockEuxRinaid = "123456"
         val mockEuxDocumentId = "d740047e730f475aa34ae59f62e3bb99"
 
@@ -85,19 +91,10 @@ internal class EuxServiceTest {
                 eq("/buc/$mockEuxRinaid/sed/$mockEuxDocumentId"),
                 eq(Sed::class.java))
 
-        val sakId = euxService.getSakIdFraSed(mockEuxRinaid, mockEuxDocumentId)
+        val sed = euxService.getSed(mockEuxRinaid, mockEuxDocumentId)
+        val sakId = hentSaksNummer(sed)
 
         assertEquals(null, sakId)
-    }
-
-    private fun getResourceBucMetadata(resourcePath: String): BucMetadata {
-        val json = javaClass.classLoader.getResource(resourcePath)!!.readText()
-        return mapJsonToAny(json, typeRefs())
-    }
-
-    private fun getResourceSed(resourcePath: String): Sed {
-        val json = javaClass.classLoader.getResource(resourcePath)!!.readText()
-        return mapJsonToAny(json, typeRefs())
     }
 }
 
