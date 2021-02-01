@@ -23,8 +23,11 @@ class HendelsesAggregeringsService(private val euxService: EuxService,
             SedHendelse(rinaSakId = meldingInn.rinaid, rinaDokumentId = it)
         }
 
+        val sed = sedHendelse?.let { euxService.getSed(it.rinaSakId, sedHendelse.rinaDokumentId) }
+
         sedHendelse?.apply {
-            this.pesysSakId = euxService.getSakIdFraSed(rinaSakId, rinaDokumentId)
+            this.pesysSakId = sed?.nav?.eessisak?.firstOrNull()?.saksnummer
+            this.navBruker = sed?.nav?.bruker.toString()
             this.opprettetDato = euxService.getTimeStampFromSedMetaDataInBuc(rinaSakId, rinaDokumentId)
             this.vedtaksId = meldingInn.vedtaksId
             lagreSedHendelse(sedHendelse)

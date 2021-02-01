@@ -16,7 +16,7 @@ data class SedHendelse (
     val rinaDokumentId: String,
     val rinaDokumentVersjon: String? = null,
     val sedType: SedType? = null,
-    val navBruker: String? = null
+    var navBruker: String? = null
 ) {
     var pesysSakId: String? = null
     var opprettetDato: String? = null
