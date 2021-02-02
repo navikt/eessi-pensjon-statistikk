@@ -5,9 +5,10 @@ import no.nav.eessi.pensjon.json.mapAnyToJson
 import no.nav.eessi.pensjon.json.mapJsonToAny
 import no.nav.eessi.pensjon.json.typeRefs
 import no.nav.eessi.pensjon.services.storage.amazons3.S3StorageService
-import no.nav.eessi.pensjon.statistikk.models.BucOpprettetHendelseUt
+import no.nav.eessi.pensjon.statistikk.models.BucOpprettetMeldingUt
+import no.nav.eessi.pensjon.statistikk.models.HendelseType
+import no.nav.eessi.pensjon.statistikk.models.OpprettelseMelding
 import no.nav.eessi.pensjon.statistikk.models.SedHendelse
-import no.nav.eessi.pensjon.statistikk.models.StatistikkMeldingInn
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 
@@ -17,10 +18,10 @@ class HendelsesAggregeringsService(private val euxService: EuxService,
 
     private val logger = LoggerFactory.getLogger(HendelsesAggregeringsService::class.java)
 
-    fun aggregateSedOpprettetData(meldingInn: StatistikkMeldingInn): SedHendelse? {
+    fun aggregateSedOpprettetData(melding: OpprettelseMelding): SedHendelse? {
 
-        val sedHendelse = meldingInn.dokumentId?.let {
-            SedHendelse(rinaSakId = meldingInn.rinaid, rinaDokumentId = it)
+        val sedHendelse = melding.dokumentId?.let {
+            SedHendelse(rinaSakId = melding.rinaid, rinaDokumentId = it, hendelseType = HendelseType.SED_SENDT)
         }
 
         val sed = sedHendelse?.let { euxService.getSed(it.rinaSakId, sedHendelse.rinaDokumentId) }
@@ -29,7 +30,7 @@ class HendelsesAggregeringsService(private val euxService: EuxService,
             this.pesysSakId = sed?.nav?.eessisak?.firstOrNull()?.saksnummer
             this.navBruker = sed?.nav?.bruker.toString()
             this.opprettetDato = euxService.getTimeStampFromSedMetaDataInBuc(rinaSakId, rinaDokumentId)
-            this.vedtaksId = meldingInn.vedtaksId
+            this.vedtaksId = melding.vedtaksId
             lagreSedHendelse(sedHendelse)
         }
 
@@ -53,10 +54,10 @@ class HendelsesAggregeringsService(private val euxService: EuxService,
     }
 
 
-    fun aggregateBucData(statistikkMeldingInn: StatistikkMeldingInn): BucOpprettetHendelseUt {
+    fun aggregateBucData(opprettelseMelding: OpprettelseMelding): BucOpprettetMeldingUt {
         //TODO: se paa dato
-        logger.info("Aggregering for BUC ${statistikkMeldingInn.rinaid}")
+        logger.info("Aggregering for BUC ${opprettelseMelding.rinaid}")
 
-        return BucOpprettetHendelseUt(statistikkMeldingInn, null)
+        return BucOpprettetMeldingUt(opprettelseMelding, null)
     }
 }

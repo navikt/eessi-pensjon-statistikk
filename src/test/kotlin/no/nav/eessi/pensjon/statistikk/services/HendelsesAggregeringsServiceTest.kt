@@ -8,7 +8,7 @@ import no.nav.eessi.pensjon.eux.Sak
 import no.nav.eessi.pensjon.eux.Sed
 import no.nav.eessi.pensjon.services.storage.amazons3.S3StorageService
 import no.nav.eessi.pensjon.statistikk.models.HendelseType
-import no.nav.eessi.pensjon.statistikk.models.StatistikkMeldingInn
+import no.nav.eessi.pensjon.statistikk.models.OpprettelseMelding
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
@@ -29,7 +29,7 @@ internal class HendelsesAggregeringsServiceTest {
         every { euxService.getTimeStampFromSedMetaDataInBuc(any(), any()) } returns opprettetDato
         every { euxService.getSed(any(), any()) } returns Sed(Nav(null, listOf(Sak("", pesysSaksID))))
 
-        val melding = StatistikkMeldingInn(rinaid = rinaid, dokumentId = dokumentId, hendelseType = HendelseType.OPPRETTBUC, vedtaksId = vedtaksId)
+        val melding = OpprettelseMelding(rinaid = rinaid, dokumentId = dokumentId, hendelseType = HendelseType.BUC_OPPRETTET, vedtaksId = vedtaksId)
         val sedHendelse = infoService.aggregateSedOpprettetData(melding);
 
         assertEquals(sedHendelse?.rinaSakId, rinaid)

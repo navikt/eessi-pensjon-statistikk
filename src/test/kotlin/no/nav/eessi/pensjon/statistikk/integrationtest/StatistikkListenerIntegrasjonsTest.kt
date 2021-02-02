@@ -9,7 +9,7 @@ import no.nav.eessi.pensjon.security.sts.STSService
 import no.nav.eessi.pensjon.services.storage.amazons3.S3StorageService
 import no.nav.eessi.pensjon.statistikk.listener.StatistikkListener
 import no.nav.eessi.pensjon.statistikk.models.HendelseType
-import no.nav.eessi.pensjon.statistikk.models.StatistikkMeldingInn
+import no.nav.eessi.pensjon.statistikk.models.OpprettelseMelding
 import no.nav.eessi.pensjon.statistikk.services.StatistikkPublisher
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
@@ -99,8 +99,8 @@ class StatistikkListenerIntegrasjonsTest {
     @Test
     fun `En buc-hendelse skal sendes videre til riktig kanal  `() {
 
-        val budMelding = StatistikkMeldingInn(
-            hendelseType = HendelseType.OPPRETTBUC,
+        val budMelding = OpprettelseMelding(
+            hendelseType = HendelseType.BUC_OPPRETTET,
             rinaid = "123",
             dokumentId = "d740047e730f475aa34ae59f62e3bb99",
             vedtaksId = null
@@ -112,7 +112,7 @@ class StatistikkListenerIntegrasjonsTest {
         verify(exactly = 1) { statistikkPublisher.publiserBucOpprettetStatistikk(any()) }
     }
 
-    private fun sendMelding(melding: StatistikkMeldingInn) {
+    private fun sendMelding(melding: OpprettelseMelding) {
         sedMottattProducerTemplate.sendDefault(melding.toJson())
     }
 
