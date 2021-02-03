@@ -9,6 +9,7 @@ import no.nav.eessi.pensjon.eux.EuxService
 import no.nav.eessi.pensjon.eux.Nav
 import no.nav.eessi.pensjon.eux.Sak
 import no.nav.eessi.pensjon.eux.Sed
+import no.nav.eessi.pensjon.eux.SedType
 import no.nav.eessi.pensjon.services.storage.amazons3.S3StorageService
 import no.nav.eessi.pensjon.statistikk.models.OpprettelseMelding
 import no.nav.eessi.pensjon.statistikk.models.OpprettelseType
@@ -30,13 +31,13 @@ internal class HendelsesAggregeringsServiceTest {
         val vedtaksId = "333"
 
         every { euxService.getBucMetadata(any())} returns BucMetadata ("", "", listOf(Document(dokumentId, "2020-12-08T09:52:55.345+0000")), BucType.P_BUC_01, "2020-12-08T09:52:55.345+0000")
-        every { euxService.getSed(any(), any()) } returns Sed(Nav(null, listOf(Sak("", pesysSaksID))))
+        every { euxService.getSed(any(), any()) } returns Sed(Nav(null, listOf(Sak("", pesysSaksID))), sed = SedType.P2100)
 
         val melding = OpprettelseMelding(rinaid = rinaid, dokumentId = dokumentId, opprettelseType = OpprettelseType.SED, vedtaksId = vedtaksId)
         val sedHendelse = infoService.aggregateSedOpprettetData(melding);
 
-        assertEquals(sedHendelse?.rinaSakId, rinaid)
-        assertEquals(sedHendelse?.rinaDokumentId, dokumentId)
+        assertEquals(sedHendelse?.rinaid, rinaid)
+        assertEquals(sedHendelse?.dokumentId, dokumentId)
         assertEquals(sedHendelse?.pesysSakId, pesysSaksID)
         assertEquals(sedHendelse?.opprettetDato, "2020-12-08T09:52:55.345Z")
         assertEquals(sedHendelse?.vedtaksId, vedtaksId)

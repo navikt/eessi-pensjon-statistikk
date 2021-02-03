@@ -19,7 +19,4 @@ class ResourceHelper {
             return mapJsonToAny(json, typeRefs())
         }
     }
-
-
-
 }

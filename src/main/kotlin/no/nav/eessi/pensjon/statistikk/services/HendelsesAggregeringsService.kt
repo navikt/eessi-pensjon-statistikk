@@ -34,7 +34,7 @@ class HendelsesAggregeringsService(private val euxService: EuxService,
                 dokumentId = it,
                 hendelseType = HendelseType.SED_SENDT,
                 bucType = bucMetadata!!.processDefinitionName,
-                sedType = sed?.sedType!!)
+                sedType = sed?.sed!!)
         }
 
 

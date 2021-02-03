@@ -11,7 +11,7 @@ class SedSerDesTest {
 
     @Test
     fun `Sjekker at serialisering virker`() {
-        val model = Sed(Nav(null, listOf(Sak("", ""))))
+        val model = Sed(Nav(null, listOf(Sak("", ""))), sed = SedType.P2100)
         val serialized = model.toJson()
         val result = Sed.fromJson(serialized)
 
