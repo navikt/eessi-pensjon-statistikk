@@ -7,7 +7,6 @@ import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class OpprettelseMelding(
-    //  val hendelseType: HendelseType,
     val opprettelseType: OpprettelseType,
     val rinaid: String,
     val dokumentId: String?,

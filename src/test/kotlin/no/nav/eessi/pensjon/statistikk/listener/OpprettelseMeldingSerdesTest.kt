@@ -2,8 +2,8 @@ package no.nav.eessi.pensjon.statistikk.listener
 
 import no.nav.eessi.pensjon.json.mapAnyToJson
 import no.nav.eessi.pensjon.json.toJson
-import no.nav.eessi.pensjon.statistikk.models.HendelseType
 import no.nav.eessi.pensjon.statistikk.models.OpprettelseMelding
+import no.nav.eessi.pensjon.statistikk.models.OpprettelseType
 import org.junit.jupiter.api.Test
 import org.skyscreamer.jsonassert.JSONAssert
 import org.skyscreamer.jsonassert.JSONCompareMode
@@ -11,7 +11,7 @@ import org.skyscreamer.jsonassert.JSONCompareMode
 class OpprettelseMeldingSerdesTest {
     @Test
     fun `Sjekker at serialisering virker`() {
-        val model = OpprettelseMelding(hendelseType = HendelseType.BUC_OPPRETTET, rinaid =  "1208875", dokumentId = "djksdfsdl3435kj3452", vedtaksId = null)
+        val model = OpprettelseMelding(opprettelseType = OpprettelseType.BUC, rinaid =  "1208875", dokumentId = "djksdfsdl3435kj3452", vedtaksId = null)
         val serialized = model.toJson()
 
         val result = OpprettelseMelding.fromJson(serialized)

@@ -6,6 +6,8 @@ import com.nhaarman.mockitokotlin2.whenever
 import no.nav.eessi.pensjon.ResourceHelper
 import no.nav.eessi.pensjon.ResourceHelper.Companion.getResourceBucMetadata
 import no.nav.eessi.pensjon.ResourceHelper.Companion.getResourceSed
+import no.nav.eessi.pensjon.services.storage.amazons3.S3StorageService
+import no.nav.eessi.pensjon.statistikk.services.HendelsesAggregeringsService
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -19,6 +21,9 @@ internal class EuxServiceTest {
 
     @Mock
     lateinit var euxOidcRestTemplate: RestTemplate
+
+    @Mock
+    lateinit var s3StorageService: S3StorageService
 
     lateinit var euxService: EuxService
 
@@ -38,7 +43,9 @@ internal class EuxServiceTest {
                 eq("/buc/$mockEuxRinaid"),
                 eq(BucMetadata::class.java))
 
-        val offsetDateTime = euxService.getTimeStampFromSedMetaDataInBuc(mockEuxRinaid, mockEuxDocumentId)
+        val metaData = euxService.getBucMetadata(mockEuxRinaid)
+        val offsetDateTime =
+            metaData?.let { HendelsesAggregeringsService(euxService, s3StorageService).getTimeStampFromSedMetaDataInBuc(it, mockEuxDocumentId) }
 
         assertEquals("2020-12-08T09:53:36.241Z", offsetDateTime)
      }

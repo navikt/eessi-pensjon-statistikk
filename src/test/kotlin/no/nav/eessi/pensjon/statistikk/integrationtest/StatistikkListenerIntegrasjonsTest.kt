@@ -8,8 +8,8 @@ import no.nav.eessi.pensjon.json.toJson
 import no.nav.eessi.pensjon.security.sts.STSService
 import no.nav.eessi.pensjon.services.storage.amazons3.S3StorageService
 import no.nav.eessi.pensjon.statistikk.listener.StatistikkListener
-import no.nav.eessi.pensjon.statistikk.models.HendelseType
 import no.nav.eessi.pensjon.statistikk.models.OpprettelseMelding
+import no.nav.eessi.pensjon.statistikk.models.OpprettelseType
 import no.nav.eessi.pensjon.statistikk.services.StatistikkPublisher
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
@@ -94,13 +94,14 @@ class StatistikkListenerIntegrasjonsTest {
     @AfterEach
     fun after() {
         shutdown(container)
+        embeddedKafka.kafkaServers.forEach { it.shutdown() }
     }
 
     @Test
     fun `En buc-hendelse skal sendes videre til riktig kanal  `() {
 
         val budMelding = OpprettelseMelding(
-            hendelseType = HendelseType.BUC_OPPRETTET,
+            opprettelseType = OpprettelseType.BUC,
             rinaid = "123",
             dokumentId = "d740047e730f475aa34ae59f62e3bb99",
             vedtaksId = null
