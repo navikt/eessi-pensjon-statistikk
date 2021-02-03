@@ -1,4 +1,4 @@
-package no.nav.eessi.pensjon.statistikk.models
+package no.nav.eessi.pensjon.eux
 
 enum class BucType {
     P_BUC_01,

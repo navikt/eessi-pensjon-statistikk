@@ -22,7 +22,7 @@ class OpprettelseMeldingSerdesTest {
     @Test
     fun `Sjekker at deserialisering gir riktig verdi`() {
         val json = """{
-              "hendelseType" : "OPPRETTBUC",
+              "opprettelseType" : "BUC",
               "rinaid" : "1208875",
               "dokumentId" : "32456365464564"
         }""".trimMargin()

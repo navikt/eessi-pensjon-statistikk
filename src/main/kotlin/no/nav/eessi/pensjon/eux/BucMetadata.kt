@@ -1,7 +1,6 @@
 package no.nav.eessi.pensjon.eux
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
-import no.nav.eessi.pensjon.statistikk.models.BucType
 import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
 

@@ -1,8 +1,12 @@
 package no.nav.eessi.pensjon.statistikk.integrationtest
 
+import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.whenever
 import io.mockk.mockk
 import io.mockk.spyk
 import io.mockk.verify
+import no.nav.eessi.pensjon.eux.BucMetadata
+import no.nav.eessi.pensjon.eux.BucType
 import no.nav.eessi.pensjon.eux.EuxService
 import no.nav.eessi.pensjon.json.toJson
 import no.nav.eessi.pensjon.security.sts.STSService
@@ -99,6 +103,9 @@ class StatistikkListenerIntegrasjonsTest {
 
     @Test
     fun `En buc-hendelse skal sendes videre til riktig kanal  `() {
+        val bucMetadata  = BucMetadata ("", "", listOf(), BucType.P_BUC_01, "2020-12-08T09:52:55.345+0000")
+
+        whenever(euxService.getBucMetadata(any())).thenReturn(bucMetadata)
 
         val budMelding = OpprettelseMelding(
             opprettelseType = OpprettelseType.BUC,
