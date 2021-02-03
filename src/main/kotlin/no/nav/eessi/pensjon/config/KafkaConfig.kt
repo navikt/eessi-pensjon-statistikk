@@ -40,10 +40,10 @@ class KafkaConfig {
         return factory
     }
 
-    @Bean
+/*    @Bean
     fun KafkaCustomErrorHandlerBean() : KafkaCustomErrorHandler{
         return KafkaCustomErrorHandler()
-    }
+    }*/
 
     open class KafkaCustomErrorHandler : ContainerAwareErrorHandler {
         private val logger = LoggerFactory.getLogger(KafkaCustomErrorHandler::class.java)
