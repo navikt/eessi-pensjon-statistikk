@@ -4,18 +4,17 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import no.nav.eessi.pensjon.eux.BucType
+import no.nav.eessi.pensjon.eux.SedType
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-data class SedHendelse (
-    val id: Long? = 0,
-    val sedId: String? = null,
-    val bucType: String? = null,
-    val rinaSakId: String,
-    val avsenderLand: String? = null,
+data class SedOpprettetMeldingUt (
+    val dokumentId: String,
+    val bucType: BucType,
+    val rinaid: String,
     val mottakerLand: String? = null,
-    val rinaDokumentId: String,
     val rinaDokumentVersjon: String? = null,
-    val sedType: SedType? = null,
+    val sedType: SedType,
     var navBruker: String? = null,
     var hendelseType: HendelseType
 ) {
@@ -26,7 +25,7 @@ data class SedHendelse (
     companion object {
         private val sedMapper: ObjectMapper = jacksonObjectMapper().configure(DeserializationFeature.READ_UNKNOWN_ENUM_VALUES_AS_NULL, true)
 
-        fun fromJson(json: String): SedHendelse = sedMapper.readValue(json, SedHendelse::class.java)
+        fun fromJson(json: String): SedOpprettetMeldingUt = sedMapper.readValue(json, SedOpprettetMeldingUt::class.java)
     }
 }
 
