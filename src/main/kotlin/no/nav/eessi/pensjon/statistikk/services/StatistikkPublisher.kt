@@ -1,7 +1,7 @@
 package no.nav.eessi.pensjon.statistikk.services
 
 import no.nav.eessi.pensjon.json.toJson
-import no.nav.eessi.pensjon.statistikk.models.BucOpprettetHendelseUt
+import no.nav.eessi.pensjon.statistikk.models.BucOpprettetMeldingUt
 import no.nav.eessi.pensjon.statistikk.models.SedHendelse
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
@@ -15,7 +15,7 @@ class StatistikkPublisher(private val kafkaTemplate: KafkaTemplate<String, Strin
 
     private val logger = LoggerFactory.getLogger(StatistikkPublisher::class.java)
 
-    fun publiserBucOpprettetStatistikk(bucOpprettet: BucOpprettetHendelseUt) {
+    fun publiserBucOpprettetStatistikk(bucOpprettet: BucOpprettetMeldingUt) {
         logger.info("Produserer melding på kafka: $statistikkUtTopic  melding: $bucOpprettet")
 
         kafkaTemplate.send(statistikkUtTopic, bucOpprettet.toJson()).get()

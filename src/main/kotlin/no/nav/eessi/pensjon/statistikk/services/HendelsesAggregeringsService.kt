@@ -1,26 +1,32 @@
 package no.nav.eessi.pensjon.statistikk.services
 
+import no.nav.eessi.pensjon.eux.BucMetadata
+import no.nav.eessi.pensjon.eux.Document
 import no.nav.eessi.pensjon.eux.EuxService
 import no.nav.eessi.pensjon.json.mapAnyToJson
 import no.nav.eessi.pensjon.json.mapJsonToAny
+import no.nav.eessi.pensjon.json.toJson
 import no.nav.eessi.pensjon.json.typeRefs
 import no.nav.eessi.pensjon.services.storage.amazons3.S3StorageService
-import no.nav.eessi.pensjon.statistikk.models.BucOpprettetHendelseUt
+import no.nav.eessi.pensjon.statistikk.models.BucOpprettetMeldingUt
+import no.nav.eessi.pensjon.statistikk.models.HendelseType
+import no.nav.eessi.pensjon.statistikk.models.OpprettelseMelding
 import no.nav.eessi.pensjon.statistikk.models.SedHendelse
-import no.nav.eessi.pensjon.statistikk.models.StatistikkMeldingInn
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
+import java.time.OffsetDateTime
+import java.time.format.DateTimeFormatter
 
 @Component
 class HendelsesAggregeringsService(private val euxService: EuxService,
                                    private val s3StorageService: S3StorageService) {
-
+    private val offsetTimeDatePattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
     private val logger = LoggerFactory.getLogger(HendelsesAggregeringsService::class.java)
 
-    fun aggregateSedOpprettetData(meldingInn: StatistikkMeldingInn): SedHendelse? {
+    fun aggregateSedOpprettetData(melding: OpprettelseMelding): SedHendelse? {
 
-        val sedHendelse = meldingInn.dokumentId?.let {
-            SedHendelse(rinaSakId = meldingInn.rinaid, rinaDokumentId = it)
+        val sedHendelse = melding.dokumentId?.let {
+            SedHendelse(rinaSakId = melding.rinaid, rinaDokumentId = it, hendelseType = HendelseType.SED_SENDT)
         }
 
         val sed = sedHendelse?.let { euxService.getSed(it.rinaSakId, sedHendelse.rinaDokumentId) }
@@ -28,8 +34,11 @@ class HendelsesAggregeringsService(private val euxService: EuxService,
         sedHendelse?.apply {
             this.pesysSakId = sed?.nav?.eessisak?.firstOrNull()?.saksnummer
             this.navBruker = sed?.nav?.bruker.toString()
-            this.opprettetDato = euxService.getTimeStampFromSedMetaDataInBuc(rinaSakId, rinaDokumentId)
-            this.vedtaksId = meldingInn.vedtaksId
+
+            val bucMetadata = euxService.getBucMetadata(rinaSakId)
+            this.opprettetDato = bucMetadata?.let { getTimeStampFromSedMetaDataInBuc(it, rinaDokumentId) }
+
+            this.vedtaksId = melding.vedtaksId
             lagreSedHendelse(sedHendelse)
         }
 
@@ -53,10 +62,23 @@ class HendelsesAggregeringsService(private val euxService: EuxService,
     }
 
 
-    fun aggregateBucData(statistikkMeldingInn: StatistikkMeldingInn): BucOpprettetHendelseUt {
-        //TODO: se paa dato
-        logger.info("Aggregering for BUC ${statistikkMeldingInn.rinaid}")
+    fun aggregateBucData(opprettelseMelding: OpprettelseMelding): BucOpprettetMeldingUt {
 
-        return BucOpprettetHendelseUt(statistikkMeldingInn, null)
+        logger.info("Aggregering for BUC ${opprettelseMelding.rinaid}")
+        val timeStamp : String?
+
+        val bucMetadata = euxService.getBucMetadata(opprettelseMelding.rinaid)!!
+        val bucType = bucMetadata.processDefinitionName
+        timeStamp = BucMetadata.offsetTimeStamp(bucMetadata.startDate)
+        return BucOpprettetMeldingUt(bucType, HendelseType.BUC_OPPRETTET, opprettelseMelding.rinaid, opprettelseMelding.dokumentId, timeStamp)
+
+    }
+
+    fun getTimeStampFromSedMetaDataInBuc(bucMetadata: BucMetadata, dokumentId : String ) : String {
+        val dokument : Document? = bucMetadata.documents.firstOrNull { it.id == dokumentId }
+
+        logger.debug("Dokument: ${dokument?.toJson()}")
+
+        return OffsetDateTime.parse(dokument?.creationDate, DateTimeFormatter.ofPattern(offsetTimeDatePattern)).toString()
     }
 }

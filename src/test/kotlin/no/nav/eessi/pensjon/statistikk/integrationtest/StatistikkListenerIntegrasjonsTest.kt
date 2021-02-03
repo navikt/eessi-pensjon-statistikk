@@ -1,15 +1,19 @@
 package no.nav.eessi.pensjon.statistikk.integrationtest
 
+import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.whenever
 import io.mockk.mockk
 import io.mockk.spyk
 import io.mockk.verify
+import no.nav.eessi.pensjon.eux.BucMetadata
+import no.nav.eessi.pensjon.eux.BucType
 import no.nav.eessi.pensjon.eux.EuxService
 import no.nav.eessi.pensjon.json.toJson
 import no.nav.eessi.pensjon.security.sts.STSService
 import no.nav.eessi.pensjon.services.storage.amazons3.S3StorageService
 import no.nav.eessi.pensjon.statistikk.listener.StatistikkListener
-import no.nav.eessi.pensjon.statistikk.models.HendelseType
-import no.nav.eessi.pensjon.statistikk.models.StatistikkMeldingInn
+import no.nav.eessi.pensjon.statistikk.models.OpprettelseMelding
+import no.nav.eessi.pensjon.statistikk.models.OpprettelseType
 import no.nav.eessi.pensjon.statistikk.services.StatistikkPublisher
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
@@ -94,13 +98,17 @@ class StatistikkListenerIntegrasjonsTest {
     @AfterEach
     fun after() {
         shutdown(container)
+        embeddedKafka.kafkaServers.forEach { it.shutdown() }
     }
 
     @Test
     fun `En buc-hendelse skal sendes videre til riktig kanal  `() {
+        val bucMetadata  = BucMetadata ("", "", listOf(), BucType.P_BUC_01, "2020-12-08T09:52:55.345+0000")
 
-        val budMelding = StatistikkMeldingInn(
-            hendelseType = HendelseType.OPPRETTBUC,
+        whenever(euxService.getBucMetadata(any())).thenReturn(bucMetadata)
+
+        val budMelding = OpprettelseMelding(
+            opprettelseType = OpprettelseType.BUC,
             rinaid = "123",
             dokumentId = "d740047e730f475aa34ae59f62e3bb99",
             vedtaksId = null
@@ -112,7 +120,7 @@ class StatistikkListenerIntegrasjonsTest {
         verify(exactly = 1) { statistikkPublisher.publiserBucOpprettetStatistikk(any()) }
     }
 
-    private fun sendMelding(melding: StatistikkMeldingInn) {
+    private fun sendMelding(melding: OpprettelseMelding) {
         sedMottattProducerTemplate.sendDefault(melding.toJson())
     }
 
