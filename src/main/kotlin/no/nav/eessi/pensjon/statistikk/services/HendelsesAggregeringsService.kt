@@ -77,7 +77,7 @@ class HendelsesAggregeringsService(private val euxService: EuxService,
         val bucMetadata = euxService.getBucMetadata(opprettelseMelding.rinaid)!!
         val bucType = bucMetadata.processDefinitionName
         timeStamp = BucMetadata.offsetTimeStamp(bucMetadata.startDate)
-        return BucOpprettetMeldingUt(bucType, HendelseType.BUC_OPPRETTET, opprettelseMelding.rinaid, opprettelseMelding.dokumentId, timeStamp)
+        return BucOpprettetMeldingUt(bucType, HendelseType.BUC_OPPRETTET, opprettelseMelding.rinaid, timeStamp)
 
     }
 
