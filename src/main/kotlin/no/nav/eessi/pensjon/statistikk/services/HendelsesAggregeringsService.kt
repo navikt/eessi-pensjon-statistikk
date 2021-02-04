@@ -33,17 +33,13 @@ class HendelsesAggregeringsService(private val euxService: EuxService,
             dokumentId = melding.dokumentId,
             hendelseType = HendelseType.SED_SENDT,
             bucType = bucMetadata!!.processDefinitionName,
-            sedType = sed?.sed!!)
+            sedType = sed?.sed!!,
+            pesysSakId = sed.nav.eessisak?.firstOrNull()?.saksnummer,
+            navBruker = sed.nav.bruker?.person?.pin?.firstOrNull { it.land == "NO" }?.identifikator,
+            opprettetDato = getTimeStampFromSedMetaDataInBuc(bucMetadata, melding.dokumentId),
+            vedtaksId = melding.vedtaksId)
 
-
-        sedHendelse.apply {
-            this.pesysSakId = sed.nav.eessisak?.firstOrNull()?.saksnummer
-            this.navBruker = sed.nav.bruker?.person?.pin?.firstOrNull { it.land == "NO" }?.identifikator
-            this.opprettetDato = getTimeStampFromSedMetaDataInBuc(bucMetadata, dokumentId)
-            this.vedtaksId = melding.vedtaksId
-
-            lagreSedHendelse(sedHendelse)
-        }
+        lagreSedHendelse(sedHendelse)
 
         return sedHendelse
     }

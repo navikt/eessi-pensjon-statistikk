@@ -25,7 +25,6 @@ internal class HendelsesAggregeringsServiceTest {
     @Test
     fun aggregateSedData() {
         val pesysSaksID = "123456"
-        val opprettetDato = "2020-01-01"
         val dokumentId = "222"
         val rinaid = "111"
         val vedtaksId = "333"
@@ -43,7 +42,4 @@ internal class HendelsesAggregeringsServiceTest {
         assertEquals(sedHendelse?.vedtaksId, vedtaksId)
 
     }
-
-    private fun hentSaksNummer(sed: Sed?) =
-        sed?.nav?.eessisak?.firstOrNull { sak -> sak?.land == "NO" }?.saksnummer
 }
