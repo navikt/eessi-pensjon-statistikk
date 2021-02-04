@@ -12,7 +12,9 @@ class EuxService(private val euxKlient: EuxKlient){
     private val logger = LoggerFactory.getLogger(EuxService::class.java)
 
     fun getBucMetadata(rinaSakId: String) : BucMetadata? {
-        return  euxKlient.getBucMetadata(rinaSakId = rinaSakId)
+         val metaData = euxKlient.getBucMetadata(rinaSakId = rinaSakId)
+        logger.debug("BucMetaData: ${metaData?.toJson()}")
+        return metaData
     }
 
 

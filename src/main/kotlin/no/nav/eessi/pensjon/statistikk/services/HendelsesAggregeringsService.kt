@@ -25,27 +25,23 @@ class HendelsesAggregeringsService(private val euxService: EuxService,
 
     fun aggregateSedOpprettetData(melding: OpprettelseMelding): SedOpprettetMeldingUt? {
 
-        val sed = melding.dokumentId?.let { euxService.getSed(melding.rinaid, it) }
+        val sed = euxService.getSed(melding.rinaid, melding.dokumentId!!)
         val bucMetadata = euxService.getBucMetadata(melding.rinaid)
 
-        val sedHendelse = melding.dokumentId?.let {
-            SedOpprettetMeldingUt(
-                rinaid = melding.rinaid,
-                dokumentId = it,
-                hendelseType = HendelseType.SED_SENDT,
-                bucType = bucMetadata!!.processDefinitionName,
-                sedType = sed?.sed!!)
-        }
+        val sedHendelse = SedOpprettetMeldingUt(
+            rinaid = melding.rinaid,
+            dokumentId = melding.dokumentId,
+            hendelseType = HendelseType.SED_SENDT,
+            bucType = bucMetadata!!.processDefinitionName,
+            sedType = sed?.sed!!)
 
 
-        sedHendelse?.apply {
-            this.pesysSakId = sed?.nav?.eessisak?.firstOrNull()?.saksnummer
-            this.navBruker = sed?.nav?.bruker.toString()
-
-
-            this.opprettetDato = bucMetadata?.let { getTimeStampFromSedMetaDataInBuc(it, dokumentId) }
-
+        sedHendelse.apply {
+            this.pesysSakId = sed.nav.eessisak?.firstOrNull()?.saksnummer
+            this.navBruker = sed.nav.bruker?.person?.pin?.firstOrNull { it.land == "NO" }?.identifikator
+            this.opprettetDato = getTimeStampFromSedMetaDataInBuc(bucMetadata, dokumentId)
             this.vedtaksId = melding.vedtaksId
+
             lagreSedHendelse(sedHendelse)
         }
 
@@ -62,7 +58,7 @@ class HendelsesAggregeringsService(private val euxService: EuxService,
 
     fun hentLagretSedhendelse(rinaSakId: String, rinaDokumentId: String): SedOpprettetMeldingUt? {
         val path = "$rinaSakId/$rinaDokumentId"
-        logger.info("Getting SedhendelseID: ${rinaSakId} from $path")
+        logger.info("Getting SedhendelseID: $rinaSakId from $path")
 
         val sedHendelseAsJson = s3StorageService.get(path)
         return sedHendelseAsJson?.let { mapJsonToAny(it, typeRefs()) }
