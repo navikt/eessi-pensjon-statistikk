@@ -13,7 +13,7 @@ data class SedOpprettetMeldingUt (
     val bucType: BucType,
     val rinaid: String,
     val mottakerLand: String? = null,
-    val rinaDokumentVersjon: String? = null,
+    val rinaDokumentVersjon: String = "1",
     val sedType: SedType,
     var navBruker: String? = null,
     var hendelseType: HendelseType,
@@ -27,3 +27,4 @@ data class SedOpprettetMeldingUt (
         fun fromJson(json: String): SedOpprettetMeldingUt = sedMapper.readValue(json, SedOpprettetMeldingUt::class.java)
     }
 }
+

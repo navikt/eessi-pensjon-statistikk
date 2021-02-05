@@ -29,7 +29,7 @@ internal class HendelsesAggregeringsServiceTest {
         val rinaid = "111"
         val vedtaksId = "333"
 
-        every { euxService.getBucMetadata(any())} returns BucMetadata ("", "", listOf(Document(dokumentId, "2020-12-08T09:52:55.345+0000")), BucType.P_BUC_01, "2020-12-08T09:52:55.345+0000")
+        every { euxService.getBucMetadata(any())} returns BucMetadata ("", "", listOf(Document(dokumentId, "2020-12-08T09:52:55.345+0000", null)), BucType.P_BUC_01, "2020-12-08T09:52:55.345+0000")
         every { euxService.getSed(any(), any()) } returns Sed(Nav(null, listOf(Sak("", pesysSaksID))), sed = SedType.P2100)
 
         val melding = OpprettelseMelding(rinaid = rinaid, dokumentId = dokumentId, opprettelseType = OpprettelseType.SED, vedtaksId = vedtaksId)
