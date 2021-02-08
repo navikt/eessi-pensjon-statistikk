@@ -8,12 +8,12 @@ import no.nav.eessi.pensjon.eux.BucType
 import no.nav.eessi.pensjon.eux.SedType
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-data class SedOpprettetMeldingUt (
+data class SedMeldingUt (
     val dokumentId: String,
     val bucType: BucType,
     val rinaid: String,
     val mottakerLand: List<String>? = null,
-    val rinaDokumentVersjon: String = "1",
+    var rinaDokumentVersjon: String,
     val sedType: SedType,
     var pid: String? = null,
     var hendelseType: HendelseType,
@@ -24,7 +24,7 @@ data class SedOpprettetMeldingUt (
     companion object {
         private val sedMapper: ObjectMapper =
             jacksonObjectMapper().configure(DeserializationFeature.READ_UNKNOWN_ENUM_VALUES_AS_NULL, true)
-        fun fromJson(json: String): SedOpprettetMeldingUt = sedMapper.readValue(json, SedOpprettetMeldingUt::class.java)
+        fun fromJson(json: String): SedMeldingUt = sedMapper.readValue(json, SedMeldingUt::class.java)
     }
 }
 

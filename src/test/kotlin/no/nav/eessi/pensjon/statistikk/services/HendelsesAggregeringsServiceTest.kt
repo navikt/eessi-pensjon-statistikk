@@ -13,6 +13,7 @@ import no.nav.eessi.pensjon.eux.Participant
 import no.nav.eessi.pensjon.eux.Sak
 import no.nav.eessi.pensjon.eux.Sed
 import no.nav.eessi.pensjon.eux.SedType
+import no.nav.eessi.pensjon.eux.Version
 import no.nav.eessi.pensjon.services.storage.amazons3.S3StorageService
 import no.nav.eessi.pensjon.statistikk.models.OpprettelseMelding
 import no.nav.eessi.pensjon.statistikk.models.OpprettelseType
@@ -36,10 +37,11 @@ internal class HendelsesAggregeringsServiceTest {
         every { euxService.getBucMetadata(any())} returns BucMetadata ("", "",
             listOf(Document(dokumentId,
                 "2020-12-08T09:52:55.345+0000",
-                listOf(Conversation(listOf(
+                conversations = listOf(Conversation(listOf(
                     Participant(Organisation("NO")),
                     Participant(Organisation("NO"))
-                ))))),
+                ))),
+                versions = listOf(Version("1")))),
             BucType.P_BUC_01, "2020-12-08T09:52:55.345+0000")
         every { euxService.getSed(any(), any()) } returns Sed(Nav(null, listOf(Sak("", pesysSaksID))), sed = SedType.P2100)
 

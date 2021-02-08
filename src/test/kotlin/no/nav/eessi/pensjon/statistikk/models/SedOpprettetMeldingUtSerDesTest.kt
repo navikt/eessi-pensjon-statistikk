@@ -11,7 +11,7 @@ import org.skyscreamer.jsonassert.JSONCompareMode
 internal class SedOpprettetMeldingUtSerDesTest {
     @Test
     fun `Sjekker at serialisering virker`() {
-        val model = SedOpprettetMeldingUt(
+        val model = SedMeldingUt(
             dokumentId = "111",
             bucType = BucType.P_BUC_01,
             rinaid = "222",
@@ -26,7 +26,7 @@ internal class SedOpprettetMeldingUtSerDesTest {
         )
         val serialized = model.toJson()
         print(serialized)
-        val result = SedOpprettetMeldingUt.fromJson(serialized)
+        val result = SedMeldingUt.fromJson(serialized)
 
         JSONAssert.assertEquals(serialized, result.toJson(), JSONCompareMode.LENIENT)
     }
@@ -48,7 +48,7 @@ internal class SedOpprettetMeldingUtSerDesTest {
           "vedtaksId" : "666"
         }""".trimMargin()
 
-        val model = SedOpprettetMeldingUt.fromJson(json)
+        val model = SedMeldingUt.fromJson(json)
 
         val result = mapAnyToJson(model)
         JSONAssert.assertEquals(json, result, JSONCompareMode.LENIENT)

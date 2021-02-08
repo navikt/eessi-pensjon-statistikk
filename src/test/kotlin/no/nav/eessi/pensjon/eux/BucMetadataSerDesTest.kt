@@ -14,10 +14,11 @@ internal class BucMetadataSerDesTest{
         val model = BucMetadata("1",
             "4",
             listOf(Document("", "2020-12-08T09:52:55.345+0000",
-                listOf(Conversation(
-                    listOf(Participant(
-                        Organisation("NO")
-                    )))))),
+                conversations = listOf(Conversation(
+                    participants = listOf(Participant(
+                        organisation = Organisation("NO")
+                    )))), versions = listOf(Version("1")))
+            ),
             BucType.P_BUC_01,
             "2020-11-08T09:52:55.345+0000")
 

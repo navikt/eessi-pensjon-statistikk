@@ -11,7 +11,7 @@ import no.nav.eessi.pensjon.services.storage.amazons3.S3StorageService
 import no.nav.eessi.pensjon.statistikk.models.BucOpprettetMeldingUt
 import no.nav.eessi.pensjon.statistikk.models.HendelseType
 import no.nav.eessi.pensjon.statistikk.models.OpprettelseMelding
-import no.nav.eessi.pensjon.statistikk.models.SedOpprettetMeldingUt
+import no.nav.eessi.pensjon.statistikk.models.SedMeldingUt
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 import java.time.OffsetDateTime
@@ -23,24 +23,25 @@ class HendelsesAggregeringsService(private val euxService: EuxService,
     private val offsetTimeDatePattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
     private val logger = LoggerFactory.getLogger(HendelsesAggregeringsService::class.java)
 
-    fun aggregateSedOpprettetData(melding: OpprettelseMelding): SedOpprettetMeldingUt? {
+    fun aggregateSedOpprettetData(melding: OpprettelseMelding): SedMeldingUt? {
 
         val sed = euxService.getSed(melding.rinaid, melding.dokumentId!!)
         val bucMetadata = euxService.getBucMetadata(melding.rinaid)
 
         val mottakerLand = populerMottakerland(bucMetadata!!)
 
-        val sedHendelse = SedOpprettetMeldingUt(
+        val sedHendelse = SedMeldingUt(
             rinaid = melding.rinaid,
             dokumentId = melding.dokumentId,
             hendelseType = HendelseType.SED_SENDT,
-            bucType = bucMetadata!!.processDefinitionName,
+            bucType = bucMetadata.processDefinitionName,
             sedType = sed?.sed!!,
             pesysSakId = sed.nav.eessisak?.firstOrNull()?.saksnummer,
             pid = sed.nav.bruker?.person?.pin?.firstOrNull { it.land == "NO" }?.identifikator,
             opprettetTidspunkt = getTimeStampFromSedMetaDataInBuc(bucMetadata, melding.dokumentId),
             vedtaksId = melding.vedtaksId,
-            mottakerLand = mottakerLand
+            mottakerLand = mottakerLand,
+            rinaDokumentVersjon = "1"
         )
 
         lagreSedHendelse(sedHendelse)
@@ -56,7 +57,7 @@ class HendelsesAggregeringsService(private val euxService: EuxService,
             .distinct()
     }
 
-    private fun lagreSedHendelse(sedhendelse: SedOpprettetMeldingUt) {
+    private fun lagreSedHendelse(sedhendelse: SedMeldingUt) {
         val path = "${sedhendelse.rinaid}/${sedhendelse.dokumentId}"
         logger.info("Storing sedhendelse to S3: $path")
 
@@ -64,14 +65,25 @@ class HendelsesAggregeringsService(private val euxService: EuxService,
     }
 
 
-    fun hentLagretSedhendelse(rinaSakId: String, rinaDokumentId: String): SedOpprettetMeldingUt? {
+    fun hentLagretSedhendelse(rinaSakId: String, rinaDokumentId: String): SedMeldingUt? {
         val path = "$rinaSakId/$rinaDokumentId"
         logger.info("Getting SedhendelseID: $rinaSakId from $path")
 
         val sedHendelseAsJson = s3StorageService.get(path)
-        return sedHendelseAsJson?.let { mapJsonToAny(it, typeRefs()) }
-    }
 
+        val utHendelse = sedHendelseAsJson?.let { mapJsonToAny(it, typeRefs<SedMeldingUt>()) }
+
+        val bucMetadata = euxService.getBucMetadata(rinaSakId)
+        val version = bucMetadata?.documents
+            ?.flatMap { it.versions }
+            ?.size
+
+        version.let {
+            utHendelse?.rinaDokumentVersjon = it.toString()
+        }
+
+        return utHendelse
+        }
 
     fun aggregateBucData(opprettelseMelding: OpprettelseMelding): BucOpprettetMeldingUt {
 
