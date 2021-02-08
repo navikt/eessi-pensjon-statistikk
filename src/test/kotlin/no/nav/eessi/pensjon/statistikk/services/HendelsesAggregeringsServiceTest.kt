@@ -36,9 +36,10 @@ internal class HendelsesAggregeringsServiceTest {
         every { euxService.getBucMetadata(any())} returns BucMetadata ("", "",
             listOf(Document(dokumentId,
                 "2020-12-08T09:52:55.345+0000",
-                listOf(Conversation(listOf(Participant(
-                    Organisation("NO")
-                )))))),
+                listOf(Conversation(listOf(
+                    Participant(Organisation("NO")),
+                    Participant(Organisation("NO"))
+                ))))),
             BucType.P_BUC_01, "2020-12-08T09:52:55.345+0000")
         every { euxService.getSed(any(), any()) } returns Sed(Nav(null, listOf(Sak("", pesysSaksID))), sed = SedType.P2100)
 

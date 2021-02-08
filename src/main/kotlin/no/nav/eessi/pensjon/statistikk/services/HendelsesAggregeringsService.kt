@@ -37,7 +37,7 @@ class HendelsesAggregeringsService(private val euxService: EuxService,
             bucType = bucMetadata!!.processDefinitionName,
             sedType = sed?.sed!!,
             pesysSakId = sed.nav.eessisak?.firstOrNull()?.saksnummer,
-            navBruker = sed.nav.bruker?.person?.pin?.firstOrNull { it.land == "NO" }?.identifikator,
+            pid = sed.nav.bruker?.person?.pin?.firstOrNull { it.land == "NO" }?.identifikator,
             opprettetDato = getTimeStampFromSedMetaDataInBuc(bucMetadata, melding.dokumentId),
             vedtaksId = melding.vedtaksId,
             mottakerLand = mottakerLand
@@ -53,6 +53,7 @@ class HendelsesAggregeringsService(private val euxService: EuxService,
             .flatMap { it.conversations }
             .flatMap { it.participants }
             .map { it.organisation.countryCode }
+            .distinct()
     }
 
     private fun lagreSedHendelse(sedhendelse: SedOpprettetMeldingUt) {

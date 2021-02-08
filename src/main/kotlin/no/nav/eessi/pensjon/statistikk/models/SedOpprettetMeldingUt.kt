@@ -15,7 +15,7 @@ data class SedOpprettetMeldingUt (
     val mottakerLand: List<String>? = null,
     val rinaDokumentVersjon: String = "1",
     val sedType: SedType,
-    var navBruker: String? = null,
+    var pid: String? = null,
     var hendelseType: HendelseType,
     var pesysSakId: String? = null,
     var opprettetDato: String,
