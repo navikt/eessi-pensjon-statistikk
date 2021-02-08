@@ -28,6 +28,8 @@ class HendelsesAggregeringsService(private val euxService: EuxService,
         val sed = euxService.getSed(melding.rinaid, melding.dokumentId!!)
         val bucMetadata = euxService.getBucMetadata(melding.rinaid)
 
+        val mottakerLand = populerMottakerland(bucMetadata!!)
+
         val sedHendelse = SedOpprettetMeldingUt(
             rinaid = melding.rinaid,
             dokumentId = melding.dokumentId,
@@ -37,11 +39,20 @@ class HendelsesAggregeringsService(private val euxService: EuxService,
             pesysSakId = sed.nav.eessisak?.firstOrNull()?.saksnummer,
             navBruker = sed.nav.bruker?.person?.pin?.firstOrNull { it.land == "NO" }?.identifikator,
             opprettetDato = getTimeStampFromSedMetaDataInBuc(bucMetadata, melding.dokumentId),
-            vedtaksId = melding.vedtaksId)
+            vedtaksId = melding.vedtaksId,
+            mottakerLand = mottakerLand
+        )
 
         lagreSedHendelse(sedHendelse)
 
         return sedHendelse
+    }
+
+    private fun populerMottakerland(bucMetadata: BucMetadata): List<String> {
+        return bucMetadata.documents
+            .flatMap { it.conversations }
+            .flatMap { it.participants }
+            .map { it.organisation.countryCode }
     }
 
     private fun lagreSedHendelse(sedhendelse: SedOpprettetMeldingUt) {

@@ -4,9 +4,12 @@ import io.mockk.every
 import io.mockk.mockk
 import no.nav.eessi.pensjon.eux.BucMetadata
 import no.nav.eessi.pensjon.eux.BucType
+import no.nav.eessi.pensjon.eux.Conversation
 import no.nav.eessi.pensjon.eux.Document
 import no.nav.eessi.pensjon.eux.EuxService
 import no.nav.eessi.pensjon.eux.Nav
+import no.nav.eessi.pensjon.eux.Organisation
+import no.nav.eessi.pensjon.eux.Participant
 import no.nav.eessi.pensjon.eux.Sak
 import no.nav.eessi.pensjon.eux.Sed
 import no.nav.eessi.pensjon.eux.SedType
@@ -28,18 +31,25 @@ internal class HendelsesAggregeringsServiceTest {
         val dokumentId = "222"
         val rinaid = "111"
         val vedtaksId = "333"
+        val mottakerland = listOf("NO")
 
-        every { euxService.getBucMetadata(any())} returns BucMetadata ("", "", listOf(Document(dokumentId, "2020-12-08T09:52:55.345+0000", null)), BucType.P_BUC_01, "2020-12-08T09:52:55.345+0000")
+        every { euxService.getBucMetadata(any())} returns BucMetadata ("", "",
+            listOf(Document(dokumentId,
+                "2020-12-08T09:52:55.345+0000",
+                listOf(Conversation(listOf(Participant(
+                    Organisation("NO")
+                )))))),
+            BucType.P_BUC_01, "2020-12-08T09:52:55.345+0000")
         every { euxService.getSed(any(), any()) } returns Sed(Nav(null, listOf(Sak("", pesysSaksID))), sed = SedType.P2100)
 
         val melding = OpprettelseMelding(rinaid = rinaid, dokumentId = dokumentId, opprettelseType = OpprettelseType.SED, vedtaksId = vedtaksId)
-        val sedHendelse = infoService.aggregateSedOpprettetData(melding);
+        val sedOpprettetMeldingUt = infoService.aggregateSedOpprettetData(melding);
 
-        assertEquals(sedHendelse?.rinaid, rinaid)
-        assertEquals(sedHendelse?.dokumentId, dokumentId)
-        assertEquals(sedHendelse?.pesysSakId, pesysSaksID)
-        assertEquals(sedHendelse?.opprettetDato, "2020-12-08T09:52:55.345Z")
-        assertEquals(sedHendelse?.vedtaksId, vedtaksId)
-
+        assertEquals(sedOpprettetMeldingUt?.rinaid, rinaid)
+        assertEquals(sedOpprettetMeldingUt?.dokumentId, dokumentId)
+        assertEquals(sedOpprettetMeldingUt?.pesysSakId, pesysSaksID)
+        assertEquals(sedOpprettetMeldingUt?.opprettetDato, "2020-12-08T09:52:55.345Z")
+        assertEquals(sedOpprettetMeldingUt?.vedtaksId, vedtaksId)
+        assertEquals(sedOpprettetMeldingUt?.mottakerLand, mottakerland)
     }
 }

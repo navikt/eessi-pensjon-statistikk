@@ -27,9 +27,10 @@ data class BucMetadata(
 data class Document (
     val id: String,
     val creationDate: String,
-    var conversations: List<Conversation>?)
+    var conversations: List<Conversation> = emptyList()
+)
 
-data class Conversation (var participants: List<Participant>)
+data class Conversation (var participants: List<Participant> = emptyList())
 
 data class Participant (val organisation: Organisation)
 

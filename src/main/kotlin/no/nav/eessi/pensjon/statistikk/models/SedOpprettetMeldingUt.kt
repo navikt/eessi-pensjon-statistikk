@@ -12,7 +12,7 @@ data class SedOpprettetMeldingUt (
     val dokumentId: String,
     val bucType: BucType,
     val rinaid: String,
-    val mottakerLand: String? = null,
+    val mottakerLand: List<String>? = null,
     val rinaDokumentVersjon: String = "1",
     val sedType: SedType,
     var navBruker: String? = null,
