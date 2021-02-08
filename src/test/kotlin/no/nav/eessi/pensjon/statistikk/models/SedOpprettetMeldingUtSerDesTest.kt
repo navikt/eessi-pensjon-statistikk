@@ -21,7 +21,7 @@ internal class SedOpprettetMeldingUtSerDesTest {
             pid = "444",
             hendelseType = HendelseType.SED_OPPRETTET,
             pesysSakId = "555",
-            opprettetDato = "2020-12-08T09:52:55.345Z",
+            opprettetTidspunkt = "2020-12-08T09:52:55.345Z",
             vedtaksId = "666"
         )
         val serialized = model.toJson()
@@ -44,7 +44,7 @@ internal class SedOpprettetMeldingUtSerDesTest {
           "pid" : "444",
           "hendelseType" : "SED_OPPRETTET",
           "pesysSakId" : "555",
-          "opprettetDato" : "2020-12-08T09:52:55.345Z",
+          "opprettetTidspunkt" : "2020-12-08T09:52:55.345Z",
           "vedtaksId" : "666"
         }""".trimMargin()
 

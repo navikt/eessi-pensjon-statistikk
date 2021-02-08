@@ -49,7 +49,7 @@ internal class HendelsesAggregeringsServiceTest {
         assertEquals(sedOpprettetMeldingUt?.rinaid, rinaid)
         assertEquals(sedOpprettetMeldingUt?.dokumentId, dokumentId)
         assertEquals(sedOpprettetMeldingUt?.pesysSakId, pesysSaksID)
-        assertEquals(sedOpprettetMeldingUt?.opprettetDato, "2020-12-08T09:52:55.345Z")
+        assertEquals(sedOpprettetMeldingUt?.opprettetTidspunkt, "2020-12-08T09:52:55.345Z")
         assertEquals(sedOpprettetMeldingUt?.vedtaksId, vedtaksId)
         assertEquals(sedOpprettetMeldingUt?.mottakerLand, mottakerland)
     }

@@ -38,7 +38,7 @@ class HendelsesAggregeringsService(private val euxService: EuxService,
             sedType = sed?.sed!!,
             pesysSakId = sed.nav.eessisak?.firstOrNull()?.saksnummer,
             pid = sed.nav.bruker?.person?.pin?.firstOrNull { it.land == "NO" }?.identifikator,
-            opprettetDato = getTimeStampFromSedMetaDataInBuc(bucMetadata, melding.dokumentId),
+            opprettetTidspunkt = getTimeStampFromSedMetaDataInBuc(bucMetadata, melding.dokumentId),
             vedtaksId = melding.vedtaksId,
             mottakerLand = mottakerLand
         )

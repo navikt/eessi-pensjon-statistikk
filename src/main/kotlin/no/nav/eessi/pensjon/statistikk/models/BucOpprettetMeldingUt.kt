@@ -6,5 +6,5 @@ data class BucOpprettetMeldingUt(
     val bucType: BucType,
     val hendelseType: HendelseType,
     val rinaid: String,
-    val opprettetDato: String){
+    val opprettetTidspunkt: String){
 }

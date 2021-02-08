@@ -18,7 +18,7 @@ data class SedOpprettetMeldingUt (
     var pid: String? = null,
     var hendelseType: HendelseType,
     var pesysSakId: String? = null,
-    var opprettetDato: String,
+    var opprettetTidspunkt: String,
     var vedtaksId: String? = null){
 
     companion object {
