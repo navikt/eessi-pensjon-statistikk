@@ -17,6 +17,7 @@ import no.nav.eessi.pensjon.statistikk.models.OpprettelseType
 import no.nav.eessi.pensjon.statistikk.services.StatistikkPublisher
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.mockserver.integration.ClientAndServer
 import org.mockserver.model.Header
@@ -101,6 +102,7 @@ class StatistikkListenerIntegrasjonsTest {
         embeddedKafka.kafkaServers.forEach { it.shutdown() }
     }
 
+    @Disabled
     @Test
     fun `En buc-hendelse skal sendes videre til riktig kanal  `() {
         val bucMetadata  = BucMetadata ("", "", listOf(), BucType.P_BUC_01, "2020-12-08T09:52:55.345+0000")
