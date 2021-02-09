@@ -11,8 +11,6 @@ import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.slf4j.LoggerFactory
 import org.slf4j.MDC
 import org.springframework.kafka.annotation.KafkaListener
-import org.springframework.kafka.annotation.PartitionOffset
-import org.springframework.kafka.annotation.TopicPartition
 import org.springframework.kafka.support.Acknowledgment
 import org.springframework.stereotype.Component
 import java.util.*
@@ -29,15 +27,11 @@ class StatistikkListener(
 
     fun getLatch() = latch
 
-/*    @KafkaListener(id="statistikkListener",
+    @KafkaListener(id="statistikkListener",
             idIsGroup = false,
             topics = ["\${kafka.statistikk-inn.topic}"],
             groupId = "\${kafka.statistikk-inn.groupid}",
-            autoStartup = "false")*/
-    @KafkaListener(id="statistikkListener",
-        groupId = "\${kafka.statistikk-inn.groupid}",
-        topicPartitions = [TopicPartition(topic = "\${kafka.statistikk-inn.topic}",
-            partitionOffsets = [PartitionOffset(partition = "0", initialOffset = "1905")])])
+            autoStartup = "false")
     fun consumeOpprettelseMelding(hendelse: String, cr: ConsumerRecord<String, String>, acknowledgment: Acknowledgment) {
         MDC.putCloseable("x_request_id", UUID.randomUUID().toString()).use {
             logger.info("Innkommet statistikk hendelse i partisjon: ${cr.partition()}, med offset: ${cr.offset()}")
@@ -49,7 +43,6 @@ class StatistikkListener(
                 when(melding.opprettelseType){
                     OpprettelseType.BUC -> {
                         val bucHendelse = sedInfoService.aggregateBucData(melding)
-                      //  val bucOpprettetMeldingUt = BucOpprettetMeldingUt(melding.)
                         statistikkPublisher.publiserBucOpprettetStatistikk(bucHendelse)
                     }
                     OpprettelseType.SED -> {
