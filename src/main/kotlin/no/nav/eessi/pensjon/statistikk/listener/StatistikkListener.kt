@@ -88,7 +88,7 @@ class StatistikkListener(
         }
     }*/
 
-    @KafkaListener(id = "sedMottattListener",
+    @KafkaListener(id = "sedSendtListener",
         idIsGroup = false,
         topics = ["\${kafka.statistikk-sed-sendt.topic}"],
         groupId = "\${kafka.statistikk-sed-sendt.groupid}",

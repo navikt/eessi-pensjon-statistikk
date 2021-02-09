@@ -33,7 +33,7 @@ data class Document (
 
 data class Version(var id: String)
 
-data class Conversation (var participants: List<Participant> = emptyList())
+data class Conversation (var participants: List<Participant>?)
 
 data class Participant (val organisation: Organisation)
 

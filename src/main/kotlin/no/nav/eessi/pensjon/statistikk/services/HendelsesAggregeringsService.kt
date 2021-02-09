@@ -3,6 +3,7 @@ package no.nav.eessi.pensjon.statistikk.services
 import no.nav.eessi.pensjon.eux.BucMetadata
 import no.nav.eessi.pensjon.eux.Document
 import no.nav.eessi.pensjon.eux.EuxService
+import no.nav.eessi.pensjon.eux.Participant
 import no.nav.eessi.pensjon.json.mapAnyToJson
 import no.nav.eessi.pensjon.json.mapJsonToAny
 import no.nav.eessi.pensjon.json.toJson
@@ -50,11 +51,12 @@ class HendelsesAggregeringsService(private val euxService: EuxService,
     }
 
     private fun populerMottakerland(bucMetadata: BucMetadata): List<String> {
-        return bucMetadata.documents
+        val list : List<Participant> = bucMetadata.documents
             .flatMap { it.conversations }
-            .flatMap { it.participants }
-            .map { it.organisation.countryCode }
-            .distinct()
+            .flatMap { it.participants.orEmpty() }
+            .toList()
+
+        return list.map { it.organisation.countryCode }.distinct()
     }
 
     private fun lagreSedHendelse(sedhendelse: SedMeldingUt) {
