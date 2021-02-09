@@ -34,7 +34,8 @@ class StatistikkListener(
             topics = ["\${kafka.statistikk-inn.topic}"],
             groupId = "\${kafka.statistikk-inn.groupid}",
             autoStartup = "false")*/
-    @KafkaListener(groupId = "\${kafka.statistikk-inn.groupid}",
+    @KafkaListener(id="statistikkListener",
+        groupId = "\${kafka.statistikk-inn.groupid}",
         topicPartitions = [TopicPartition(topic = "\${kafka.statistikk-inn.topic}",
             partitionOffsets = [PartitionOffset(partition = "0", initialOffset = "1905")])])
     fun consumeOpprettelseMelding(hendelse: String, cr: ConsumerRecord<String, String>, acknowledgment: Acknowledgment) {
