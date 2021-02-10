@@ -96,17 +96,14 @@ class StatistikkListener(
         MDC.putCloseable("x_request_id", UUID.randomUUID().toString()).use {
             try {
                 val sedHendelseRina = SedHendelseRina.fromJson(hendelse)
+                val vedtaksId = sedInfoService.hentVedtaksId(sedHendelseRina.rinaSakId, sedHendelseRina.rinaDokumentId)
+                val sedMeldingUt = sedInfoService.populerSedMeldingUt(
+                    sedHendelseRina.rinaSakId,
+                    sedHendelseRina.rinaDokumentId,
+                    vedtaksId,
+                    HendelseType.SED_SENDT)
 
-                sedInfoService.hentLagretSedhendelse(sedHendelseRina.rinaSakId, sedHendelseRina.rinaDokumentId).let {
-                    if (it != null) {
-                        logger.debug(it.toJson())
-                        it.hendelseType = HendelseType.SED_SENDT
-                        statistikkPublisher.publiserSedHendelse(it)
-                    }
-                    else{
-                        logger.error("Noe gikk galt under behandling av statistikk-sed-hendelse:\n $hendelse \n", sedHendelseRina)
-                    }
-                }
+                statistikkPublisher.publiserSedHendelse(sedMeldingUt)
 
             } catch (ex: Exception) {
                 logger.error("Noe gikk galt under behandling av statistikk-sed-hendelse:\n $hendelse \n", ex)

@@ -25,29 +25,34 @@ class HendelsesAggregeringsService(private val euxService: EuxService,
     private val logger = LoggerFactory.getLogger(HendelsesAggregeringsService::class.java)
 
     fun aggregateSedOpprettetData(melding: OpprettelseMelding): SedMeldingUt? {
+        val sedHendelse = populerSedMeldingUt(melding.rinaid,
+            melding.dokumentId!!,
+            melding.vedtaksId,
+            HendelseType.SED_OPPRETTET)
+        lagreSedHendelse(sedHendelse)
 
-        val sed = euxService.getSed(melding.rinaid, melding.dokumentId!!)
-        val bucMetadata = euxService.getBucMetadata(melding.rinaid)
+        return sedHendelse
+    }
 
+    fun populerSedMeldingUt(rinaid: String, dokumentId: String, vedtaksId: String?, hendelseType: HendelseType): SedMeldingUt {
+
+        val sed = euxService.getSed(rinaid, dokumentId)
+        val bucMetadata = euxService.getBucMetadata(rinaid)
         val mottakerLand = populerMottakerland(bucMetadata!!)
 
-        val sedHendelse = SedMeldingUt(
-            rinaid = melding.rinaid,
-            dokumentId = melding.dokumentId,
-            hendelseType = HendelseType.SED_SENDT,
+        return SedMeldingUt(
+            rinaid = rinaid,
+            dokumentId = dokumentId,
+            hendelseType = hendelseType,
             bucType = bucMetadata.processDefinitionName,
             sedType = sed?.sed!!,
             pesysSakId = sed.nav.eessisak?.firstOrNull()?.saksnummer,
             pid = sed.nav.bruker?.person?.pin?.firstOrNull { it.land == "NO" }?.identifikator,
-            opprettetTidspunkt = getTimeStampFromSedMetaDataInBuc(bucMetadata, melding.dokumentId),
-            vedtaksId = melding.vedtaksId,
+            opprettetTidspunkt = getTimeStampFromSedMetaDataInBuc(bucMetadata, dokumentId),
+            vedtaksId = vedtaksId,
             mottakerLand = mottakerLand,
             rinaDokumentVersjon = "1"
         )
-
-        lagreSedHendelse(sedHendelse)
-
-        return sedHendelse
     }
 
     private fun populerMottakerland(bucMetadata: BucMetadata): List<String> {
@@ -67,24 +72,13 @@ class HendelsesAggregeringsService(private val euxService: EuxService,
     }
 
 
-    fun hentLagretSedhendelse(rinaSakId: String, rinaDokumentId: String): SedMeldingUt? {
+    fun hentVedtaksId(rinaSakId: String, rinaDokumentId: String): String? {
         val path = "$rinaSakId/$rinaDokumentId"
         logger.info("Getting SedhendelseID: $rinaSakId from $path")
 
         val sedHendelseAsJson = s3StorageService.get(path)
 
-        val utHendelse = sedHendelseAsJson?.let { mapJsonToAny(it, typeRefs<SedMeldingUt>()) }
-
-        val bucMetadata = euxService.getBucMetadata(rinaSakId)
-        val version = bucMetadata?.documents
-            ?.flatMap { it.versions }
-            ?.size
-
-        version.let {
-            utHendelse?.rinaDokumentVersjon = it.toString()
-        }
-
-        return utHendelse
+        return sedHendelseAsJson?.let { mapJsonToAny(it, typeRefs<SedMeldingUt>()) }?.vedtaksId
         }
 
     fun aggregateBucData(opprettelseMelding: OpprettelseMelding): BucOpprettetMeldingUt {
