@@ -26,6 +26,10 @@ class KafkaConfig {
             val statisikkListener = registry.getListenerContainer("statistikkListener")
             statisikkListener.containerProperties.authorizationExceptionRetryInterval = Duration.ofSeconds(4L)
             statisikkListener.start()
+
+            val sedSendtListener = registry.getListenerContainer("sedSendtListener")
+            sedSendtListener.containerProperties.authorizationExceptionRetryInterval = Duration.ofSeconds(4L)
+            sedSendtListener.start()
         }
     }
 
