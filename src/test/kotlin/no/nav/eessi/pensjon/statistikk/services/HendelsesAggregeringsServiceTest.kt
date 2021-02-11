@@ -30,14 +30,14 @@ internal class HendelsesAggregeringsServiceTest {
         val dokumentId = "222"
         val rinaid = "111"
         val vedtaksId = "333"
-        val mottakerland = listOf("NO")
+        val mottakerland = listOf("SE")
 
         every { euxService.getBucMetadata(any())} returns BucMetadata (
             listOf(Document(dokumentId,
                 "2020-12-08T09:52:55.345+0000",
                 conversations = listOf(Conversation(listOf(
-                    Participant(Organisation("NO")),
-                    Participant(Organisation("NO"))
+                    Participant("Sender", Organisation("NO")),
+                    Participant("Receiver", Organisation("SE"))
                 ))),
                 versions = listOf(Version("1"),Version("2"),Version("3")))),
             BucType.P_BUC_01, "2020-12-08T09:52:55.345+0000")

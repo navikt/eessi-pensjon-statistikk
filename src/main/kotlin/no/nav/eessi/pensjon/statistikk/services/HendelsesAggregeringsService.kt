@@ -63,6 +63,7 @@ class HendelsesAggregeringsService(private val euxService: EuxService,
         val list : List<Participant> = bucMetadata.documents
             .flatMap { it.conversations }
             .flatMap { it.participants.orEmpty() }
+            .filter { it.role == "Receiver" }
             .toList()
 
         return list.map { it.organisation.countryCode }.distinct()

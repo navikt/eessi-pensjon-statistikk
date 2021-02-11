@@ -33,6 +33,6 @@ data class Version(var id: String)
 
 data class Conversation (var participants: List<Participant>?)
 
-data class Participant (val organisation: Organisation)
+data class Participant (val role: String, val organisation: Organisation)
 
 data class Organisation (val countryCode: String)

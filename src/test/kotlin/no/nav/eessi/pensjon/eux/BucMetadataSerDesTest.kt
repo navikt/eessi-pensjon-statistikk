@@ -13,10 +13,9 @@ internal class BucMetadataSerDesTest{
     fun `Sjekker at serialisering virker`() {
         val model = BucMetadata(
             listOf(Document("", "2020-12-08T09:52:55.345+0000",
-                conversations = listOf(Conversation(
-                    participants = listOf(Participant(
-                        organisation = Organisation("NO")
-                    )))), versions = listOf(Version("1")))
+                listOf(Conversation(
+                    listOf(Participant("Receiver", Organisation("SE")
+                    )))), listOf(Version("1")))
             ),
             BucType.P_BUC_01,
             "2020-11-08T09:52:55.345+0000")
