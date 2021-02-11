@@ -8,18 +8,18 @@ import no.nav.eessi.pensjon.eux.BucType
 import no.nav.eessi.pensjon.eux.SedType
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-data class SedMeldingUt (
+open class SedMeldingUt (
     val dokumentId: String,
     val bucType: BucType,
     val rinaid: String,
     val mottakerLand: List<String>? = null,
-    var rinaDokumentVersjon: String,
+    val rinaDokumentVersjon: String,
     val sedType: SedType,
-    var pid: String? = null,
-    var hendelseType: HendelseType,
-    var pesysSakId: String? = null,
-    var opprettetTidspunkt: String,
-    var vedtaksId: String? = null){
+    val pid: String? = null,
+    val hendelseType: HendelseType,
+    val pesysSakId: String? = null,
+    val opprettetTidspunkt: String,
+    val vedtaksId: String? = null){
 
     companion object {
         private val sedMapper: ObjectMapper =
