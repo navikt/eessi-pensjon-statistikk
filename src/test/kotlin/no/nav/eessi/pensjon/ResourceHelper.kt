@@ -9,13 +9,13 @@ class ResourceHelper {
 
     companion object {
         fun getResourceBucMetadata(resourcePath: String): BucMetadata {
-            val json = javaClass.classLoader.getResource(resourcePath)!!.readText()
+            val json = this::class.java.classLoader.getResource(resourcePath)!!.readText()
             return mapJsonToAny(json, typeRefs())
         }
 
 
         fun getResourceSed(resourcePath: String) : Sed {
-            val json = javaClass.classLoader.getResource(resourcePath)!!.readText()
+            val json = this::class.java.classLoader.getResource(resourcePath)!!.readText()
             return mapJsonToAny(json, typeRefs())
         }
     }

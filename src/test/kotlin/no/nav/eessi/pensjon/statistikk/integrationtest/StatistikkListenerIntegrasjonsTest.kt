@@ -103,7 +103,7 @@ class StatistikkListenerIntegrasjonsTest {
 
     @Test
     fun `En buc-hendelse skal sendes videre til riktig kanal  `() {
-        val bucMetadata  = BucMetadata ("", "", listOf(), BucType.P_BUC_01, "2020-12-08T09:52:55.345+0000")
+        val bucMetadata  = BucMetadata (listOf(), BucType.P_BUC_01, "2020-12-08T09:52:55.345+0000")
 
         whenever(euxService.getBucMetadata(any())).thenReturn(bucMetadata)
 

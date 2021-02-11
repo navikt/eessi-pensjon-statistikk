@@ -11,8 +11,7 @@ import org.skyscreamer.jsonassert.JSONCompareMode
 internal class BucMetadataSerDesTest{
     @Test
     fun `Sjekker at serialisering virker`() {
-        val model = BucMetadata("1",
-            "4",
+        val model = BucMetadata(
             listOf(Document("", "2020-12-08T09:52:55.345+0000",
                 conversations = listOf(Conversation(
                     participants = listOf(Participant(
@@ -36,7 +35,10 @@ internal class BucMetadataSerDesTest{
 
         JSONAssert.assertEquals(buc, result, JSONCompareMode.LENIENT)
         assertEquals(
-            model.documents[0].conversations?.get(0)?.participants?.get(0)?.organisation?.countryCode,
+            model.documents[0]
+                .conversations[0]
+                .participants?.get(0)
+                ?.organisation?.countryCode,
             "NO"
         )
     }

@@ -32,7 +32,7 @@ internal class HendelsesAggregeringsServiceTest {
         val vedtaksId = "333"
         val mottakerland = listOf("NO")
 
-        every { euxService.getBucMetadata(any())} returns BucMetadata ("", "",
+        every { euxService.getBucMetadata(any())} returns BucMetadata (
             listOf(Document(dokumentId,
                 "2020-12-08T09:52:55.345+0000",
                 conversations = listOf(Conversation(listOf(
