@@ -51,7 +51,7 @@ class HendelsesAggregeringsService(private val euxService: EuxService,
             opprettetTidspunkt = getTimeStampFromSedMetaDataInBuc(bucMetadata, dokumentId),
             vedtaksId = vedtaksId,
             mottakerLand = mottakerLand,
-            rinaDokumentVersjon = "1"
+            rinaDokumentVersjon = bucMetadata.documents.filter { it.id == dokumentId }[0].versions.size.toString()
         )
     }
 

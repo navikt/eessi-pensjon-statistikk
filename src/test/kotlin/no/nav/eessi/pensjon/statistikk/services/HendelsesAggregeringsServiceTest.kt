@@ -41,7 +41,7 @@ internal class HendelsesAggregeringsServiceTest {
                     Participant(Organisation("NO")),
                     Participant(Organisation("NO"))
                 ))),
-                versions = listOf(Version("1")))),
+                versions = listOf(Version("1"),Version("2"),Version("3")))),
             BucType.P_BUC_01, "2020-12-08T09:52:55.345+0000")
         every { euxService.getSed(any(), any()) } returns Sed(Nav(null, listOf(Sak("", pesysSaksID))), sed = SedType.P2100)
 
@@ -54,5 +54,6 @@ internal class HendelsesAggregeringsServiceTest {
         assertEquals(sedOpprettetMeldingUt?.opprettetTidspunkt, "2020-12-08T09:52:55.345Z")
         assertEquals(sedOpprettetMeldingUt?.vedtaksId, vedtaksId)
         assertEquals(sedOpprettetMeldingUt?.mottakerLand, mottakerland)
+        assertEquals(sedOpprettetMeldingUt?.rinaDokumentVersjon, "3")
     }
 }
