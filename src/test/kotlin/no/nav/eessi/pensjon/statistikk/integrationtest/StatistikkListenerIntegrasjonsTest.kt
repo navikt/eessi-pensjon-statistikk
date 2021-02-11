@@ -11,8 +11,8 @@ import no.nav.eessi.pensjon.eux.EuxService
 import no.nav.eessi.pensjon.json.toJson
 import no.nav.eessi.pensjon.security.sts.STSService
 import no.nav.eessi.pensjon.services.storage.amazons3.S3StorageService
+import no.nav.eessi.pensjon.statistikk.listener.OpprettelseMelding
 import no.nav.eessi.pensjon.statistikk.listener.StatistikkListener
-import no.nav.eessi.pensjon.statistikk.models.OpprettelseMelding
 import no.nav.eessi.pensjon.statistikk.models.OpprettelseType
 import no.nav.eessi.pensjon.statistikk.services.StatistikkPublisher
 import org.junit.jupiter.api.AfterEach
@@ -109,7 +109,7 @@ class StatistikkListenerIntegrasjonsTest {
 
         val budMelding = OpprettelseMelding(
             opprettelseType = OpprettelseType.BUC,
-            rinaid = "123",
+            rinaId = "123",
             dokumentId = "d740047e730f475aa34ae59f62e3bb99",
             vedtaksId = null
         )

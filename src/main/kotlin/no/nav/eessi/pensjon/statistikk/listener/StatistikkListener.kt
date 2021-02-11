@@ -2,9 +2,7 @@ package no.nav.eessi.pensjon.statistikk.listener
 
 import no.nav.eessi.pensjon.json.toJson
 import no.nav.eessi.pensjon.statistikk.models.HendelseType
-import no.nav.eessi.pensjon.statistikk.models.OpprettelseMelding
 import no.nav.eessi.pensjon.statistikk.models.OpprettelseType
-import no.nav.eessi.pensjon.statistikk.models.SedHendelseRina
 import no.nav.eessi.pensjon.statistikk.services.HendelsesAggregeringsService
 import no.nav.eessi.pensjon.statistikk.services.StatistikkPublisher
 import org.apache.kafka.clients.consumer.ConsumerRecord
@@ -42,11 +40,11 @@ class StatistikkListener(
 
                 when(melding.opprettelseType){
                     OpprettelseType.BUC -> {
-                        val bucHendelse = sedInfoService.aggregateBucData(melding)
+                        val bucHendelse = sedInfoService.aggregateBucData(melding.rinaId)
                         statistikkPublisher.publiserBucOpprettetStatistikk(bucHendelse)
                     }
                     OpprettelseType.SED -> {
-                        val sedHendelse = sedInfoService.aggregateSedOpprettetData(melding)
+                        val sedHendelse = sedInfoService.aggregateSedOpprettetData(melding.rinaId, melding.dokumentId!!, melding.vedtaksId)
                         if (sedHendelse != null) {
                             statistikkPublisher.publiserSedHendelse(sedHendelse)
                         }

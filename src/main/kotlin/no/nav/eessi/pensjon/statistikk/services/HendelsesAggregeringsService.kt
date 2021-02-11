@@ -11,7 +11,6 @@ import no.nav.eessi.pensjon.json.typeRefs
 import no.nav.eessi.pensjon.services.storage.amazons3.S3StorageService
 import no.nav.eessi.pensjon.statistikk.models.BucOpprettetMeldingUt
 import no.nav.eessi.pensjon.statistikk.models.HendelseType
-import no.nav.eessi.pensjon.statistikk.models.OpprettelseMelding
 import no.nav.eessi.pensjon.statistikk.models.SedMeldingUt
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
@@ -24,17 +23,22 @@ class HendelsesAggregeringsService(private val euxService: EuxService,
     private val offsetTimeDatePattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
     private val logger = LoggerFactory.getLogger(HendelsesAggregeringsService::class.java)
 
-    fun aggregateSedOpprettetData(melding: OpprettelseMelding): SedMeldingUt? {
-        val sedHendelse = populerSedMeldingUt(melding.rinaid,
-            melding.dokumentId!!,
-            melding.vedtaksId,
+    fun aggregateSedOpprettetData(rinaId: String,
+                                  dokumentId: String,
+                                  vedtaksId: String?): SedMeldingUt? {
+        val sedHendelse = populerSedMeldingUt(rinaId,
+            dokumentId,
+            vedtaksId,
             HendelseType.SED_OPPRETTET)
         lagreSedHendelse(sedHendelse)
 
         return sedHendelse
     }
 
-    fun populerSedMeldingUt(rinaid: String, dokumentId: String, vedtaksId: String?, hendelseType: HendelseType): SedMeldingUt {
+    fun populerSedMeldingUt(rinaid: String,
+                            dokumentId: String,
+                            vedtaksId: String?,
+                            hendelseType: HendelseType): SedMeldingUt {
 
         val sed = euxService.getSed(rinaid, dokumentId)
         val bucMetadata = euxService.getBucMetadata(rinaid)
@@ -81,15 +85,15 @@ class HendelsesAggregeringsService(private val euxService: EuxService,
         return sedHendelseAsJson?.let { mapJsonToAny(it, typeRefs<SedMeldingUt>()) }?.vedtaksId
         }
 
-    fun aggregateBucData(opprettelseMelding: OpprettelseMelding): BucOpprettetMeldingUt {
+    fun aggregateBucData(rinaId: String): BucOpprettetMeldingUt {
 
-        logger.info("Aggregering for BUC ${opprettelseMelding.rinaid}")
+        logger.info("Aggregering for BUC $rinaId")
         val timeStamp : String?
 
-        val bucMetadata = euxService.getBucMetadata(opprettelseMelding.rinaid)!!
+        val bucMetadata = euxService.getBucMetadata(rinaId)!!
         val bucType = bucMetadata.processDefinitionName
         timeStamp = BucMetadata.offsetTimeStamp(bucMetadata.startDate)
-        return BucOpprettetMeldingUt(bucType, HendelseType.BUC_OPPRETTET, opprettelseMelding.rinaid, timeStamp)
+        return BucOpprettetMeldingUt(bucType, HendelseType.BUC_OPPRETTET, rinaId, timeStamp)
 
     }
 

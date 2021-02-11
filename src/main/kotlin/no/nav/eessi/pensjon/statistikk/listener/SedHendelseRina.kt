@@ -1,4 +1,4 @@
-package no.nav.eessi.pensjon.statistikk.models
+package no.nav.eessi.pensjon.statistikk.listener
 
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper

@@ -15,16 +15,14 @@ import no.nav.eessi.pensjon.eux.Sed
 import no.nav.eessi.pensjon.eux.SedType
 import no.nav.eessi.pensjon.eux.Version
 import no.nav.eessi.pensjon.services.storage.amazons3.S3StorageService
-import no.nav.eessi.pensjon.statistikk.models.OpprettelseMelding
-import no.nav.eessi.pensjon.statistikk.models.OpprettelseType
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
 internal class HendelsesAggregeringsServiceTest {
 
-    var euxService = mockk<EuxService>(relaxed = true)
-    var s3Service = mockk<S3StorageService>(relaxed = true)
-    var infoService = HendelsesAggregeringsService(euxService,  s3Service)
+    private var euxService = mockk<EuxService>(relaxed = true)
+    private var s3Service = mockk<S3StorageService>(relaxed = true)
+    private var infoService = HendelsesAggregeringsService(euxService,  s3Service)
 
     @Test
     fun aggregateSedData() {
@@ -44,9 +42,7 @@ internal class HendelsesAggregeringsServiceTest {
                 versions = listOf(Version("1"),Version("2"),Version("3")))),
             BucType.P_BUC_01, "2020-12-08T09:52:55.345+0000")
         every { euxService.getSed(any(), any()) } returns Sed(Nav(null, listOf(Sak("", pesysSaksID))), sed = SedType.P2100)
-
-        val melding = OpprettelseMelding(rinaid = rinaid, dokumentId = dokumentId, opprettelseType = OpprettelseType.SED, vedtaksId = vedtaksId)
-        val sedOpprettetMeldingUt = infoService.aggregateSedOpprettetData(melding);
+        val sedOpprettetMeldingUt = infoService.aggregateSedOpprettetData(rinaid, dokumentId, vedtaksId)
 
         assertEquals(sedOpprettetMeldingUt?.rinaid, rinaid)
         assertEquals(sedOpprettetMeldingUt?.dokumentId, dokumentId)
