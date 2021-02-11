@@ -3,13 +3,14 @@ package no.nav.eessi.pensjon.statistikk.models
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import no.nav.eessi.pensjon.eux.BucType
 import no.nav.eessi.pensjon.eux.SedType
 
 data class SedHendelseRina(
     val id: Long? = 0,
     val sedId: String? = null,
     val sektorKode: String,
-    val bucType: String? = null,
+    val bucType: BucType,
     val rinaSakId: String,
     val avsenderId: String? = null,
     val avsenderNavn: String? = null,
