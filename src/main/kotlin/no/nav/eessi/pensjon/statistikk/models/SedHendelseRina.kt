@@ -10,7 +10,7 @@ data class SedHendelseRina(
     val id: Long? = 0,
     val sedId: String? = null,
     val sektorKode: String,
-    val bucType: BucType,
+    val bucType: BucType? = null,
     val rinaSakId: String,
     val avsenderId: String? = null,
     val avsenderNavn: String? = null,
