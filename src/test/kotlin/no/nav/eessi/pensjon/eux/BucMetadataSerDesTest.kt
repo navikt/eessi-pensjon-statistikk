@@ -28,7 +28,7 @@ internal class BucMetadataSerDesTest{
 
     @Test
     fun `Sjekker at deserialisering gir riktig verdi`() {
-        val buc = ResourceHelper.getResourceBucMetadata("buc/BucMedP2000.json").toJson()
+        val buc = ResourceHelper.getResourceBucMetadata("buc/bucMedP2000.json").toJson()
         val model = BucMetadata.fromJson(buc)
         val result = mapAnyToJson(model)
 

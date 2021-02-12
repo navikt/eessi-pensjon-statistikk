@@ -183,7 +183,7 @@ class StatistikkListenerIntegrasjonsTest {
                     HttpResponse.response()
                         .withHeader(Header("Content-Type", "application/json; charset=utf-8"))
                         .withStatusCode(HttpStatusCode.OK_200.code())
-                        .withBody(String(Files.readAllBytes(Paths.get("src/test/resources/buc/BucMedP2000.json"))))
+                        .withBody(String(Files.readAllBytes(Paths.get("src/test/resources/buc/bucMedP2000.json"))))
                 )
         }
 

@@ -8,7 +8,7 @@ import no.nav.eessi.pensjon.eux.BucType
 import no.nav.eessi.pensjon.eux.SedType
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-data class SedMeldingUt (
+open class SedMeldingUt (
     val dokumentId: String,
     val bucType: BucType,
     val rinaid: String,

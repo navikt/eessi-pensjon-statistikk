@@ -11,7 +11,14 @@ class SedSerDesTest {
 
     @Test
     fun `Sjekker at serialisering virker`() {
-        val model = Sed(Nav(null, listOf(Sak("", ""))), sed = SedType.P2100)
+        val model = Sed(
+            Nav(null, listOf(Sak("", ""))),
+            sed = SedType.P2100,
+            pensjon = Pensjon(
+                vedtak = listOf(Vedtak(type = "02", resultat = "04", beregning = listOf(Beregning(belopBrutto = BeloepBrutto("10000"), valuta = "NOK")))),
+                tilleggsinformasjon = Tilleggsinformasjon("")
+            )
+        )
         val serialized = model.toJson()
         val result = Sed.fromJson(serialized)
 
@@ -21,6 +28,15 @@ class SedSerDesTest {
     @Test
     fun `Sjekker at deserialisering gir riktig verdi`() {
         val sed = getResourceSed("sed/P2000-preutfylt-fnr-og-sakid.json").toJson()
+        val model = Sed.fromJson(sed)
+        val result = mapAnyToJson(model)
+
+        JSONAssert.assertEquals(sed, result, JSONCompareMode.LENIENT)
+    }
+
+    @Test
+    fun `Sjekker at deserialisering gir riktig verdi P6000`() {
+        val sed = getResourceSed("sed/P6000-komplett.json").toJson()
         val model = Sed.fromJson(sed)
         val result = mapAnyToJson(model)
 

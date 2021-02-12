@@ -34,7 +34,7 @@ internal class EuxServiceTest {
 
     @Test
     fun `Se timestamp konverters fra zone til offsettDateTime`() {
-        val gyldigBuc : BucMetadata = getResourceBucMetadata("buc/BucMedP2000.json")
+        val gyldigBuc : BucMetadata = getResourceBucMetadata("buc/bucMedP2000.json")
         val mockEuxRinaid = "123456"
         val mockEuxDocumentId = "d740047e730f475aa34ae59f62e3bb99"
 
