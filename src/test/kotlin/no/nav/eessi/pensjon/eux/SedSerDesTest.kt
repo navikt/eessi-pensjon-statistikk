@@ -15,7 +15,7 @@ class SedSerDesTest {
             Nav(null, listOf(Sak("", ""))),
             sed = SedType.P2100,
             pensjon = Pensjon(
-                vedtak = listOf(Vedtak(type = "02", resultat = "04", beregning = listOf(Beregning(belopBrutto = BeloepBrutto("10000"), valuta = "NOK", belopNetto = BeloepNetto("8000"))))),
+                vedtak = listOf(Vedtak(type = "02", resultat = "04", beregning = listOf(Beregning(beloepBrutto = BeloepBrutto("10000"), valuta = "NOK", beloepNetto = BeloepNetto("8000"))))),
                 tilleggsinformasjon = Tilleggsinformasjon("")
             )
         )
@@ -34,12 +34,4 @@ class SedSerDesTest {
         JSONAssert.assertEquals(sed, result, JSONCompareMode.LENIENT)
     }
 
-    @Test
-    fun `Sjekker at deserialisering gir riktig verdi P6000`() {
-        val sed = getResourceSed("sed/P6000-komplett.json").toJson()
-        val model = Sed.fromJson(sed)
-        val result = mapAnyToJson(model)
-
-        JSONAssert.assertEquals(sed, result, JSONCompareMode.LENIENT)
-    }
 }
