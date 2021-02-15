@@ -26,7 +26,7 @@ internal class SedOpprettetMeldingUtSerDesTest {
         )
         val serialized = model.toJson()
         print(serialized)
-        val result = SedMeldingUt.fromJson(serialized)
+        val result = SedMeldingP6000Ut.fromJson(serialized)
 
         JSONAssert.assertEquals(serialized, result.toJson(), JSONCompareMode.LENIENT)
     }
@@ -48,7 +48,7 @@ internal class SedOpprettetMeldingUtSerDesTest {
           "vedtaksId" : "666"
         }""".trimMargin()
 
-        val model = SedMeldingUt.fromJson(json)
+        val model = SedMeldingP6000Ut.fromJson(json)
 
         val result = mapAnyToJson(model)
         JSONAssert.assertEquals(json, result, JSONCompareMode.LENIENT)

@@ -26,13 +26,14 @@ class Adresse(val land: String?)
 
 class Pensjon(val vedtak: List<Vedtak>?, val tilleggsinformasjon: Tilleggsinformasjon)
 
-class Vedtak(val type: String?, resultat: String?, beregning: List<Beregning>?)
+//rinamapping:  resultat == vedtakstype
+class Vedtak(val type: String?, val resultat: String?, val beregning: List<Beregning>?)
 
-class Beregning(val belopBrutto: BeloepBrutto?, valuta: String?)
+class Beregning(val belopBrutto: BeloepBrutto?, val valuta: String?,  val belopNetto: BeloepNetto?)
 
-class BeloepBrutto(beloep: String?)
+class BeloepBrutto(val beloep: String?)
 
-class BeloepNetto(beloep: String?)
+class BeloepNetto(val beloep: String?)
 
 class Tilleggsinformasjon(val artikkel48: String?)
 

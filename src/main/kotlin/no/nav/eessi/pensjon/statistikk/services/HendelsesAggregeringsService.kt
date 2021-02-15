@@ -1,9 +1,11 @@
 package no.nav.eessi.pensjon.statistikk.services
 
+import no.nav.eessi.pensjon.eux.Beregning
 import no.nav.eessi.pensjon.eux.BucMetadata
 import no.nav.eessi.pensjon.eux.Document
 import no.nav.eessi.pensjon.eux.EuxService
 import no.nav.eessi.pensjon.eux.Participant
+import no.nav.eessi.pensjon.eux.Vedtak
 import no.nav.eessi.pensjon.json.mapAnyToJson
 import no.nav.eessi.pensjon.json.mapJsonToAny
 import no.nav.eessi.pensjon.json.toJson
@@ -11,6 +13,7 @@ import no.nav.eessi.pensjon.json.typeRefs
 import no.nav.eessi.pensjon.services.storage.amazons3.S3StorageService
 import no.nav.eessi.pensjon.statistikk.models.BucOpprettetMeldingUt
 import no.nav.eessi.pensjon.statistikk.models.HendelseType
+import no.nav.eessi.pensjon.statistikk.models.SedMeldingP6000Ut
 import no.nav.eessi.pensjon.statistikk.models.SedMeldingUt
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
@@ -43,20 +46,45 @@ class HendelsesAggregeringsService(private val euxService: EuxService,
         val sed = euxService.getSed(rinaid, dokumentId)
         val bucMetadata = euxService.getBucMetadata(rinaid)
         val mottakerLand = populerMottakerland(bucMetadata!!)
+        val beregning  = hentBeregning(sed?.pensjon?.vedtak)
 
-        return SedMeldingUt(
-            rinaid = rinaid,
-            dokumentId = dokumentId,
-            hendelseType = hendelseType,
-            bucType = bucMetadata.processDefinitionName,
-            sedType = sed?.sed!!,
-            pesysSakId = sed.nav.eessisak?.firstOrNull()?.saksnummer,
-            pid = sed.nav.bruker?.person?.pin?.firstOrNull { it.land == "NO" }?.identifikator,
-            opprettetTidspunkt = getTimeStampFromSedMetaDataInBuc(bucMetadata, dokumentId),
-            vedtaksId = vedtaksId,
-            mottakerLand = mottakerLand,
-            rinaDokumentVersjon = bucMetadata.documents.filter { it.id == dokumentId }[0].versions.size.toString()
-        )
+        return when(hendelseType){
+            HendelseType.SED_SENDT ->  SedMeldingP6000Ut(
+                rinaid = rinaid,
+                dokumentId = dokumentId,
+                hendelseType = hendelseType,
+                bucType = bucMetadata.processDefinitionName,
+                sedType = sed!!.sed,
+                pesysSakId = sed.nav.eessisak?.firstOrNull()?.saksnummer,
+                pid = sed.nav.bruker?.person?.pin?.firstOrNull { it.land == "NO" }?.identifikator,
+                opprettetTidspunkt = getTimeStampFromSedMetaDataInBuc(bucMetadata, dokumentId),
+                vedtaksId = vedtaksId,
+                mottakerLand = mottakerLand,
+                rinaDokumentVersjon = bucMetadata.documents.filter { it.id == dokumentId }[0].versions.size.toString(),
+                bostedsland =  sed.nav.bruker?.adresse?.land,
+                bruttoBelop = beregning?.belopBrutto?.beloep,
+                nettoBelop = beregning?.belopNetto?.beloep,
+                valuta = beregning?.valuta,
+                anmodningOmRevurdering = sed.pensjon?.tilleggsinformasjon?.artikkel48
+            )
+            else -> SedMeldingUt(
+                rinaid = rinaid,
+                dokumentId = dokumentId,
+                hendelseType = hendelseType,
+                bucType = bucMetadata.processDefinitionName,
+                sedType = sed?.sed!!,
+                pesysSakId = sed.nav.eessisak?.firstOrNull()?.saksnummer,
+                pid = sed.nav.bruker?.person?.pin?.firstOrNull { it.land == "NO" }?.identifikator,
+                opprettetTidspunkt = getTimeStampFromSedMetaDataInBuc(bucMetadata, dokumentId),
+                vedtaksId = vedtaksId,
+                mottakerLand = mottakerLand,
+                rinaDokumentVersjon = bucMetadata.documents.filter { it.id == dokumentId }[0].versions.size.toString()
+            )
+        }
+    }
+
+    private fun hentBeregning(vedtak: List<Vedtak>?): Beregning? {
+        return vedtak?.firstOrNull()?.beregning?.firstOrNull()
     }
 
     private fun populerMottakerland(bucMetadata: BucMetadata): List<String> {

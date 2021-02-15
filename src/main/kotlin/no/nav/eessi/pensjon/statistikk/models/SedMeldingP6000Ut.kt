@@ -1,5 +1,8 @@
 package no.nav.eessi.pensjon.statistikk.models
 
+import com.fasterxml.jackson.databind.DeserializationFeature
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import no.nav.eessi.pensjon.eux.BucType
 import no.nav.eessi.pensjon.eux.SedType
 
@@ -14,13 +17,13 @@ class SedMeldingP6000Ut(dokumentId: String,
                         pesysSakId: String? = null,
                         opprettetTidspunkt: String,
                         vedtaksId: String? = null,
-                        bostedsland: String? = null,
-                        pensjonsType: String? = null,
-                        vedtakStatus: String? = null,
-                        bruttoBelop: String? = null,
-                        nettoBelop: String? = null,
-                        valuta: String? = null,
-                        anmodningOmRevurdering: String?
+                        val bostedsland: String? = null,
+                        val pensjonsType: String? = null,
+                        val vedtakStatus: String? = null,
+                        val bruttoBelop: String? = null,
+                        val nettoBelop: String? = null,
+                        val valuta: String? = null,
+                        val anmodningOmRevurdering: String?
                         ):
     SedMeldingUt(dokumentId,
         bucType,
@@ -33,3 +36,10 @@ class SedMeldingP6000Ut(dokumentId: String,
         pesysSakId,
         opprettetTidspunkt,
         vedtaksId)
+{
+
+    companion object {
+        private val sedMapper: ObjectMapper = jacksonObjectMapper().configure(DeserializationFeature.READ_UNKNOWN_ENUM_VALUES_AS_NULL, true)
+        fun fromJson(json: String): SedMeldingP6000Ut = sedMapper.readValue(json, SedMeldingP6000Ut::class.java)
+    }
+}
