@@ -24,7 +24,7 @@ class Pin(val land: String, val identifikator: String)
 
 class Adresse(val land: String?)
 
-class Pensjon(val vedtak: List<Vedtak>?, val tilleggsinformasjon: Tilleggsinformasjon)
+class Pensjon(val vedtak: List<Vedtak>?, val tilleggsinformasjon: Tilleggsinformasjon?)
 
 //rinamapping:  resultat == vedtakstype
 class Vedtak(val type: String?, val resultat: String?, val beregning: List<Beregning>?)
