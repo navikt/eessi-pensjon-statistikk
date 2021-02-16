@@ -8,6 +8,8 @@ import no.nav.eessi.pensjon.eux.EuxService
 import no.nav.eessi.pensjon.eux.Sed
 import no.nav.eessi.pensjon.json.toJson
 import no.nav.eessi.pensjon.services.storage.amazons3.S3StorageService
+import no.nav.eessi.pensjon.statistikk.models.HendelseType
+import no.nav.eessi.pensjon.statistikk.models.SedMeldingP6000Ut
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
@@ -72,5 +74,42 @@ internal class HendelsesAggregeringsServiceTest {
         assertEquals(sedOpprettetMeldingUt?.mottakerLand, mottakerland)
         assertEquals(sedOpprettetMeldingUt?.rinaDokumentVersjon, "5")
 
+    }
+
+    @Test
+    fun `gitt en sed sendt for P6000 melding så populer SedMeldingUt `() {
+        //Mocker BUC
+        val bucJson = ResourceHelper.getResourceBucMetadata("buc/bucMedP6000.json").toJson()
+        val buc = BucMetadata.fromJson(bucJson)
+        every { euxService.getBucMetadata(any())} returns buc
+
+        // Mocker SED
+        val p6000Json = ResourceHelper.getResourceSed("sed/P6000-komplett.json").toJson()
+        val p6000 = Sed.fromJson(p6000Json)
+        every { euxService.getSed(any(), any()) } returns p6000
+
+        val dokumentId = "08e5310500a94640abfb309e481ca319"
+        val rinaId = "1271728"
+        val mottakerland = listOf("NO")
+
+        val sedOpprettetMeldingUt = infoService.populerSedMeldingUt(rinaId, dokumentId, null, HendelseType.SED_SENDT)
+            as SedMeldingP6000Ut
+
+        assertEquals(sedOpprettetMeldingUt.rinaid, rinaId)
+        assertEquals(sedOpprettetMeldingUt.dokumentId, dokumentId)
+        assertEquals(sedOpprettetMeldingUt.pesysSakId, "22919968")
+        assertEquals(sedOpprettetMeldingUt.opprettetTidspunkt, "2021-02-11T13:08:29.914Z")
+        assertEquals(sedOpprettetMeldingUt.vedtaksId, null)
+        assertEquals(sedOpprettetMeldingUt.mottakerLand, mottakerland)
+        assertEquals(sedOpprettetMeldingUt.rinaDokumentVersjon, "5")
+
+        //SedMeldingP6000Ut
+        assertEquals(sedOpprettetMeldingUt.bostedsland, "HR")
+        assertEquals(sedOpprettetMeldingUt.bruttoBelop, "12482")
+        assertEquals(sedOpprettetMeldingUt.nettoBelop, "10000")
+        assertEquals(sedOpprettetMeldingUt.valuta, "NOK")
+        assertEquals(sedOpprettetMeldingUt.anmodningOmRevurdering, "1")
+        assertEquals(sedOpprettetMeldingUt.pensjonsType, "03")
+        assertEquals(sedOpprettetMeldingUt.vedtakStatus, "04")
     }
 }

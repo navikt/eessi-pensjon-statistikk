@@ -65,7 +65,9 @@ class HendelsesAggregeringsService(private val euxService: EuxService,
                 bruttoBelop = beregning?.beloepBrutto?.beloep,
                 nettoBelop = beregning?.beloepNetto?.beloep,
                 valuta = beregning?.valuta,
-                anmodningOmRevurdering = sed.pensjon?.tilleggsinformasjon?.artikkel48
+                anmodningOmRevurdering = sed.pensjon?.tilleggsinformasjon?.artikkel48,
+                pensjonsType = sed.pensjon?.vedtak?.firstOrNull()?.type,
+                vedtakStatus = sed.pensjon?.vedtak?.firstOrNull()?.resultat
             )
             else -> SedMeldingUt(
                 rinaid = rinaid,
