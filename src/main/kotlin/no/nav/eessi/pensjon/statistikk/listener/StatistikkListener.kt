@@ -70,11 +70,10 @@ class StatistikkListener(
             try {
                 val sedHendelseRina = SedHendelseRina.fromJson(hendelse)
                 if (GyldigeHendelser.sendt(sedHendelseRina)) {
-                    val vedtaksId = sedInfoService.hentVedtaksId(sedHendelseRina.rinaSakId, sedHendelseRina.rinaDokumentId)
                     val sedMeldingUt = sedInfoService.populerSedMeldingUt(
                         sedHendelseRina.rinaSakId,
                         sedHendelseRina.rinaDokumentId,
-                        vedtaksId,
+                        null,
                         HendelseType.SED_MOTTATT
                     )
                     statistikkPublisher.publiserSedHendelse(sedMeldingUt)
