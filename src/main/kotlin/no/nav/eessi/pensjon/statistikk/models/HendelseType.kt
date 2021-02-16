@@ -6,5 +6,6 @@ package no.nav.eessi.pensjon.statistikk.models
 enum class HendelseType {
     BUC_OPPRETTET,
     SED_OPPRETTET,
-    SED_SENDT
+    SED_SENDT,
+    SED_MOTTATT
 }

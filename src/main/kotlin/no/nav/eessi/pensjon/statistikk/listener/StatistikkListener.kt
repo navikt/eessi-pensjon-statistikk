@@ -60,30 +60,32 @@ class StatistikkListener(
         }
     }
 
-
-/*   @KafkaListener(id = "sedMottattListener",
-            idIsGroup = false,
-            topics = ["\${kafka.statistikk-sed-mottatt.topic}"],
-            groupId = "\${kafka.statistikk-sed-mottatt.groupid}",
-            autoStartup = "false")
+    @KafkaListener(id = "sedMottattListener",
+        idIsGroup = false,
+        topics = ["\${kafka.statistikk-sed-mottatt.topic}"],
+        groupId = "\${kafka.statistikk-sed-mottatt.groupid}",
+        autoStartup = "false")
     fun consumeSedMottatt(hendelse: String, cr: ConsumerRecord<String, String>, acknowledgment: Acknowledgment) {
         MDC.putCloseable("x_request_id", UUID.randomUUID().toString()).use {
             try {
-                val sedHendelse = SedHendelse.fromJson(hendelse)
-                logger.info("*** Starter behandling av SED ${sedHendelse.sedType} BUCtype: ${sedHendelse.bucType} bucid: ${sedHendelse.rinaSakId} ***")
-
-                val sedHendelseAgg = sedInfoService.aggregateSedSendtData(sedHendelse)
-                statistikkPublisher.publiserSedHendelse(sedHendelseAgg)
-
-                logger.info("Acket statistikk (sed mottatt) med offset: ${cr.offset()} i partisjon ${cr.partition()}")
-
+                val sedHendelseRina = SedHendelseRina.fromJson(hendelse)
+                if (GyldigeHendelser.sendt(sedHendelseRina)) {
+                    val vedtaksId = sedInfoService.hentVedtaksId(sedHendelseRina.rinaSakId, sedHendelseRina.rinaDokumentId)
+                    val sedMeldingUt = sedInfoService.populerSedMeldingUt(
+                        sedHendelseRina.rinaSakId,
+                        sedHendelseRina.rinaDokumentId,
+                        vedtaksId,
+                        HendelseType.SED_MOTTATT
+                    )
+                    statistikkPublisher.publiserSedHendelse(sedMeldingUt)
+                }
             } catch (ex: Exception) {
                 logger.error("Noe gikk galt under behandling av statistikk-sed-hendelse:\n $hendelse \n", ex)
                 throw RuntimeException(ex.message)
             }
             latch.countDown()
         }
-    }*/
+    }
 
     @KafkaListener(id = "sedSendtListener",
         idIsGroup = false,

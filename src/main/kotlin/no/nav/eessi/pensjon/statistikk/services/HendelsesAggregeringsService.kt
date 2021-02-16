@@ -49,7 +49,7 @@ class HendelsesAggregeringsService(private val euxService: EuxService,
         val beregning  = hentBeregning(sed?.pensjon?.vedtak)
 
         return when(hendelseType){
-            HendelseType.SED_SENDT ->  SedMeldingP6000Ut(
+            HendelseType.SED_SENDT, HendelseType.SED_MOTTATT ->  SedMeldingP6000Ut(
                 rinaid = rinaid,
                 dokumentId = dokumentId,
                 hendelseType = hendelseType,
