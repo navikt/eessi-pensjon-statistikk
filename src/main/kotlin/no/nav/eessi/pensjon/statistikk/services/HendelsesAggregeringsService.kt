@@ -62,8 +62,8 @@ class HendelsesAggregeringsService(private val euxService: EuxService,
                 mottakerLand = mottakerLand,
                 rinaDokumentVersjon = bucMetadata.documents.filter { it.id == dokumentId }[0].versions.size.toString(),
                 bostedsland =  sed.nav.bruker?.adresse?.land,
-                bruttoBelop = beregning?.belopBrutto?.beloep,
-                nettoBelop = beregning?.belopNetto?.beloep,
+                bruttoBelop = beregning?.beloepBrutto?.beloep,
+                nettoBelop = beregning?.beloepNetto?.beloep,
                 valuta = beregning?.valuta,
                 anmodningOmRevurdering = sed.pensjon?.tilleggsinformasjon?.artikkel48
             )

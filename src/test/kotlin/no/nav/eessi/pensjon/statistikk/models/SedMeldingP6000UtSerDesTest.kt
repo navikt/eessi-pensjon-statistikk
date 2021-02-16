@@ -1,9 +1,12 @@
 package no.nav.eessi.pensjon.statistikk.models
 
+import no.nav.eessi.pensjon.ResourceHelper
 import no.nav.eessi.pensjon.eux.BucType
+import no.nav.eessi.pensjon.eux.Sed
 import no.nav.eessi.pensjon.eux.SedType
 import no.nav.eessi.pensjon.json.mapAnyToJson
 import no.nav.eessi.pensjon.json.toJson
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.skyscreamer.jsonassert.JSONAssert
 import org.skyscreamer.jsonassert.JSONCompareMode
@@ -65,5 +68,26 @@ internal class SedMeldingP6000UtSerDesTest{
 
         val result = mapAnyToJson(model)
         JSONAssert.assertEquals(json, result, JSONCompareMode.STRICT)
+    }
+
+    @Test
+    fun `Sjekker at deserialisering fra model fungerer for alle felt`() {
+        val sed = ResourceHelper.getResourceSed("sed/P6000-komplett.json").toJson()
+        val model = Sed.fromJson(sed)
+
+        val result = mapAnyToJson(model)
+        JSONAssert.assertEquals(sed, result, JSONCompareMode.STRICT)
+
+        val vedtak = model.pensjon?.vedtak?.firstOrNull()
+        assertEquals("04", vedtak?.resultat)
+        assertEquals("03", vedtak?.type)
+
+        val beregning = model.pensjon?.vedtak?.firstOrNull()?.beregning?.first()!!
+        assertEquals("12482", beregning.beloepBrutto?.beloep)
+        assertEquals("10000", beregning.beloepNetto?.beloep)
+        assertEquals("NOK", beregning.valuta)
+
+        assertEquals("1", model.pensjon?.tilleggsinformasjon?.artikkel48)
+        assertEquals("HR", model.nav.bruker?.adresse?.land)
     }
 }
