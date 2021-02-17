@@ -12,7 +12,7 @@ open class SedMeldingUt (
     val dokumentId: String,
     open val bucType: BucType,
     open val rinaid: String,
-    open val mottakerLand: List<String>? = null,
+    open val mottakerLand: List<String>,
     open val rinaDokumentVersjon: String,
     open val sedType: SedType,
     open val pid: String? = null,

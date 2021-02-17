@@ -9,7 +9,7 @@ import no.nav.eessi.pensjon.eux.SedType
 class SedMeldingP6000Ut(dokumentId: String,
                         override val bucType: BucType,
                         override val rinaid: String,
-                        override val mottakerLand: List<String>? = null,
+                        override val mottakerLand: List<String>,
                         override val rinaDokumentVersjon: String,
                         override val sedType: SedType,
                         override val pid: String? = null,
