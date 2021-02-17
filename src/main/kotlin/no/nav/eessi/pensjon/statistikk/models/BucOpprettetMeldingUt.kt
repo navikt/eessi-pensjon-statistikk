@@ -5,6 +5,6 @@ import no.nav.eessi.pensjon.eux.BucType
 data class BucOpprettetMeldingUt(
     val bucType: BucType,
     val hendelseType: HendelseType,
-    val rinaid: String,
+    val rinaId: String,
     val opprettetTidspunkt: String){
 }
