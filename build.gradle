@@ -68,9 +68,6 @@ dependencies {
         exclude module: "junit-vintage-engine"
     }
     testImplementation 'org.springframework.kafka:spring-kafka-test'
-    testCompileOnly('junit:junit:4.13') {
-        because "spring-kafka-test needs it - but we should not use it in our code"
-    }
 
     //aws and s3
     implementation 'com.amazonaws:aws-java-sdk-s3:1.11.942'
