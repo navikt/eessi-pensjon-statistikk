@@ -3,7 +3,7 @@ buildscript {
     ext {
         kotlinVersion = '1.4.30'
         springBootVersion = '2.3.2.RELEASE'
-        logstashLogbackVersion = '6.4'
+        logstashLogbackVersion = '6.6'
     }
 
     repositories {
@@ -28,11 +28,9 @@ buildscript {
 
 plugins {
     id 'com.github.ben-manes.versions' version '0.28.0'
-    id 'se.patrikerdes.use-latest-versions' version '0.2.14'
-    id "org.owasp.dependencycheck" version "5.3.2.1"
-    id "org.sonarqube" version "3.0"
-    id 'jacoco'
-    id 'com.adarshr.test-logger' version '2.0.0'
+    id 'se.patrikerdes.use-latest-versions' version '0.2.15'
+    id "org.owasp.dependencycheck" version "6.1.1"
+    id 'com.adarshr.test-logger' version '2.1.1'
 }
 
 assert JavaVersion.current().isJava11Compatible(): "Java 11 or newer is required"
@@ -53,10 +51,10 @@ configurations {
 dependencies {
 
     // Spring-boot
-    implementation("org.springframework.boot:spring-boot-starter-web")
-    implementation("org.springframework.boot:spring-boot-starter-aop")
-    implementation("org.springframework.boot:spring-boot-starter-actuator")
-    implementation("org.springframework.boot:spring-boot-actuator")
+    implementation("org.springframework.boot:spring-boot-starter-web:${springBootVersion}")
+    implementation("org.springframework.boot:spring-boot-starter-aop:${springBootVersion}")
+    implementation("org.springframework.boot:spring-boot-starter-actuator:${springBootVersion}")
+    implementation("org.springframework.boot:spring-boot-actuator:${springBootVersion}")
 
     implementation 'com.fasterxml.jackson.module:jackson-module-kotlin'
     implementation 'org.jetbrains.kotlin:kotlin-reflect'
@@ -73,16 +71,14 @@ dependencies {
     implementation 'com.amazonaws:aws-java-sdk-s3:1.11.942'
     testImplementation("io.findify:s3mock_2.12:0.2.5")
 
-    implementation("commons-io:commons-io:2.7")
-
     //mock - test
-    testImplementation("org.junit.jupiter:junit-jupiter:5.6.2")
-    testImplementation("org.junit.jupiter:junit-jupiter-params:5.6.2")
-    testImplementation('org.mockito:mockito-junit-jupiter:3.3.3')
+    testImplementation("org.junit.jupiter:junit-jupiter:5.7.1")
+    testImplementation("org.junit.jupiter:junit-jupiter-params:5.7.1")
+    testImplementation('org.mockito:mockito-junit-jupiter:3.8.0')
     testImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0")
-    testImplementation("org.mock-server:mockserver-client-java:5.5.1")
+    testImplementation("org.mock-server:mockserver-client-java:5.11.2")
     // Next version (5.5.4) fails, should be investigated
-    testImplementation("org.mock-server:mockserver-netty:5.5.1") {
+    testImplementation("org.mock-server:mockserver-netty:5.11.2") {
         exclude module: 'junit'
     }
     testImplementation "io.mockk:mockk:1.10.0"
@@ -204,18 +200,6 @@ wrapper {
     distributionType = Wrapper.DistributionType.ALL
 }
 
-// https://docs.gradle.org/current/userguide/jacoco_plugin.html
-jacoco {
-    toolVersion = "0.8.5"
-}
-
-jacocoTestReport {
-    reports {
-        xml.enabled true
-    }
-}
-
-tasks.sonarqube.dependsOn jacocoTestReport
 
 /* https://github.com/ben-manes/gradle-versions-plugin */
 dependencyUpdates {
