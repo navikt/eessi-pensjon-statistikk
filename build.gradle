@@ -213,6 +213,8 @@ jacocoTestReport {
     }
 }
 
+tasks.sonarqube.dependsOn tasks["jacocoTestReport"]
+
 /* https://github.com/ben-manes/gradle-versions-plugin */
 dependencyUpdates {
     rejectVersionIf {
