@@ -1,13 +1,8 @@
-package no.nav.eessi.pensjon.services.storage.amazons3
+package no.nav.eessi.pensjon.s3
 
 import com.amazonaws.AmazonServiceException
 import com.amazonaws.services.s3.AmazonS3
-import com.amazonaws.services.s3.model.BucketVersioningConfiguration
-import com.amazonaws.services.s3.model.CannedAccessControlList
-import com.amazonaws.services.s3.model.CreateBucketRequest
-import com.amazonaws.services.s3.model.ListObjectsV2Request
-import com.amazonaws.services.s3.model.S3Object
-import com.amazonaws.services.s3.model.SetBucketVersioningConfigurationRequest
+import com.amazonaws.services.s3.model.*
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.context.event.ApplicationReadyEvent

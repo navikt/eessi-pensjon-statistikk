@@ -5,7 +5,9 @@ import no.nav.eessi.pensjon.eux.BucType
 import no.nav.eessi.pensjon.eux.Sed
 import no.nav.eessi.pensjon.eux.SedType
 import no.nav.eessi.pensjon.json.mapAnyToJson
+import no.nav.eessi.pensjon.json.mapJsonToAny
 import no.nav.eessi.pensjon.json.toJson
+import no.nav.eessi.pensjon.json.typeRefs
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.skyscreamer.jsonassert.JSONAssert
@@ -35,16 +37,15 @@ internal class SedMeldingP6000UtSerDesTest{
             anmodningOmRevurdering = "1"
         )
 
-        val serialized = model.toJson()
-        print(serialized)
-        val result = SedMeldingP6000Ut.fromJson(serialized)
+        val p6000Json = model.toJson()
+        val result =  mapJsonToAny(p6000Json, typeRefs<SedMeldingP6000Ut>())
 
-        JSONAssert.assertEquals(serialized, result.toJson(), JSONCompareMode.STRICT)
+        JSONAssert.assertEquals(p6000Json, result.toJson(), JSONCompareMode.STRICT)
     }
 
     @Test
     fun `Sjekker at deserialisering gir riktig verdi`() {
-        val json = """{
+        val p6000Json = """{
               "dokumentId" : "111",
               "bucType" : "P_BUC_01",
               "rinaid" : "222",
@@ -64,10 +65,10 @@ internal class SedMeldingP6000UtSerDesTest{
               "valuta" : "NOK",
               "anmodningOmRevurdering" : "1"}""".trimMargin()
 
-        val model = SedMeldingP6000Ut.fromJson(json)
-
+        val model = mapJsonToAny(p6000Json, typeRefs<SedMeldingP6000Ut>())
         val result = mapAnyToJson(model)
-        JSONAssert.assertEquals(json, result, JSONCompareMode.STRICT)
+
+        JSONAssert.assertEquals(p6000Json, result, JSONCompareMode.STRICT)
     }
 
     @Test

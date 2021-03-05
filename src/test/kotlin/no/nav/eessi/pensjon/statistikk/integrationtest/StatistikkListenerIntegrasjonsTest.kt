@@ -9,8 +9,8 @@ import no.nav.eessi.pensjon.eux.BucMetadata
 import no.nav.eessi.pensjon.eux.BucType
 import no.nav.eessi.pensjon.eux.EuxService
 import no.nav.eessi.pensjon.json.toJson
+import no.nav.eessi.pensjon.s3.S3StorageService
 import no.nav.eessi.pensjon.security.sts.STSService
-import no.nav.eessi.pensjon.services.storage.amazons3.S3StorageService
 import no.nav.eessi.pensjon.statistikk.listener.OpprettelseMelding
 import no.nav.eessi.pensjon.statistikk.listener.StatistikkListener
 import no.nav.eessi.pensjon.statistikk.models.OpprettelseType

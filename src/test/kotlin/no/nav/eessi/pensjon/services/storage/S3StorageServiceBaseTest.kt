@@ -6,7 +6,7 @@ import com.amazonaws.client.builder.AwsClientBuilder
 import com.amazonaws.services.s3.AmazonS3
 import com.amazonaws.services.s3.AmazonS3ClientBuilder
 import io.findify.s3mock.S3Mock
-import no.nav.eessi.pensjon.services.storage.amazons3.S3StorageService
+import no.nav.eessi.pensjon.s3.S3StorageService
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.mockito.Mockito

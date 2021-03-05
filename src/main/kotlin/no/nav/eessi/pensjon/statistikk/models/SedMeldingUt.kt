@@ -1,9 +1,6 @@
 package no.nav.eessi.pensjon.statistikk.models
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
-import com.fasterxml.jackson.databind.DeserializationFeature
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import no.nav.eessi.pensjon.eux.BucType
 import no.nav.eessi.pensjon.eux.SedType
 
@@ -21,16 +18,8 @@ open class SedMeldingUt (
     open val opprettetTidspunkt: String,
     open val vedtaksId: String? = null){
 
-    companion object {
-        private val sedMapper: ObjectMapper =
-            jacksonObjectMapper().configure(DeserializationFeature.READ_UNKNOWN_ENUM_VALUES_AS_NULL, true)
-        fun fromJson(json: String): SedMeldingUt = sedMapper.readValue(json, SedMeldingUt::class.java)
-    }
-
     override fun toString(): String {
         return "SedMeldingUt(dokumentId='$dokumentId', bucType=$bucType, rinaid='$rinaid', mottakerLand=$mottakerLand, rinaDokumentVersjon='$rinaDokumentVersjon', sedType=$sedType, pid=$pid, hendelseType=$hendelseType, pesysSakId=$pesysSakId, opprettetTidspunkt='$opprettetTidspunkt', vedtaksId=$vedtaksId)"
     }
-
-
 }
 
