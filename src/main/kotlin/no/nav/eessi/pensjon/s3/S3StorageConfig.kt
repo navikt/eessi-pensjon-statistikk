@@ -1,4 +1,4 @@
-package no.nav.eessi.pensjon.services.storage.amazons3
+package no.nav.eessi.pensjon.s3
 
 import com.amazonaws.auth.AWSStaticCredentialsProvider
 import com.amazonaws.auth.BasicAWSCredentials

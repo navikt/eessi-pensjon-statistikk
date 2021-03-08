@@ -1,6 +1,8 @@
 package no.nav.eessi.pensjon.statistikk.listener
 
+import no.nav.eessi.pensjon.json.mapJsonToAny
 import no.nav.eessi.pensjon.json.toJson
+import no.nav.eessi.pensjon.json.typeRefs
 import no.nav.eessi.pensjon.statistikk.models.HendelseType
 import no.nav.eessi.pensjon.statistikk.models.OpprettelseType
 import no.nav.eessi.pensjon.statistikk.services.HendelsesAggregeringsService
@@ -36,7 +38,7 @@ class StatistikkListener(
 
             try {
                 logger.debug("Hendelse : ${hendelse.toJson()}")
-                val melding = OpprettelseMelding.fromJson(hendelse)
+                val melding = mapJsonToAny(hendelse, typeRefs<OpprettelseMelding>())
 
                 when(melding.opprettelseType){
                     OpprettelseType.BUC -> {
@@ -68,8 +70,8 @@ class StatistikkListener(
     fun consumeSedMottatt(hendelse: String, cr: ConsumerRecord<String, String>, acknowledgment: Acknowledgment) {
         MDC.putCloseable("x_request_id", UUID.randomUUID().toString()).use {
             try {
-                val sedHendelseRina = SedHendelseRina.fromJson(hendelse)
-                if (GyldigeHendelser.sendt(sedHendelseRina)) {
+                val sedHendelseRina = mapJsonToAny(hendelse, typeRefs<SedHendelseRina>())
+                if (GyldigeHendelser.mottatt(sedHendelseRina)) {
                     val sedMeldingUt = sedInfoService.populerSedMeldingUt(
                         sedHendelseRina.rinaSakId,
                         sedHendelseRina.rinaDokumentId,
@@ -94,7 +96,7 @@ class StatistikkListener(
     fun consumeSedSendt(hendelse: String, cr: ConsumerRecord<String, String>, acknowledgment: Acknowledgment) {
         MDC.putCloseable("x_request_id", UUID.randomUUID().toString()).use {
             try {
-                val sedHendelseRina = SedHendelseRina.fromJson(hendelse)
+                val sedHendelseRina = mapJsonToAny(hendelse, typeRefs<SedHendelseRina>())
                 if (GyldigeHendelser.sendt(sedHendelseRina)) {
                     val vedtaksId = sedInfoService.hentVedtaksId(sedHendelseRina.rinaSakId, sedHendelseRina.rinaDokumentId)
                     val sedMeldingUt = sedInfoService.populerSedMeldingUt(

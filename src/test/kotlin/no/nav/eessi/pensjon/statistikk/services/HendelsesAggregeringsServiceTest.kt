@@ -7,7 +7,7 @@ import no.nav.eessi.pensjon.eux.BucMetadata
 import no.nav.eessi.pensjon.eux.EuxService
 import no.nav.eessi.pensjon.eux.Sed
 import no.nav.eessi.pensjon.json.toJson
-import no.nav.eessi.pensjon.services.storage.amazons3.S3StorageService
+import no.nav.eessi.pensjon.s3.S3StorageService
 import no.nav.eessi.pensjon.statistikk.models.HendelseType
 import no.nav.eessi.pensjon.statistikk.models.SedMeldingP6000Ut
 import org.junit.jupiter.api.Assertions.assertEquals

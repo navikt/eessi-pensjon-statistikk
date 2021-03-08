@@ -3,7 +3,9 @@ package no.nav.eessi.pensjon.statistikk.models
 import no.nav.eessi.pensjon.eux.BucType
 import no.nav.eessi.pensjon.eux.SedType
 import no.nav.eessi.pensjon.json.mapAnyToJson
+import no.nav.eessi.pensjon.json.mapJsonToAny
 import no.nav.eessi.pensjon.json.toJson
+import no.nav.eessi.pensjon.json.typeRefs
 import org.junit.jupiter.api.Test
 import org.skyscreamer.jsonassert.JSONAssert
 import org.skyscreamer.jsonassert.JSONCompareMode
@@ -24,11 +26,10 @@ internal class SedOpprettetMeldingUtSerDesTest {
             opprettetTidspunkt = "2020-12-08T09:52:55.345Z",
             vedtaksId = "666"
         )
-        val serialized = model.toJson()
-        print(serialized)
-        val result = SedMeldingP6000Ut.fromJson(serialized)
+        val sedMeldingUtJson = model.toJson()
+        val result = mapJsonToAny(sedMeldingUtJson, typeRefs<SedMeldingUt>())
 
-        JSONAssert.assertEquals(serialized, result.toJson(), JSONCompareMode.LENIENT)
+        JSONAssert.assertEquals(sedMeldingUtJson, result.toJson(), JSONCompareMode.LENIENT)
     }
 
 
@@ -48,7 +49,7 @@ internal class SedOpprettetMeldingUtSerDesTest {
           "vedtaksId" : "666"
         }""".trimMargin()
 
-        val model = SedMeldingP6000Ut.fromJson(json)
+        val model = mapJsonToAny(json, typeRefs<SedMeldingUt>())
 
         val result = mapAnyToJson(model)
         JSONAssert.assertEquals(json, result, JSONCompareMode.LENIENT)

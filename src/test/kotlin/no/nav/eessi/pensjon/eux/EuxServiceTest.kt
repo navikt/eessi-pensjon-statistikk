@@ -6,7 +6,7 @@ import com.nhaarman.mockitokotlin2.whenever
 import no.nav.eessi.pensjon.ResourceHelper
 import no.nav.eessi.pensjon.ResourceHelper.Companion.getResourceBucMetadata
 import no.nav.eessi.pensjon.ResourceHelper.Companion.getResourceSed
-import no.nav.eessi.pensjon.services.storage.amazons3.S3StorageService
+import no.nav.eessi.pensjon.s3.S3StorageService
 import no.nav.eessi.pensjon.statistikk.services.HendelsesAggregeringsService
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
