@@ -54,8 +54,6 @@ class ArchitectureTest {
         val Listeners = "statistikk.listener"
         val JSON = "statistikk.json"
         val Services = "statistikk.services"
-        val Integrationtest = "integrationtest"
-
 
         layeredArchitecture()
             //Define components
@@ -65,9 +63,7 @@ class ArchitectureTest {
             .layer(JSON).definedBy("$root.json")
             .layer(Listeners).definedBy("$root.statistikk.listener")
             .layer(Services).definedBy("$root.statistikk.services")
-/*
-            .layer(Integrationtest).definedBy("$root.integrationtest")
-*/
+
             //define rules
             .whereLayer(ROOT).mayNotBeAccessedByAnyLayer()
             .whereLayer(Health).mayNotBeAccessedByAnyLayer()

@@ -52,6 +52,14 @@ configurations {
 
 dependencies {
 
+    //eessi pensjon libs
+    implementation("no.nav.eessi.pensjon:ep-logging:1.0.6")
+    implementation("no.nav.eessi.pensjon:ep-personoppslag:7.1.2")
+    implementation("no.nav.eessi.pensjon:ep-security-sts:0.0.10")
+
+    //pensjonsinformasjon
+    xsd("no.nav.tjenestespesifikasjoner:pensjonsinformasjon-v1-tjenestespesifikasjon:1.2020.09.21-09.58-dde2f6764e92")
+
     // Spring-boot
     implementation("org.springframework.boot:spring-boot-starter-web:${springBootVersion}")
     implementation("org.springframework.boot:spring-boot-starter-aop:${springBootVersion}")
@@ -62,33 +70,9 @@ dependencies {
     implementation 'org.jetbrains.kotlin:kotlin-reflect'
     implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8'
     implementation 'org.springframework.kafka:spring-kafka'
-    testImplementation('org.springframework.boot:spring-boot-starter-test') {
-        exclude module: 'junit'
-        exclude module: "mockito-core"
-        exclude module: "junit-vintage-engine"
-    }
-    testImplementation 'org.springframework.kafka:spring-kafka-test'
 
     //aws and s3
     implementation 'com.amazonaws:aws-java-sdk-s3:1.11.942'
-    testImplementation("io.findify:s3mock_2.12:0.2.5")
-
-    //mock - test
-    testImplementation("org.junit.jupiter:junit-jupiter:5.7.1")
-    testImplementation("org.junit.jupiter:junit-jupiter-params:5.7.1")
-    testImplementation('org.mockito:mockito-junit-jupiter:3.8.0')
-    testImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0")
-    testImplementation("org.mock-server:mockserver-client-java:5.11.2")
-    // Next version (5.5.4) fails, should be investigated
-    testImplementation("org.mock-server:mockserver-netty:5.11.2") {
-        exclude module: 'junit'
-    }
-    testImplementation "io.mockk:mockk:1.10.0"
-
-    // Architecture tests
-    testImplementation 'com.tngtech.archunit:archunit:0.14.1'
-
-    implementation("no.nav.eessi.pensjon:ep-security-sts:0.0.10")
 
     // Micrometer
     implementation("io.micrometer:micrometer-registry-prometheus")
@@ -99,70 +83,62 @@ dependencies {
     configurations { all*.exclude group: 'commons-logging', module: 'commons-logging' }
     implementation group: 'org.slf4j', name: 'jcl-over-slf4j'
 
-    implementation group: 'com.google.guava', name: 'guava', version: '30.1-jre'
-
-    //eessi pensjon libs
-    implementation("no.nav.eessi.pensjon:ep-logging:1.0.6")
-    implementation("no.nav.eessi.pensjon:ep-personoppslag:7.1.2")
-
-    //pensjonsinformasjon
-    xsd("no.nav.tjenestespesifikasjoner:pensjonsinformasjon-v1-tjenestespesifikasjon:1.2020.09.21-09.58-dde2f6764e92")
+    implementation group: 'com.google.guava', name: 'guava', version: '30.1.1-jre'
 
     implementation("com.sun.xml.ws:jaxws-ri:2.3.2")
     jaxb ('org.glassfish.jaxb:jaxb-xjc:2.3.2')
     jaxb ('org.glassfish.jaxb:jaxb-runtime:2.3.2')
+
+
+    //test
+    testImplementation('org.springframework.boot:spring-boot-starter-test') {
+        exclude module: 'junit'
+        exclude module: "junit-vintage-engine"
+    }
+    testImplementation("io.mockk:mockk:1.10.6")
+
+    testImplementation 'org.springframework.kafka:spring-kafka-test'
+    testImplementation("io.findify:s3mock_2.12:0.2.5")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.7.1")
+    testImplementation("org.junit.jupiter:junit-jupiter-params:5.7.1")
+    testImplementation("org.mock-server:mockserver-client-java:5.11.2")
+    // Next version (5.5.4) fails, should be investigated
+    testImplementation("org.mock-server:mockserver-netty:5.11.2") {
+        exclude module: 'junit'
+    }
+    // Architecture tests
+    testImplementation 'com.tngtech.archunit:archunit:0.14.1'
+}
+test {
+    useJUnitPlatform()
+}
+
+tasks.withType(Test) {
+    testLogging {
+        exceptionFormat "full"
+        events "started", "skipped", "passed", "failed"
+        showStandardStreams true
+    }
 }
 
 tasks.named("xsd-dependency-tree").configure {
     outputs.upToDateWhen { false }
 }
 
-test {
-    useJUnitPlatform()
-}
-
-java {
-    sourceCompatibility = JavaVersion.VERSION_11
-    targetCompatibility = JavaVersion.VERSION_11
-}
-
-compileKotlin {
-    kotlinOptions {
-        freeCompilerArgs = ["-Xjsr305=strict"]
-        jvmTarget = "11"
-    }
-}
-
-compileTestKotlin {
-    kotlinOptions {
-        freeCompilerArgs = ['-Xjsr305=strict']
-        jvmTarget = '11'
-    }
-}
-
-
-
-repositories {
-
-    mavenCentral()
-
-    ["maven-release","ep-metrics", "ep-security-sts", "ep-personoppslag"].each { repo ->
-        String token = System.getenv("GITHUB_TOKEN") ?: project.findProperty("gpr.key")
-        if (!token) throw new NullPointerException("Missing token, you have to set GITHUB_TOKEN or gpr.key, see README")
-        maven {
-            url = uri("https://maven.pkg.github.com/navikt/$repo")
-            credentials {
-                username = "token"
-                password = token
-            }
-        }
-    }
-
-}
-
-processResources.doFirst {
+processResources.doFirst{
+    //clean xsd
     delete "${projectDir}/src/main/resources/schemas"
     delete "${projectDir}/src/main/resources/xsdtemp"
+}
+
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
+    sourceCompatibility = JavaVersion.VERSION_15
+    targetCompatibility = JavaVersion.VERSION_15
+
+    kotlinOptions {
+        freeCompilerArgs = ['-Xjsr305=strict']
+        jvmTarget = '15'
+    }
 }
 
 ext.xsdTemp = "${buildDir}/xsdtemp"
@@ -197,14 +173,13 @@ compileKotlin.dependsOn tasks["xjc"]
 sourceSets["main"].resources.srcDir(schemasDir)
 sourceSets["main"].java.srcDir("${buildDir}/generated-sources/xjc")
 
-
 wrapper {
     distributionType = Wrapper.DistributionType.ALL
 }
 
 // https://docs.gradle.org/current/userguide/jacoco_plugin.html
 jacoco {
-    toolVersion = "0.8.4"
+    toolVersion = "0.8.6"
 }
 
 jacocoTestReport {
@@ -215,6 +190,24 @@ jacocoTestReport {
 
 tasks.sonarqube.dependsOn tasks["jacocoTestReport"]
 
+repositories {
+
+    mavenCentral()
+
+    ["maven-release","ep-metrics", "ep-security-sts", "ep-personoppslag"].each { repo ->
+        String token = System.getenv("GITHUB_TOKEN") ?: project.findProperty("gpr.key")
+        if (!token) throw new NullPointerException("Missing token, you have to set GITHUB_TOKEN or gpr.key, see README")
+        maven {
+            url = uri("https://maven.pkg.github.com/navikt/$repo")
+            credentials {
+                username = "token"
+                password = token
+            }
+        }
+    }
+
+}
+
 /* https://github.com/ben-manes/gradle-versions-plugin */
 dependencyUpdates {
     rejectVersionIf {
@@ -223,3 +216,4 @@ dependencyUpdates {
     }
     revision = 'release'
 }
+

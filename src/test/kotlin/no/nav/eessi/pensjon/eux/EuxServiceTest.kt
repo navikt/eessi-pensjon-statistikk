@@ -1,8 +1,8 @@
 package no.nav.eessi.pensjon.eux
-
-import com.nhaarman.mockitokotlin2.doReturn
-import com.nhaarman.mockitokotlin2.eq
-import com.nhaarman.mockitokotlin2.whenever
+import io.mockk.clearAllMocks
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.verify
 import no.nav.eessi.pensjon.ResourceHelper
 import no.nav.eessi.pensjon.ResourceHelper.Companion.getResourceBucMetadata
 import no.nav.eessi.pensjon.ResourceHelper.Companion.getResourceSed
@@ -12,18 +12,13 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.Mock
-import org.mockito.junit.jupiter.MockitoExtension
 import org.springframework.web.client.RestTemplate
 
-@ExtendWith(MockitoExtension::class)
 internal class EuxServiceTest {
 
-    @Mock
-    lateinit var euxOidcRestTemplate: RestTemplate
+    protected var euxOidcRestTemplate: RestTemplate = mockk()
 
-    @Mock
-    lateinit var s3StorageService: S3StorageService
+    protected var s3StorageService: S3StorageService  = mockk()
 
     lateinit var euxService: EuxService
 
@@ -38,10 +33,7 @@ internal class EuxServiceTest {
         val mockEuxRinaid = "123456"
         val mockEuxDocumentId = "d740047e730f475aa34ae59f62e3bb99"
 
-        doReturn(gyldigBuc)
-            .whenever(euxOidcRestTemplate).getForObject(
-                eq("/buc/$mockEuxRinaid"),
-                eq(BucMetadata::class.java))
+        every { euxOidcRestTemplate.getForObject("/buc/$mockEuxRinaid", BucMetadata::class.java)} returns  gyldigBuc
 
         val metaData = euxService.getBucMetadata(mockEuxRinaid)
         val offsetDateTime =
@@ -51,15 +43,12 @@ internal class EuxServiceTest {
      }
 
     @Test
-    fun `Gitt en SED når norskSakId er utfylt så returner norsk saksId`() {
+    fun  `Gitt en SED når norskSakId er utfylt så returner norsk saksId`() {
         val gyldigBuc : Sed = getResourceSed("sed/P2000-minimal-med-en-norsk-sakId.json")
         val mockEuxRinaid = "123456"
         val mockEuxDocumentId = "d740047e730f475aa34ae59f62e3bb99"
 
-        doReturn(gyldigBuc)
-            .whenever(euxOidcRestTemplate).getForObject(
-                eq("/buc/$mockEuxRinaid/sed/$mockEuxDocumentId"),
-                eq(Sed::class.java))
+        every { euxOidcRestTemplate.getForObject(eq("/buc/$mockEuxRinaid/sed/$mockEuxDocumentId"), eq(Sed::class.java))} returns  gyldigBuc
 
         val sed = euxService.getSed(mockEuxRinaid, mockEuxDocumentId)
         val saksNummer = hentSaksNummer(sed)
@@ -69,14 +58,11 @@ internal class EuxServiceTest {
 
     @Test
     fun `Gitt en SED når norskSakId ikke er utfylt så returner null`() {
-        val gyldigBuc : Sed = getResourceSed("sed/P2000-minimal-med-kun-utenlandsk-sakId.json")
+        val gyldigBuc = getResourceSed("sed/P2000-minimal-med-kun-utenlandsk-sakId.json")
         val mockEuxRinaid = "123456"
         val mockEuxDocumentId = "d740047e730f475aa34ae59f62e3bb99"
 
-        doReturn(gyldigBuc)
-            .whenever(euxOidcRestTemplate).getForObject(
-                eq("/buc/$mockEuxRinaid/sed/$mockEuxDocumentId"),
-                eq(Sed::class.java))
+        every { euxOidcRestTemplate.getForObject("/buc/$mockEuxRinaid/sed/$mockEuxDocumentId", Sed::class.java)} returns  gyldigBuc
 
         val sed = euxService.getSed(mockEuxRinaid, mockEuxDocumentId)
         val sakId = hentSaksNummer(sed)
@@ -93,10 +79,7 @@ internal class EuxServiceTest {
         val mockEuxRinaid = "123456"
         val mockEuxDocumentId = "d740047e730f475aa34ae59f62e3bb99"
 
-        doReturn(gyldigBuc)
-            .whenever(euxOidcRestTemplate).getForObject(
-                eq("/buc/$mockEuxRinaid/sed/$mockEuxDocumentId"),
-                eq(Sed::class.java))
+        every { euxOidcRestTemplate.getForObject(eq("/buc/$mockEuxRinaid/sed/$mockEuxDocumentId"), eq(Sed::class.java))} returns  gyldigBuc
 
         val sed = euxService.getSed(mockEuxRinaid, mockEuxDocumentId)
         val sakId = hentSaksNummer(sed)
