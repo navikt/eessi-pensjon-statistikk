@@ -11,7 +11,7 @@ jobs:
     steps:
       # PULLER REPO
       - name: 'Pull repo'
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
 
       # SETTER DATO OG COMMIT VARIABEL
       - name: 'Setter dato og commit variabel'
@@ -24,11 +24,12 @@ jobs:
       - name: 'Setter Image'
         run: echo "IMAGE=docker.pkg.github.com/${{ github.repository }}/eessi-pensjon-statistikk:${{ env.DATE }}---${{ env.COMMIT_HASH }}" >> $GITHUB_ENV
 
-      # JAVA 11
-      - name: 'Java 11'
-        uses: actions/setup-java@v1.4.3
+      # JAVA 15
+      - name: 'Java 15'
+        uses: actions/setup-java@v2
         with:
-          java-version: 11
+          distribution: 'adopt'
+          java-version: 15
 
       # BYGGER DOCKER CONTAINER
       - name: 'Bygg og publiser docker image'

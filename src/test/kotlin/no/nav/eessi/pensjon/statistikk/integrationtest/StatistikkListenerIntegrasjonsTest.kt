@@ -1,7 +1,6 @@
 package no.nav.eessi.pensjon.statistikk.integrationtest
 
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.whenever
+import io.mockk.every
 import io.mockk.mockk
 import io.mockk.spyk
 import io.mockk.verify
@@ -69,13 +68,12 @@ class StatistikkListenerIntegrasjonsTest {
     lateinit var restEuxTemplate: RestTemplate
 
     @MockBean
-    lateinit var euxService: EuxService
+    lateinit var stsService: STSService
+
+    var euxService: EuxService = mockk()
 
     @MockBean
     lateinit var s3StorageService: S3StorageService
-
-    @MockBean
-    lateinit var stsService: STSService
 
     @Autowired
     lateinit var statistikkListener: StatistikkListener
@@ -105,7 +103,7 @@ class StatistikkListenerIntegrasjonsTest {
     fun `En buc-hendelse skal sendes videre til riktig kanal  `() {
         val bucMetadata  = BucMetadata (listOf(), BucType.P_BUC_01, "2020-12-08T09:52:55.345+0000")
 
-        whenever(euxService.getBucMetadata(any())).thenReturn(bucMetadata)
+        every{ euxService.getBucMetadata(any()) } returns bucMetadata
 
         val budMelding = OpprettelseMelding(
             opprettelseType = OpprettelseType.BUC,
