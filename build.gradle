@@ -35,8 +35,6 @@ plugins {
     id 'jacoco'
 }
 
-assert JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_15): "Java 15 or newer is required"
-
 apply plugin: 'kotlin'
 apply plugin: 'kotlin-spring'
 apply plugin: 'org.springframework.boot'
