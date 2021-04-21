@@ -6,10 +6,11 @@ import no.nav.eessi.pensjon.eux.SedType
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 open class SedMeldingUt (
-    val dokumentId: String,
+    open val dokumentId: String,
     open val bucType: BucType,
     open val rinaid: String,
     open val mottakerLand: List<String>,
+    open val avsenderLand: String? = null,
     open val rinaDokumentVersjon: String,
     open val sedType: SedType,
     open val pid: String? = null,

@@ -4,6 +4,7 @@ import no.nav.eessi.pensjon.eux.BucMetadata
 import no.nav.eessi.pensjon.eux.Sed
 import no.nav.eessi.pensjon.json.mapJsonToAny
 import no.nav.eessi.pensjon.json.typeRefs
+import no.nav.eessi.pensjon.statistikk.listener.SedHendelseRina
 
 class ResourceHelper {
 
@@ -15,6 +16,11 @@ class ResourceHelper {
 
 
         fun getResourceSed(resourcePath: String) : Sed {
+            val json = this::class.java.classLoader.getResource(resourcePath)!!.readText()
+            return mapJsonToAny(json, typeRefs())
+        }
+
+        fun getResourceSedHendelseRina(resourcePath: String) : SedHendelseRina {
             val json = this::class.java.classLoader.getResource(resourcePath)!!.readText()
             return mapJsonToAny(json, typeRefs())
         }

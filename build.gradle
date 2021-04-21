@@ -1,7 +1,7 @@
 buildscript {
 
     ext {
-        kotlinVersion = '1.4.30'
+        kotlinVersion = '1.4.31'
         springBootVersion = '2.3.2.RELEASE'
         logstashLogbackVersion = '6.6'
     }
@@ -130,12 +130,12 @@ processResources.doFirst{
 }
 
 tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
-    sourceCompatibility = JavaVersion.VERSION_15
-    targetCompatibility = JavaVersion.VERSION_15
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
 
     kotlinOptions {
         freeCompilerArgs = ['-Xjsr305=strict']
-        jvmTarget = '15'
+        jvmTarget = '11'
     }
 }
 

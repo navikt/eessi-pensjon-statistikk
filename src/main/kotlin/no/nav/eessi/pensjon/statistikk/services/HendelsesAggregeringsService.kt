@@ -35,10 +35,13 @@ class HendelsesAggregeringsService(private val euxService: EuxService,
         return sedHendelse
     }
 
-    fun populerSedMeldingUt(rinaid: String,
-                            dokumentId: String,
-                            vedtaksId: String?,
-                            hendelseType: HendelseType): SedMeldingUt {
+    fun populerSedMeldingUt(
+        rinaid: String,
+        dokumentId: String,
+        vedtaksId: String?,
+        hendelseType: HendelseType,
+        avsenderLand: String? = null
+    ): SedMeldingUt {
 
         val sed = euxService.getSed(rinaid, dokumentId)
         val bucMetadata = euxService.getBucMetadata(rinaid)
@@ -57,6 +60,7 @@ class HendelsesAggregeringsService(private val euxService: EuxService,
                 opprettetTidspunkt = getTimeStampFromSedMetaDataInBuc(bucMetadata, dokumentId),
                 vedtaksId = vedtaksId,
                 mottakerLand = mottakerLand,
+                avsenderLand = avsenderLand!!,
                 rinaDokumentVersjon = bucMetadata.documents.filter { it.id == dokumentId }[0].versions.size.toString(),
                 bostedsland =  sed.nav.bruker?.adresse?.land,
                 bruttoBelop = beregning?.beloepBrutto?.beloep,

@@ -92,7 +92,7 @@ internal class HendelsesAggregeringsServiceTest {
         val rinaId = "1271728"
         val mottakerland = listOf("NO")
 
-        val sedOpprettetMeldingUt = infoService.populerSedMeldingUt(rinaId, dokumentId, null, HendelseType.SED_SENDT)
+        val sedOpprettetMeldingUt = infoService.populerSedMeldingUt(rinaId, dokumentId, null, HendelseType.SED_SENDT, "SE")
             as SedMeldingP6000Ut
 
         assertEquals(sedOpprettetMeldingUt.rinaid, rinaId)
@@ -111,5 +111,6 @@ internal class HendelsesAggregeringsServiceTest {
         assertEquals(sedOpprettetMeldingUt.anmodningOmRevurdering, "1")
         assertEquals(sedOpprettetMeldingUt.pensjonsType, "03")
         assertEquals(sedOpprettetMeldingUt.vedtakStatus, "04")
+        assertEquals(sedOpprettetMeldingUt.avsenderLand, "SE")
     }
 }

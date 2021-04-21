@@ -76,7 +76,8 @@ class StatistikkListener(
                         sedHendelseRina.rinaSakId,
                         sedHendelseRina.rinaDokumentId,
                         null,
-                        HendelseType.SED_MOTTATT
+                        HendelseType.SED_MOTTATT,
+                        sedHendelseRina.avsenderLand
                     )
                     statistikkPublisher.publiserSedHendelse(sedMeldingUt)
                 }
@@ -103,7 +104,8 @@ class StatistikkListener(
                         sedHendelseRina.rinaSakId,
                         sedHendelseRina.rinaDokumentId,
                         vedtaksId,
-                        HendelseType.SED_SENDT
+                        HendelseType.SED_SENDT,
+                        sedHendelseRina.avsenderLand
                     )
                     statistikkPublisher.publiserSedHendelse(sedMeldingUt)
                 }
