@@ -99,6 +99,7 @@ class StatistikkListener(
             try {
                 val sedHendelseRina = mapJsonToAny(hendelse, typeRefs<SedHendelseRina>())
                 if (GyldigeHendelser.sendt(sedHendelseRina)) {
+                    logger.debug(sedHendelseRina.toJson())
                     val vedtaksId = sedInfoService.hentVedtaksId(sedHendelseRina.rinaSakId, sedHendelseRina.rinaDokumentId)
                     val sedMeldingUt = sedInfoService.populerSedMeldingUt(
                         sedHendelseRina.rinaSakId,
