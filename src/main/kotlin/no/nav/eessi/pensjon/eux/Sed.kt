@@ -30,11 +30,9 @@ class Pensjon(val vedtak: List<Vedtak>?, val tilleggsinformasjon: Tilleggsinform
 //resultat:  4.1.4. Type vedtak
 class Vedtak(val type: String?, val resultat: String?, val beregning: List<Beregning>?)
 
-class Beregning(val beloepBrutto: BeloepBrutto?, val valuta: String?,  val beloepNetto: BeloepNetto?)
+class Beregning(val beloepBrutto: BeloepBrutto?, val valuta: String?)
 
 class BeloepBrutto(val beloep: String?)
-
-class BeloepNetto(val beloep: String?)
 
 class Tilleggsinformasjon(val artikkel48: String?)
 

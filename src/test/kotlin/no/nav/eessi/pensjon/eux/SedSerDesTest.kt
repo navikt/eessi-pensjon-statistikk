@@ -15,7 +15,10 @@ class SedSerDesTest {
             Nav(null, listOf(Sak("", ""))),
             sed = SedType.P2100,
             pensjon = Pensjon(
-                vedtak = listOf(Vedtak(type = "02", resultat = "04", beregning = listOf(Beregning(beloepBrutto = BeloepBrutto("10000"), valuta = "NOK", beloepNetto = BeloepNetto("8000"))))),
+                vedtak = listOf(Vedtak(type = "02", resultat = "04", beregning = listOf(Beregning(
+                    beloepBrutto = BeloepBrutto("10000"),
+                    valuta = "NOK"
+                )))),
                 tilleggsinformasjon = Tilleggsinformasjon("")
             )
         )

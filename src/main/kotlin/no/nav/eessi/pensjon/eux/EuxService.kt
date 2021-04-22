@@ -28,9 +28,9 @@ class EuxService(private val euxKlient: EuxKlient){
      *
      */
     fun getSed(rinaSakId: String, dokumentId : String) : Sed? {
-        val sed : Sed? = euxKlient.getSed(rinaSakId, dokumentId)
+        val sed : Sed = euxKlient.getSed(rinaSakId, dokumentId)
 
-        logger.debug("Dokument: ${sed?.toJson()}")
+        logger.debug("Dokument: ${sed.toJson()}")
         return sed
     }
 }

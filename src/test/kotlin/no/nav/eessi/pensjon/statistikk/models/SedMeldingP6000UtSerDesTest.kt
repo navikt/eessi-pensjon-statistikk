@@ -33,9 +33,7 @@ internal class SedMeldingP6000UtSerDesTest{
             pensjonsType = "03",
             vedtakStatus = "02",
             bruttoBelop = "1000",
-            nettoBelop = "800",
-            valuta = "NOK",
-            anmodningOmRevurdering = "1"
+            valuta = "NOK"
         )
 
         val p6000Json = model.toJson()
@@ -63,9 +61,8 @@ internal class SedMeldingP6000UtSerDesTest{
               "pensjonsType" : "03",
               "vedtakStatus" : "02",
               "bruttoBelop" : "1000",
-              "nettoBelop" : "800",
-              "valuta" : "NOK",
-              "anmodningOmRevurdering" : "1"}""".trimMargin()
+              "valuta" : "NOK"
+              }""".trimMargin()
 
         val model = mapJsonToAny(p6000Json, typeRefs<SedMeldingP6000Ut>())
         val result = mapAnyToJson(model)
@@ -87,7 +84,6 @@ internal class SedMeldingP6000UtSerDesTest{
 
         val beregning = model.pensjon?.vedtak?.firstOrNull()?.beregning?.first()!!
         assertEquals("12482", beregning.beloepBrutto?.beloep)
-        assertEquals("10000", beregning.beloepNetto?.beloep)
         assertEquals("NOK", beregning.valuta)
 
         assertEquals("1", model.pensjon?.tilleggsinformasjon?.artikkel48)

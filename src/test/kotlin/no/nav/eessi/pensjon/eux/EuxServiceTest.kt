@@ -1,9 +1,6 @@
 package no.nav.eessi.pensjon.eux
-import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.mockk
-import io.mockk.verify
-import no.nav.eessi.pensjon.ResourceHelper
 import no.nav.eessi.pensjon.ResourceHelper.Companion.getResourceBucMetadata
 import no.nav.eessi.pensjon.ResourceHelper.Companion.getResourceSed
 import no.nav.eessi.pensjon.s3.S3StorageService
@@ -11,7 +8,6 @@ import no.nav.eessi.pensjon.statistikk.services.HendelsesAggregeringsService
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.web.client.RestTemplate
 
 internal class EuxServiceTest {
@@ -75,7 +71,7 @@ internal class EuxServiceTest {
 
     @Test
     fun `Gitt en SED når ingen sakId er utfylt så returner null`() {
-        val gyldigBuc : Sed = ResourceHelper.getResourceSed("sed/P2000-minimal-uten-sakId.json")
+        val gyldigBuc : Sed = getResourceSed("sed/P2000-minimal-uten-sakId.json")
         val mockEuxRinaid = "123456"
         val mockEuxDocumentId = "d740047e730f475aa34ae59f62e3bb99"
 

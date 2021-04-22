@@ -50,25 +50,23 @@ class HendelsesAggregeringsService(private val euxService: EuxService,
 
         return when(hendelseType){
             HendelseType.SED_SENDT, HendelseType.SED_MOTTATT ->  SedMeldingP6000Ut(
-                rinaid = rinaid,
                 dokumentId = dokumentId,
-                hendelseType = hendelseType,
                 bucType = bucMetadata.processDefinitionName,
-                sedType = sed!!.sed,
-                pesysSakId = sed.nav.eessisak?.firstOrNull()?.saksnummer,
-                pid = sed.nav.bruker?.person?.pin?.firstOrNull { it.land == "NO" }?.identifikator,
-                opprettetTidspunkt = getTimeStampFromSedMetaDataInBuc(bucMetadata, dokumentId),
-                vedtaksId = vedtaksId,
+                rinaid = rinaid,
                 mottakerLand = mottakerLand,
                 avsenderLand = avsenderLand!!,
                 rinaDokumentVersjon = bucMetadata.documents.filter { it.id == dokumentId }[0].versions.size.toString(),
+                sedType = sed!!.sed,
+                pid = sed.nav.bruker?.person?.pin?.firstOrNull { it.land == "NO" }?.identifikator,
+                hendelseType = hendelseType,
+                pesysSakId = sed.nav.eessisak?.firstOrNull()?.saksnummer,
+                opprettetTidspunkt = getTimeStampFromSedMetaDataInBuc(bucMetadata, dokumentId),
+                vedtaksId = vedtaksId,
                 bostedsland =  sed.nav.bruker?.adresse?.land,
-                bruttoBelop = beregning?.beloepBrutto?.beloep,
-                nettoBelop = beregning?.beloepNetto?.beloep,
-                valuta = beregning?.valuta,
-                anmodningOmRevurdering = sed.pensjon?.tilleggsinformasjon?.artikkel48,
                 pensjonsType = sed.pensjon?.vedtak?.firstOrNull()?.type,
-                vedtakStatus = sed.pensjon?.vedtak?.firstOrNull()?.resultat
+                vedtakStatus = sed.pensjon?.vedtak?.firstOrNull()?.resultat,
+                bruttoBelop = beregning?.beloepBrutto?.beloep,
+                valuta = beregning?.valuta
             )
             else -> SedMeldingUt(
                 rinaid = rinaid,

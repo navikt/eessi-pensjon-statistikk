@@ -145,7 +145,7 @@ class StatistikkListenerIntegrasjonsTest {
 
         val consumerFactory = DefaultKafkaConsumerFactory<String, String>(consumerProperties)
         val containerProperties = ContainerProperties(topicNavn)
-        val container = KafkaMessageListenerContainer<String, String>(consumerFactory, containerProperties)
+        val container = KafkaMessageListenerContainer(consumerFactory, containerProperties)
         val messageListener = MessageListener<String, String> { record -> println("Konsumerer melding:  $record") }
         container.setupMessageListener(messageListener)
 

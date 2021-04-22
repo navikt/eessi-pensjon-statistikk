@@ -139,12 +139,10 @@ class SedMottattIntegrasjonsTest {
               "pensjonsType" : "03",
               "vedtakStatus" : "04",
               "bruttoBelop" : "12482",
-              "nettoBelop" : "10000",
-              "valuta" : "NOK",
-              "anmodningOmRevurdering" : "1"            
+              "valuta" : "NOK"
             }
         """.trimIndent()
-        return mapJsonToAny(meldingUtJson, typeRefs<SedMeldingP6000Ut>())
+        return mapJsonToAny(meldingUtJson, typeRefs())
     }
 
     private fun sendMelding(melding: SedHendelseRina) {
@@ -174,7 +172,7 @@ class SedMottattIntegrasjonsTest {
 
         val consumerFactory = DefaultKafkaConsumerFactory<String, String>(consumerProperties)
         val containerProperties = ContainerProperties(topicNavn)
-        val container = KafkaMessageListenerContainer<String, String>(consumerFactory, containerProperties)
+        val container = KafkaMessageListenerContainer(consumerFactory, containerProperties)
         val messageListener = MessageListener<String, String> { record -> println("Konsumerer melding:  $record") }
         container.setupMessageListener(messageListener)
 

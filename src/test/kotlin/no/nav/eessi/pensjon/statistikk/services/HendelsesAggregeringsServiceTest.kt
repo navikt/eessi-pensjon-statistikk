@@ -106,9 +106,7 @@ internal class HendelsesAggregeringsServiceTest {
         //SedMeldingP6000Ut
         assertEquals(sedOpprettetMeldingUt.bostedsland, "HR")
         assertEquals(sedOpprettetMeldingUt.bruttoBelop, "12482")
-        assertEquals(sedOpprettetMeldingUt.nettoBelop, "10000")
         assertEquals(sedOpprettetMeldingUt.valuta, "NOK")
-        assertEquals(sedOpprettetMeldingUt.anmodningOmRevurdering, "1")
         assertEquals(sedOpprettetMeldingUt.pensjonsType, "03")
         assertEquals(sedOpprettetMeldingUt.vedtakStatus, "04")
         assertEquals(sedOpprettetMeldingUt.avsenderLand, "SE")

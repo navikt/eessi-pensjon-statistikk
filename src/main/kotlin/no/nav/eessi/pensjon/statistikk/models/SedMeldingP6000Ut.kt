@@ -20,10 +20,8 @@ data class SedMeldingP6000Ut(
     val pensjonsType: String? = null,
     val vedtakStatus: String? = null,
     val bruttoBelop: String? = null,
-    val nettoBelop: String? = null,
-    val valuta: String? = null,
-    val anmodningOmRevurdering: String?
-                        ):
+    val valuta: String? = null
+):
     SedMeldingUt(dokumentId,
         bucType,
         rinaid,
@@ -38,6 +36,6 @@ data class SedMeldingP6000Ut(
         vedtaksId)
 {
     override fun toString(): String {
-        return "SedMeldingP6000Ut(bucType=$bucType, rinaid='$rinaid', mottakerLand=$mottakerLand, rinaDokumentVersjon='$rinaDokumentVersjon', sedType=$sedType, pid=$pid, hendelseType=$hendelseType, pesysSakId=$pesysSakId, opprettetTidspunkt='$opprettetTidspunkt', vedtaksId=$vedtaksId, bostedsland=$bostedsland, pensjonsType=$pensjonsType, vedtakStatus=$vedtakStatus, bruttoBelop=$bruttoBelop, nettoBelop=$nettoBelop, valuta=$valuta, anmodningOmRevurdering=$anmodningOmRevurdering)"
+        return "SedMeldingP6000Ut(bucType=$bucType, rinaid='$rinaid', mottakerLand=$mottakerLand, rinaDokumentVersjon='$rinaDokumentVersjon', sedType=$sedType, pid=$pid, hendelseType=$hendelseType, pesysSakId=$pesysSakId, opprettetTidspunkt='$opprettetTidspunkt', vedtaksId=$vedtaksId, bostedsland=$bostedsland, pensjonsType=$pensjonsType, vedtakStatus=$vedtakStatus, bruttoBelop=$bruttoBelop, valuta=$valuta)"
     }
 }
