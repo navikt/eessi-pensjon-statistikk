@@ -136,8 +136,8 @@ class SedMottattIntegrasjonsTest {
               "opprettetTidspunkt" : "2021-02-11T13:08:03Z",
               "vedtaksId" : null,
               "bostedsland" : "HR",
-              "pensjonsType" : "03",
-              "vedtakStatus" : "04",
+              "pensjonsType" : "GJENLEV",
+              "vedtakStatus" : "FORELOPIG_UTBETALING",
               "bruttoBelop" : "12482",
               "valuta" : "NOK"
             }

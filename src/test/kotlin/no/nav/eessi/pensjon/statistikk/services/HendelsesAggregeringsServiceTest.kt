@@ -9,7 +9,9 @@ import no.nav.eessi.pensjon.eux.Sed
 import no.nav.eessi.pensjon.json.toJson
 import no.nav.eessi.pensjon.s3.S3StorageService
 import no.nav.eessi.pensjon.statistikk.models.HendelseType
+import no.nav.eessi.pensjon.statistikk.models.PensjonsType
 import no.nav.eessi.pensjon.statistikk.models.SedMeldingP6000Ut
+import no.nav.eessi.pensjon.statistikk.models.VedtakStatus
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
@@ -92,8 +94,7 @@ internal class HendelsesAggregeringsServiceTest {
         val rinaId = "1271728"
         val mottakerland = listOf("NO")
 
-        val sedOpprettetMeldingUt = infoService.populerSedMeldingUt(rinaId, dokumentId, null, HendelseType.SED_SENDT, "SE")
-            as SedMeldingP6000Ut
+        val sedOpprettetMeldingUt = infoService.populerSedMeldingUt(rinaId, dokumentId, null, HendelseType.SED_SENDT, "SE") as SedMeldingP6000Ut
 
         assertEquals(sedOpprettetMeldingUt.rinaid, rinaId)
         assertEquals(sedOpprettetMeldingUt.dokumentId, dokumentId)
@@ -107,8 +108,8 @@ internal class HendelsesAggregeringsServiceTest {
         assertEquals(sedOpprettetMeldingUt.bostedsland, "HR")
         assertEquals(sedOpprettetMeldingUt.bruttoBelop, "12482")
         assertEquals(sedOpprettetMeldingUt.valuta, "NOK")
-        assertEquals(sedOpprettetMeldingUt.pensjonsType, "03")
-        assertEquals(sedOpprettetMeldingUt.vedtakStatus, "04")
+        assertEquals(sedOpprettetMeldingUt.pensjonsType, PensjonsType.GJENLEV)
+        assertEquals(sedOpprettetMeldingUt.vedtakStatus, VedtakStatus.FORELOPIG_UTBETALING)
         assertEquals(sedOpprettetMeldingUt.avsenderLand, "SE")
     }
 }

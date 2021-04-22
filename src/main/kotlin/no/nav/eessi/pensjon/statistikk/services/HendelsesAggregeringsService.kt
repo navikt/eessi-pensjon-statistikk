@@ -1,6 +1,11 @@
 package no.nav.eessi.pensjon.statistikk.services
 
-import no.nav.eessi.pensjon.eux.*
+import no.nav.eessi.pensjon.eux.Beregning
+import no.nav.eessi.pensjon.eux.BucMetadata
+import no.nav.eessi.pensjon.eux.Document
+import no.nav.eessi.pensjon.eux.EuxService
+import no.nav.eessi.pensjon.eux.Participant
+import no.nav.eessi.pensjon.eux.Vedtak
 import no.nav.eessi.pensjon.json.mapAnyToJson
 import no.nav.eessi.pensjon.json.mapJsonToAny
 import no.nav.eessi.pensjon.json.toJson
@@ -8,8 +13,10 @@ import no.nav.eessi.pensjon.json.typeRefs
 import no.nav.eessi.pensjon.s3.S3StorageService
 import no.nav.eessi.pensjon.statistikk.models.BucOpprettetMeldingUt
 import no.nav.eessi.pensjon.statistikk.models.HendelseType
+import no.nav.eessi.pensjon.statistikk.models.PensjonsType
 import no.nav.eessi.pensjon.statistikk.models.SedMeldingP6000Ut
 import no.nav.eessi.pensjon.statistikk.models.SedMeldingUt
+import no.nav.eessi.pensjon.statistikk.models.VedtakStatus
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 import java.time.OffsetDateTime
@@ -63,8 +70,8 @@ class HendelsesAggregeringsService(private val euxService: EuxService,
                 opprettetTidspunkt = getTimeStampFromSedMetaDataInBuc(bucMetadata, dokumentId),
                 vedtaksId = vedtaksId,
                 bostedsland =  sed.nav.bruker?.adresse?.land,
-                pensjonsType = sed.pensjon?.vedtak?.firstOrNull()?.type,
-                vedtakStatus = sed.pensjon?.vedtak?.firstOrNull()?.resultat,
+                pensjonsType = PensjonsType.fra ( sed.pensjon?.vedtak?.firstOrNull().let{ it?.type } ),
+                vedtakStatus = VedtakStatus.fra ( sed.pensjon?.vedtak?.firstOrNull().let { it?.resultat } ),
                 bruttoBelop = beregning?.beloepBrutto?.beloep,
                 valuta = beregning?.valuta
             )

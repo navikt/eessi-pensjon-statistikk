@@ -30,8 +30,8 @@ internal class SedMeldingP6000UtSerDesTest{
             opprettetTidspunkt = "2020-12-08T09:52:55.345Z",
             vedtaksId = "666",
             bostedsland = "NO",
-            pensjonsType = "03",
-            vedtakStatus = "02",
+            pensjonsType = PensjonsType.fra("03"),
+            vedtakStatus = VedtakStatus.fra("02"),
             bruttoBelop = "1000",
             valuta = "NOK"
         )
@@ -58,13 +58,15 @@ internal class SedMeldingP6000UtSerDesTest{
               "opprettetTidspunkt" : "2020-12-08T09:52:55.345Z",
               "vedtaksId" : "666",
               "bostedsland" : "NO",
-              "pensjonsType" : "03",
-              "vedtakStatus" : "02",
+              "pensjonsType" : "GJENLEV",
+              "vedtakStatus" : "AVSLAG",
               "bruttoBelop" : "1000",
               "valuta" : "NOK"
               }""".trimMargin()
 
         val model = mapJsonToAny(p6000Json, typeRefs<SedMeldingP6000Ut>())
+        assertEquals(model.vedtakStatus, VedtakStatus.AVSLAG)
+        assertEquals(model.pensjonsType, PensjonsType.GJENLEV)
         val result = mapAnyToJson(model)
 
         JSONAssert.assertEquals(p6000Json, result, JSONCompareMode.STRICT)

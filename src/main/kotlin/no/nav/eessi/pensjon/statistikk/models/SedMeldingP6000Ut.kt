@@ -17,8 +17,8 @@ data class SedMeldingP6000Ut(
     override val opprettetTidspunkt: String,
     override val vedtaksId: String? = null,
     val bostedsland: String? = null,
-    val pensjonsType: String? = null,
-    val vedtakStatus: String? = null,
+    val pensjonsType: PensjonsType?,
+    val vedtakStatus: VedtakStatus?,
     val bruttoBelop: String? = null,
     val valuta: String? = null
 ):
@@ -34,3 +34,35 @@ data class SedMeldingP6000Ut(
         pesysSakId,
         opprettetTidspunkt,
         vedtaksId)
+
+enum class VedtakStatus(val value: String) {
+    INNVILGENSE("01"),
+    AVSLAG("02"),
+    NY_BEREGNING_OMREGNING("03"),
+    FORELOPIG_UTBETALING("04");
+
+    companion object {
+        @JvmStatic
+        fun fra(value: String?): VedtakStatus? {
+            return if (value == null) null
+            else values().firstOrNull { it.value == value }
+        }
+    }
+}
+
+enum class PensjonsType(val value: String) {
+    ALDER("01"),
+    UFORE("02"),
+    GJENLEV("03"),
+    DELVIS_UFORE("04"),
+    HELT_UFORE("05"),
+    FORTID_PENSJON("06");
+
+    companion object {
+        @JvmStatic
+        fun fra(value: String?): PensjonsType? {
+            return if (value == null) null
+            else values().firstOrNull { it.value == value }
+        }
+    }
+}
