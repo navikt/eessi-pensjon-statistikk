@@ -34,8 +34,3 @@ data class SedMeldingP6000Ut(
         pesysSakId,
         opprettetTidspunkt,
         vedtaksId)
-{
-    override fun toString(): String {
-        return "SedMeldingP6000Ut(bucType=$bucType, rinaid='$rinaid', mottakerLand=$mottakerLand, rinaDokumentVersjon='$rinaDokumentVersjon', sedType=$sedType, pid=$pid, hendelseType=$hendelseType, pesysSakId=$pesysSakId, opprettetTidspunkt='$opprettetTidspunkt', vedtaksId=$vedtaksId, bostedsland=$bostedsland, pensjonsType=$pensjonsType, vedtakStatus=$vedtakStatus, bruttoBelop=$bruttoBelop, valuta=$valuta)"
-    }
-}
