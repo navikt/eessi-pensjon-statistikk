@@ -1,6 +1,6 @@
 package no.nav.eessi.pensjon.statistikk.listener
 
-import no.nav.eessi.pensjon.eux.BucType
+import no.nav.eessi.pensjon.eux.model.buc.BucType
 
 class GyldigeHendelser {
     companion object {
