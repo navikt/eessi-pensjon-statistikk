@@ -1,22 +1,12 @@
 package no.nav.eessi.pensjon.statistikk.services
 
-import no.nav.eessi.pensjon.eux.Beregning
-import no.nav.eessi.pensjon.eux.BucMetadata
-import no.nav.eessi.pensjon.eux.Document
-import no.nav.eessi.pensjon.eux.EuxService
-import no.nav.eessi.pensjon.eux.Participant
-import no.nav.eessi.pensjon.eux.Vedtak
+import no.nav.eessi.pensjon.eux.*
 import no.nav.eessi.pensjon.json.mapAnyToJson
 import no.nav.eessi.pensjon.json.mapJsonToAny
 import no.nav.eessi.pensjon.json.toJson
 import no.nav.eessi.pensjon.json.typeRefs
 import no.nav.eessi.pensjon.s3.S3StorageService
-import no.nav.eessi.pensjon.statistikk.models.BucOpprettetMeldingUt
-import no.nav.eessi.pensjon.statistikk.models.HendelseType
-import no.nav.eessi.pensjon.statistikk.models.PensjonsType
-import no.nav.eessi.pensjon.statistikk.models.SedMeldingP6000Ut
-import no.nav.eessi.pensjon.statistikk.models.SedMeldingUt
-import no.nav.eessi.pensjon.statistikk.models.VedtakStatus
+import no.nav.eessi.pensjon.statistikk.models.*
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 import java.time.OffsetDateTime
@@ -85,6 +75,7 @@ class HendelsesAggregeringsService(private val euxService: EuxService,
                 pid = sed.nav.bruker?.person?.pin?.firstOrNull { it.land == "NO" }?.identifikator,
                 opprettetTidspunkt = getTimeStampFromSedMetaDataInBuc(bucMetadata, dokumentId),
                 vedtaksId = vedtaksId,
+                avsenderLand = avsenderLand,
                 mottakerLand = mottakerLand,
                 rinaDokumentVersjon = bucMetadata.documents.filter { it.id == dokumentId }[0].versions.size.toString()
             )
