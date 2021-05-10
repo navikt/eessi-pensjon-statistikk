@@ -91,6 +91,9 @@ dependencies {
     }
     // Architecture tests
     testImplementation 'com.tngtech.archunit:archunit:0.14.1'
+
+    implementation("no.nav.eessi.pensjon:ep-eux:1.0.40")
+
 }
 test {
     useJUnitPlatform()

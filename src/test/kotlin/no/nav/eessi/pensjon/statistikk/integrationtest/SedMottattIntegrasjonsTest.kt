@@ -6,8 +6,8 @@ import io.mockk.spyk
 import io.mockk.verify
 import no.nav.eessi.pensjon.ResourceHelper
 import no.nav.eessi.pensjon.eux.BucMetadata
-import no.nav.eessi.pensjon.eux.BucType
 import no.nav.eessi.pensjon.eux.EuxService
+import no.nav.eessi.pensjon.eux.model.buc.BucType
 import no.nav.eessi.pensjon.json.mapJsonToAny
 import no.nav.eessi.pensjon.json.toJson
 import no.nav.eessi.pensjon.json.typeRefs
