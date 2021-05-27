@@ -11,13 +11,9 @@ import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.junit.jupiter.MockitoExtension
 import java.net.ServerSocket
 import java.time.LocalDateTime
 
-
-@ExtendWith(MockitoExtension::class)
 class S3StorageServiceTest {
 
     private lateinit var storageService: S3StorageService
@@ -42,7 +38,6 @@ class S3StorageServiceTest {
         storageService = S3StorageService(s3MockClient)
         storageService.bucketname = "eessipensjon"
         storageService.env = "q1"
-        //storage.passphrase = "mypassphrase"
         storageService.init()
     }
 

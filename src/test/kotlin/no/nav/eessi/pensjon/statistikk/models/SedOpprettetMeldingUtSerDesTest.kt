@@ -11,6 +11,7 @@ import org.skyscreamer.jsonassert.JSONAssert
 import org.skyscreamer.jsonassert.JSONCompareMode
 
 internal class SedOpprettetMeldingUtSerDesTest {
+
     @Test
     fun `Sjekker at serialisering virker`() {
         val model = SedMeldingUt(

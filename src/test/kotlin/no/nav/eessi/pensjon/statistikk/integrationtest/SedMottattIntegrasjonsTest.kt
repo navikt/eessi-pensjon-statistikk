@@ -1,5 +1,6 @@
 package no.nav.eessi.pensjon.statistikk.integrationtest
 
+import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.spyk
@@ -13,6 +14,7 @@ import no.nav.eessi.pensjon.json.toJson
 import no.nav.eessi.pensjon.json.typeRefs
 import no.nav.eessi.pensjon.s3.S3StorageService
 import no.nav.eessi.pensjon.security.sts.STSService
+import no.nav.eessi.pensjon.statistikk.S3StorageHelper
 import no.nav.eessi.pensjon.statistikk.listener.SedHendelseRina
 import no.nav.eessi.pensjon.statistikk.listener.StatistikkListener
 import no.nav.eessi.pensjon.statistikk.models.SedMeldingP6000Ut
@@ -28,7 +30,6 @@ import org.mockserver.model.HttpStatusCode
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.context.TestConfiguration
-import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.context.annotation.Bean
 import org.springframework.http.HttpMethod
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory
@@ -56,10 +57,7 @@ private lateinit var mockServer: ClientAndServer
 @ActiveProfiles("integrationtest")
 @DirtiesContext
 @EmbeddedKafka(
-    controlledShutdown = true,
-    partitions = 1,
-    topics = [STATISTIKK_TOPIC],
-    brokerProperties = ["log.dir=out/embedded-kafkamottatt"]
+    topics = [STATISTIKK_TOPIC]
 )
 class SedMottattIntegrasjonsTest {
 
@@ -67,16 +65,13 @@ class SedMottattIntegrasjonsTest {
     @Autowired
     lateinit var embeddedKafka: EmbeddedKafkaBroker
 
-    @MockBean(name = "pensjonsinformasjonOidcRestTemplate")
+    @MockkBean(name = "pensjonsinformasjonOidcRestTemplate")
     lateinit var restEuxTemplate: RestTemplate
 
-    @MockBean
+    @MockkBean
     lateinit var stsService: STSService
 
     var euxService: EuxService = mockk()
-
-    @MockBean
-    lateinit var s3StorageService: S3StorageService
 
     @Autowired
     lateinit var statistikkListener: StatistikkListener
@@ -89,6 +84,8 @@ class SedMottattIntegrasjonsTest {
 
     @BeforeEach
     fun setup() {
+        every { stsService.getSystemOidcToken() } returns "a nice little token?"
+
         container = settOppUtitlityConsumer(STATISTIKK_TOPIC)
         container.start()
         ContainerTestUtils.waitForAssignment(container, embeddedKafka.partitionsPerTopic)
@@ -98,26 +95,23 @@ class SedMottattIntegrasjonsTest {
 
     @AfterEach
     fun after() {
-        shutdown(container)
+        container.stop()
         embeddedKafka.kafkaServers.forEach { it.shutdown() }
     }
 
     @Test
-    fun `En buc-hendelse skal sendes videre til riktig kanal  `() {
+    fun `En sed hendelse skal sendes videre til riktig kanal  `() {
         val bucMetadata  = BucMetadata (listOf(), BucType.P_BUC_01, "2020-12-08T09:52:55.345+0000")
 
         every{ euxService.getBucMetadata(any()) } returns bucMetadata
-
 
         val sedHendelse = ResourceHelper.getResourceSedHendelseRina("eux/P_BUC_01_P2000.json").toJson()
         val model = mapJsonToAny(sedHendelse, typeRefs<SedHendelseRina>())
 
         sendMelding(model).let {
-            statistikkListener.getLatch().await(15000, TimeUnit.MILLISECONDS)
+            statistikkListener.getLatch().await(35000, TimeUnit.MILLISECONDS)
         }
         verify(exactly = 1) { statistikkPublisher.publiserSedHendelse(eq(sedMeldingP6000Ut())) }
-
-
     }
 
     private fun sedMeldingP6000Ut(): SedMeldingP6000Ut {
@@ -147,11 +141,6 @@ class SedMottattIntegrasjonsTest {
 
     private fun sendMelding(melding: SedHendelseRina) {
         sedMottattProducerTemplate.sendDefault(melding.toJson())
-    }
-
-    private fun shutdown(container: KafkaMessageListenerContainer<String, String>) {
-        container.stop()
-        embeddedKafka.kafkaServers.forEach { it.shutdown() }
     }
 
     private fun settOppProducerTemplate(): KafkaTemplate<Int, String> {
@@ -224,10 +213,8 @@ class SedMottattIntegrasjonsTest {
                 )
         }
 
-
         private fun randomFrom(from: Int = 1024, to: Int = 65535): Int {
-            val random = Random()
-            return random.nextInt(to - from) + from
+            return Random().nextInt(to - from) + from
         }
     }
 
@@ -238,6 +225,11 @@ class SedMottattIntegrasjonsTest {
         fun statistikkPublisher(): StatistikkPublisher {
             return spyk(StatistikkPublisher(mockk(relaxed = true), "bogusTopic"))
         }
-    }
 
+        @Bean
+        fun s3StorageService(): S3StorageService {
+            println("InintMock S3")
+            return S3StorageHelper.createStoreService().also { it.init() }
+        }
+    }
 }

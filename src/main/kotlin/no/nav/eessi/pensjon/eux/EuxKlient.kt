@@ -18,9 +18,6 @@ class EuxKlient(
     private val euxOidcRestTemplate: RestTemplate,
     @Autowired(required = false) private val metricsHelper: MetricsHelper = MetricsHelper(SimpleMeterRegistry())) {
 
-    // Vi trenger denne no arg konstruktøren for å kunne bruke @Spy med mockito
-    constructor() : this(RestTemplate(), MetricsHelper(SimpleMeterRegistry()))
-
     private val logger = LoggerFactory.getLogger(EuxKlient::class.java)
 
     private lateinit var hentBucMetadata: MetricsHelper.Metric
