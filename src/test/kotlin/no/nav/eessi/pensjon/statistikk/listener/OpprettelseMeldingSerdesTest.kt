@@ -10,6 +10,7 @@ import org.skyscreamer.jsonassert.JSONAssert
 import org.skyscreamer.jsonassert.JSONCompareMode
 
 class OpprettelseMeldingSerdesTest {
+
     @Test
     fun `Sjekker at serialisering virker`() {
         val model = OpprettelseMelding(opprettelseType = OpprettelseType.BUC, rinaId =  "1208875", dokumentId = "djksdfsdl3435kj3452", vedtaksId = null)

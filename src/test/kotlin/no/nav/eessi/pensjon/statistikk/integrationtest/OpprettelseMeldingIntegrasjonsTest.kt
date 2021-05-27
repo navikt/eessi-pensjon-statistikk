@@ -1,5 +1,6 @@
 package no.nav.eessi.pensjon.statistikk.integrationtest
 
+import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.spyk
@@ -10,9 +11,11 @@ import no.nav.eessi.pensjon.eux.model.buc.BucType
 import no.nav.eessi.pensjon.json.toJson
 import no.nav.eessi.pensjon.s3.S3StorageService
 import no.nav.eessi.pensjon.security.sts.STSService
+import no.nav.eessi.pensjon.statistikk.S3StorageHelper
 import no.nav.eessi.pensjon.statistikk.listener.OpprettelseMelding
 import no.nav.eessi.pensjon.statistikk.listener.StatistikkListener
 import no.nav.eessi.pensjon.statistikk.models.OpprettelseType
+import no.nav.eessi.pensjon.statistikk.services.HendelsesAggregeringsService
 import no.nav.eessi.pensjon.statistikk.services.StatistikkPublisher
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
@@ -25,7 +28,6 @@ import org.mockserver.model.HttpStatusCode
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.context.TestConfiguration
-import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.context.annotation.Bean
 import org.springframework.http.HttpMethod
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory
@@ -53,30 +55,25 @@ private lateinit var mockServer: ClientAndServer
 @ActiveProfiles("integrationtest")
 @DirtiesContext
 @EmbeddedKafka(
-    controlledShutdown = true,
-    partitions = 1,
-    topics = [STATISTIKK_TOPIC],
-    brokerProperties = ["log.dir=out/embedded-kafkamottatt"]
+    topics = [STATISTIKK_TOPIC]
 )
-class StatistikkListenerIntegrasjonsTest {
+class OpprettelseMeldingIntegrasjonsTest {
 
     @Suppress("SpringJavaInjectionPointsAutowiringInspection")
     @Autowired
     lateinit var embeddedKafka: EmbeddedKafkaBroker
 
-    @MockBean(name = "pensjonsinformasjonOidcRestTemplate")
+    @MockkBean(name = "pensjonsinformasjonOidcRestTemplate")
     lateinit var restEuxTemplate: RestTemplate
 
-    @MockBean
+    @MockkBean
     lateinit var stsService: STSService
-
-    var euxService: EuxService = mockk()
-
-    @MockBean
-    lateinit var s3StorageService: S3StorageService
 
     @Autowired
     lateinit var statistikkListener: StatistikkListener
+
+    @Autowired
+    lateinit var hendelsesAggregeringsService: HendelsesAggregeringsService
 
     @Autowired
     lateinit var statistikkPublisher: StatistikkPublisher
@@ -86,6 +83,8 @@ class StatistikkListenerIntegrasjonsTest {
 
     @BeforeEach
     fun setup() {
+        every { stsService.getSystemOidcToken() } returns "something"
+
         container = settOppUtitlityConsumer(STATISTIKK_TOPIC)
         container.start()
         ContainerTestUtils.waitForAssignment(container, embeddedKafka.partitionsPerTopic)
@@ -95,15 +94,15 @@ class StatistikkListenerIntegrasjonsTest {
 
     @AfterEach
     fun after() {
-        shutdown(container)
+        container.stop()
         embeddedKafka.kafkaServers.forEach { it.shutdown() }
     }
 
     @Test
-    fun `En buc-hendelse skal sendes videre til riktig kanal  `() {
+    fun `En buc hendelse skal sendes videre til riktig kanal  `() {
         val bucMetadata  = BucMetadata (listOf(), BucType.P_BUC_01, "2020-12-08T09:52:55.345+0000")
 
-        every{ euxService.getBucMetadata(any()) } returns bucMetadata
+        every{ mockk<EuxService>().getBucMetadata(any()) } returns bucMetadata
 
         val budMelding = OpprettelseMelding(
             opprettelseType = OpprettelseType.BUC,
@@ -115,16 +114,12 @@ class StatistikkListenerIntegrasjonsTest {
         sendMelding(budMelding).let {
             statistikkListener.getLatch().await(15000, TimeUnit.MILLISECONDS)
         }
+
         verify(exactly = 1) { statistikkPublisher.publiserBucOpprettetStatistikk(any()) }
     }
 
     private fun sendMelding(melding: OpprettelseMelding) {
         sedMottattProducerTemplate.sendDefault(melding.toJson())
-    }
-
-    private fun shutdown(container: KafkaMessageListenerContainer<String, String>) {
-        container.stop()
-        embeddedKafka.kafkaServers.forEach { it.shutdown() }
     }
 
     private fun settOppProducerTemplate(): KafkaTemplate<Int, String> {
@@ -150,6 +145,21 @@ class StatistikkListenerIntegrasjonsTest {
         container.setupMessageListener(messageListener)
 
         return container
+    }
+
+    @TestConfiguration
+    class TestConfig {
+
+        @Bean
+        fun statistikkPublisher(): StatistikkPublisher {
+            return spyk(StatistikkPublisher(mockk(relaxed = true), "bogusTopic"))
+        }
+
+        @Bean
+        fun s3StorageService(): S3StorageService {
+            println("InintMock S3")
+            return S3StorageHelper.createStoreService().also { it.init() }
+        }
     }
 
     companion object {
@@ -191,14 +201,4 @@ class StatistikkListenerIntegrasjonsTest {
             return random.nextInt(to - from) + from
         }
     }
-
-    @TestConfiguration
-    class TestConfig {
-
-        @Bean
-        fun statistikkPublisher(): StatistikkPublisher {
-            return spyk(StatistikkPublisher(mockk(relaxed = true), "bogusTopic"))
-        }
-    }
-
 }

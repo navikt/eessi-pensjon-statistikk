@@ -23,6 +23,11 @@ s3_url: 'http://objectstore.rook-ceph.svc.nais.local'
 s3_region: 'us-east-1'
 s3_fss_url: "http://objectstore.rook-ceph.svc.nais.local"
 
+eessi.pensjon.statistikk:
+  s3:
+    bucket.name: 'eessipensjon'
+ENV: 'q2'
+
 spring:
   kafka:
     listener:
