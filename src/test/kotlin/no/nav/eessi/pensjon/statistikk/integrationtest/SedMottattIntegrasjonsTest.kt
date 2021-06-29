@@ -109,7 +109,7 @@ class SedMottattIntegrasjonsTest {
         val model = mapJsonToAny(sedHendelse, typeRefs<SedHendelseRina>())
 
         sendMelding(model).let {
-            statistikkListener.getLatch().await(35000, TimeUnit.MILLISECONDS)
+            statistikkListener.getLatch().await(40000, TimeUnit.MILLISECONDS)
         }
         verify(exactly = 1) { statistikkPublisher.publiserSedHendelse(eq(sedMeldingP6000Ut())) }
     }
