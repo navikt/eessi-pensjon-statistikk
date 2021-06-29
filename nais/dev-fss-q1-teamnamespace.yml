@@ -18,7 +18,7 @@ spec:
     - name: KAFKA_STATISTIKK_TOPICNAME_INN
       value: eessipensjon.privat-statistikk-q1
     - name: KAFKA_STATISTIKK_TOPICNAME_UT
-      value: eessipensjon-statistikk-q1
+      value: eessipensjon.public-statistikk-q1
     - name: KAFKA_SEDSENDT_TOPIC
       value: eessi-basis-sedSendt-v1-q1
     - name: KAFKA_SEDMOTTATT_TOPIC
