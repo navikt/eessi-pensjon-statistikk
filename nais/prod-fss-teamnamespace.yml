@@ -2,7 +2,7 @@ kind: Application
 apiVersion: nais.io/v1alpha1
 metadata:
   name: eessi-pensjon-statistikk
-  namespace: default
+  namespace: eessipesjon
   labels:
     team: eessipensjon
 spec:
@@ -61,10 +61,10 @@ spec:
     requests:
       cpu: 400m
       memory: 4024Mi
-#  vault:
-#    enabled: true
-#    paths:
-#      - kvPath: {{serviceuserkv}}
-#        mountPath: /var/run/secrets/nais.io/srveessio
-#      - kvPath: /apikey/appdynamics/prod
-#        mountPath: /var/run/secrets/nais.io/vault
+  vault:
+    enabled: true
+    paths:
+      - kvPath: {{serviceuserkv}}
+        mountPath: /var/run/secrets/nais.io/srveessipensjonstats
+      - kvPath: {{appsecrets}}
+        mountPath: /var/run/secrets/nais.io/appcredentials

@@ -1,7 +1,7 @@
 apiVersion: kafka.nais.io/v1
 kind: Topic
 metadata:
-  name: privat-eessipensjon-statistikk-q2
+  name: privat-statistikk-q2
   namespace: q2
   labels:
     team: eessipensjon
