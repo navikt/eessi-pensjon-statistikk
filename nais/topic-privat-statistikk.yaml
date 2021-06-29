@@ -1,8 +1,8 @@
 apiVersion: kafka.nais.io/v1
 kind: Topic
 metadata:
-  name: privat-statistikk-q2
-  namespace: q2
+  name: privat-statistikk
+  namespace: eessipensjon
   labels:
     team: eessipensjon
 spec:
@@ -17,7 +17,7 @@ spec:
   acl:
     - team: eessipensjon
       application: eessi-pensjon-statistikk
-      access: readwrite   # read, write, readwrite
+      access: read   # read, write, readwrite
     - team: eessipensjon
       application: eessi-pensjon-fagmodul
       access: write
