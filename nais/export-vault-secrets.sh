@@ -14,7 +14,6 @@ then
     export srvusername=$(cat /var/run/secrets/nais.io/srveessipensjonstats/username)
 fi
 
-
 echo "Sjekker eessi_pensjon_statistikk_s3_creds_password"
 if test -f /var/run/secrets/nais.io/appcredentials/eessi_pensjon_statistikk_s3_creds_password;
 then
