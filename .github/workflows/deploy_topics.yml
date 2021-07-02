@@ -1,0 +1,20 @@
+name: Deploy topics
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'nais/topics/**'
+jobs:
+  deploy_topics:
+    name: 'Deploy topics'
+    runs-on: ubuntu-latest
+    steps:
+      # DEPLOYER TIL NAIS
+      - name: 'Deploy to eessipensjon namespace'
+        uses: nais/deploy/actions/deploy@v1
+        env:
+          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+          CLUSTER: dev-fss
+          RESOURCE: nais/topic-privat-statistikk.yaml
