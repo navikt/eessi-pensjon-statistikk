@@ -61,7 +61,6 @@ private lateinit var mockServer: ClientAndServer
     topics = [STATISTIKK_TOPIC]
 )
 
-@Disabled
 class SedMottattIntegrasjonsTest {
 
     @Suppress("SpringJavaInjectionPointsAutowiringInspection")
