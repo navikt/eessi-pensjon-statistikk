@@ -6,16 +6,13 @@ import org.apache.kafka.clients.producer.ProducerConfig
 import org.apache.kafka.common.config.SslConfigs
 import org.apache.kafka.common.serialization.StringDeserializer
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.boot.ApplicationRunner
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Profile
 import org.springframework.kafka.annotation.EnableKafka
-import org.springframework.kafka.config.KafkaListenerEndpointRegistry
 import org.springframework.kafka.core.ConsumerFactory
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory
 import org.springframework.kafka.support.serializer.JsonDeserializer
-import java.time.Duration
 
 
 @EnableKafka
@@ -46,7 +43,7 @@ class KafkaConfig(
         return DefaultKafkaConsumerFactory(configMap)
     }
 
-    @Bean
+/*    @Bean
     fun sedSendtAuthRetry(registry: KafkaListenerEndpointRegistry): ApplicationRunner? {
         return ApplicationRunner {
             val statisikkListener = registry.getListenerContainer("statistikkListener")
@@ -61,6 +58,6 @@ class KafkaConfig(
             sedMottattListener.containerProperties.authorizationExceptionRetryInterval = Duration.ofSeconds(4L)
             sedMottattListener.start()
         }
-    }
+    }*/
 
 }
