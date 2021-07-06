@@ -19,6 +19,7 @@ import no.nav.eessi.pensjon.statistikk.services.HendelsesAggregeringsService
 import no.nav.eessi.pensjon.statistikk.services.StatistikkPublisher
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.mockserver.integration.ClientAndServer
 import org.mockserver.model.Header
@@ -57,6 +58,7 @@ private lateinit var mockServer: ClientAndServer
 @EmbeddedKafka(
     topics = [STATISTIKK_TOPIC]
 )
+@Disabled
 class OpprettelseMeldingIntegrasjonsTest {
 
     @Suppress("SpringJavaInjectionPointsAutowiringInspection")
