@@ -14,7 +14,7 @@ import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.kafka.support.Acknowledgment
 import org.springframework.stereotype.Component
 import java.util.*
-import java.util.concurrent.*
+import java.util.concurrent.CountDownLatch
 
 @Component
 class StatistikkListener(
@@ -29,11 +29,8 @@ class StatistikkListener(
     fun getLatch() = latch
 
     @KafkaListener(
-        id = "statistikkListener",
-        idIsGroup = false,
         topics = ["\${kafka.statistikk-inn.topic}"],
         groupId = "\${kafka.statistikk-inn.groupid}",
-        autoStartup = "false"
     )
     fun consumeOpprettelseMelding(
         hendelse: String,
@@ -73,11 +70,8 @@ class StatistikkListener(
         }
 
         @KafkaListener(
-            id = "sedMottattListener",
-            idIsGroup = false,
             topics = ["\${kafka.statistikk-sed-mottatt.topic}"],
             groupId = "\${kafka.statistikk-sed-mottatt.groupid}",
-            autoStartup = "false"
         )
         fun consumeSedMottatt(hendelse: String, cr: ConsumerRecord<String, String>, acknowledgment: Acknowledgment) {
             MDC.putCloseable("x_request_id", UUID.randomUUID().toString()).use {}
@@ -102,11 +96,8 @@ class StatistikkListener(
         }
 
         @KafkaListener(
-            id = "sedSendtListener",
-            idIsGroup = false,
             topics = ["\${kafka.statistikk-sed-sendt.topic}"],
             groupId = "\${kafka.statistikk-sed-sendt.groupid}",
-            autoStartup = "false"
         )
         fun consumeSedSendt(hendelse: String, cr: ConsumerRecord<String, String>, acknowledgment: Acknowledgment) {
             MDC.putCloseable("x_request_id", UUID.randomUUID().toString()).use {
