@@ -29,8 +29,8 @@ class StatistikkListener(
     fun getLatch() = latch
 
     @KafkaListener(
-        topics = ["\${kafka.statistikk-inn.topic}"],
-        groupId = "\${kafka.statistikk-inn.groupid}",
+        topics = ["eessipensjon.privat-statistikk-q2"],
+        groupId = "eessi-pensjon-statistikk-group",
     )
     fun consumeOpprettelseMelding(
         hendelse: String,

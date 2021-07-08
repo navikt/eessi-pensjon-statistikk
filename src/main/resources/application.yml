@@ -8,7 +8,6 @@ kafka:
   credstore.password: ${KAFKA_CREDSTORE_PASSWORD:}
   brokers: ${KAFKA_BROKERS:localhost:9092}
   security.protocol: SSL
-
   statistikk-inn:
     topic: ${KAFKA_STATISTIKK_TOPICNAME_INN}
     groupid: eessi-pensjon-statistikk-group
