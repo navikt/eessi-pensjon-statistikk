@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component
 import java.util.*
 import java.util.concurrent.CountDownLatch
 
-@Component
+@Component("statistikkListener")
 class StatistikkListener(
     private val sedInfoService: HendelsesAggregeringsService,
     private val statistikkPublisher: StatistikkPublisher

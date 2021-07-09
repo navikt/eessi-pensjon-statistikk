@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.ApplicationRunner
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.DependsOn
 import org.springframework.context.annotation.Profile
 import org.springframework.kafka.annotation.EnableKafka
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory
@@ -64,7 +65,7 @@ class KafkaConfig(
         return DefaultKafkaConsumerFactory(configMap)
     }
 
-    @Bean
+    @Bean("listenerFactory", "statistikkListener")
     fun kafkaListenerContainerFactory(): ConcurrentKafkaListenerContainerFactory<String, String>? {
         val factory = ConcurrentKafkaListenerContainerFactory<String, String>()
         factory.consumerFactory = consumerFactory()
@@ -74,6 +75,7 @@ class KafkaConfig(
     }
 
     @Bean
+    @DependsOn("listenerFactory")
     fun listenerConfig(registry: KafkaListenerEndpointRegistry): ApplicationRunner? {
         return ApplicationRunner {
             val statisikkListener = registry.getListenerContainer("statistikkListener")
