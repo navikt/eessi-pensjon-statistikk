@@ -13,11 +13,7 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Profile
 import org.springframework.kafka.annotation.EnableKafka
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory
-import org.springframework.kafka.core.ConsumerFactory
-import org.springframework.kafka.core.DefaultKafkaConsumerFactory
-import org.springframework.kafka.core.DefaultKafkaProducerFactory
-import org.springframework.kafka.core.KafkaTemplate
-import org.springframework.kafka.core.ProducerFactory
+import org.springframework.kafka.core.*
 import org.springframework.kafka.support.serializer.JsonDeserializer
 import org.springframework.kafka.support.serializer.JsonSerializer
 
@@ -72,6 +68,7 @@ class KafkaConfig(
         configMap[ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG] = StringDeserializer::class.java
         configMap[ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG] = JsonDeserializer::class.java
         configMap[ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG] = bootstrapServers
+        configMap[ConsumerConfig.AUTO_OFFSET_RESET_CONFIG] = "earliest"
         return DefaultKafkaConsumerFactory(configMap)
     }
 
