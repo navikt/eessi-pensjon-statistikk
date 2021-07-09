@@ -7,7 +7,6 @@ import org.apache.kafka.clients.producer.ProducerConfig
 import org.apache.kafka.common.config.SslConfigs
 import org.apache.kafka.common.serialization.StringDeserializer
 import org.apache.kafka.common.serialization.StringSerializer
-import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -21,7 +20,7 @@ import org.springframework.kafka.support.serializer.JsonSerializer
 
 
 @EnableKafka
-@Profile("test")
+@Profile("test", "prod")
 @Configuration
 class KafkaConfig(
     @param:Value("\${kafka.keystore.path}") private val keystorePath: String,
@@ -31,27 +30,15 @@ class KafkaConfig(
     @param:Value("\${kafka.security.protocol}") private val securityProtocol: String
 ) {
 
-    private val logger = LoggerFactory.getLogger(KafkaConfig::class.java)
-
-
     @Bean
     fun producerFactory(): ProducerFactory<String, String> {
         val configMap: MutableMap<String, Any> = HashMap()
-        configMap[CommonClientConfigs.SECURITY_PROTOCOL_CONFIG] = "SSL"
-        configMap[SslConfigs.SSL_KEYSTORE_LOCATION_CONFIG] = keystorePath
-        configMap[SslConfigs.SSL_TRUSTSTORE_PASSWORD_CONFIG] = credstorePassword
-        configMap[SslConfigs.SSL_KEYSTORE_PASSWORD_CONFIG] = credstorePassword
-        configMap[SslConfigs.SSL_KEY_PASSWORD_CONFIG] = credstorePassword
-        configMap[SslConfigs.SSL_TRUSTSTORE_TYPE_CONFIG] = "JKS"
-        configMap[SslConfigs.SSL_KEYSTORE_TYPE_CONFIG] = "PKCS12"
-        configMap[SslConfigs.SSL_TRUSTSTORE_LOCATION_CONFIG] = truststorePath
-        configMap[CommonClientConfigs.SECURITY_PROTOCOL_CONFIG] = securityProtocol
+        populerCommonConfig(configMap)
         configMap[ProducerConfig.CLIENT_ID_CONFIG] = "eessi-pensjon-statistikk"
         configMap[ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG] = StringSerializer::class.java
         configMap[ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG] = JsonSerializer::class.java
         configMap[ProducerConfig.BOOTSTRAP_SERVERS_CONFIG] = bootstrapServers
 
-        logger.debug("ProducerFactory config: $configMap")
         return DefaultKafkaProducerFactory(configMap)
     }
 
@@ -63,15 +50,7 @@ class KafkaConfig(
     @Bean
     fun consumerFactory(): ConsumerFactory<String, String> {
         val configMap: MutableMap<String, Any> = HashMap()
-        configMap[CommonClientConfigs.SECURITY_PROTOCOL_CONFIG] = "SSL"
-        configMap[SslConfigs.SSL_KEYSTORE_LOCATION_CONFIG] = keystorePath
-        configMap[SslConfigs.SSL_TRUSTSTORE_PASSWORD_CONFIG] = credstorePassword
-        configMap[SslConfigs.SSL_KEYSTORE_PASSWORD_CONFIG] = credstorePassword
-        configMap[SslConfigs.SSL_KEY_PASSWORD_CONFIG] = credstorePassword
-        configMap[SslConfigs.SSL_TRUSTSTORE_TYPE_CONFIG] = "JKS"
-        configMap[SslConfigs.SSL_KEYSTORE_TYPE_CONFIG] = "PKCS12"
-        configMap[SslConfigs.SSL_TRUSTSTORE_LOCATION_CONFIG] = truststorePath
-        configMap[CommonClientConfigs.SECURITY_PROTOCOL_CONFIG] = securityProtocol
+        populerCommonConfig(configMap)
         configMap[ConsumerConfig.CLIENT_ID_CONFIG] = "eessi-pensjon-statistikk"
         configMap[ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG] = StringDeserializer::class.java
         configMap[ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG] = JsonDeserializer::class.java
@@ -79,7 +58,6 @@ class KafkaConfig(
         configMap[ConsumerConfig.AUTO_OFFSET_RESET_CONFIG] = "latest"
         configMap[ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG] = false
 
-        logger.debug("ConsumerFactory config: $configMap")
         return DefaultKafkaConsumerFactory(configMap)
     }
 
@@ -92,4 +70,14 @@ class KafkaConfig(
         return factory
     }
 
+    private fun populerCommonConfig(configMap: MutableMap<String, Any>) {
+        configMap[SslConfigs.SSL_KEYSTORE_LOCATION_CONFIG] = keystorePath
+        configMap[SslConfigs.SSL_TRUSTSTORE_PASSWORD_CONFIG] = credstorePassword
+        configMap[SslConfigs.SSL_KEYSTORE_PASSWORD_CONFIG] = credstorePassword
+        configMap[SslConfigs.SSL_KEY_PASSWORD_CONFIG] = credstorePassword
+        configMap[SslConfigs.SSL_TRUSTSTORE_TYPE_CONFIG] = "JKS"
+        configMap[SslConfigs.SSL_KEYSTORE_TYPE_CONFIG] = "PKCS12"
+        configMap[SslConfigs.SSL_TRUSTSTORE_LOCATION_CONFIG] = truststorePath
+        configMap[CommonClientConfigs.SECURITY_PROTOCOL_CONFIG] = securityProtocol
+    }
 }
