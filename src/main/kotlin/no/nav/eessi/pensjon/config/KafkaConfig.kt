@@ -15,6 +15,7 @@ import org.springframework.context.annotation.Profile
 import org.springframework.kafka.annotation.EnableKafka
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory
 import org.springframework.kafka.core.*
+import org.springframework.kafka.listener.ContainerProperties
 import org.springframework.kafka.support.serializer.JsonDeserializer
 import org.springframework.kafka.support.serializer.JsonSerializer
 
@@ -76,6 +77,7 @@ class KafkaConfig(
         configMap[ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG] = JsonDeserializer::class.java
         configMap[ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG] = bootstrapServers
         configMap[ConsumerConfig.AUTO_OFFSET_RESET_CONFIG] = "earliest"
+        configMap[ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG] = false
 
         logger.debug("ConsumerFactory config: $configMap")
         return DefaultKafkaConsumerFactory(configMap)
@@ -85,6 +87,8 @@ class KafkaConfig(
     fun kafkaListenerContainerFactory(): ConcurrentKafkaListenerContainerFactory<String, String>? {
         val factory = ConcurrentKafkaListenerContainerFactory<String, String>()
         factory.consumerFactory = consumerFactory()
+        factory.containerProperties.ackMode = ContainerProperties.AckMode.MANUAL
+
         return factory
     }
 
