@@ -7,6 +7,7 @@ import org.apache.kafka.clients.producer.ProducerConfig
 import org.apache.kafka.common.config.SslConfigs
 import org.apache.kafka.common.serialization.StringDeserializer
 import org.apache.kafka.common.serialization.StringSerializer
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -28,6 +29,10 @@ class KafkaConfig(
     @param:Value("\${kafka.brokers}") private val bootstrapServers: String,
     @param:Value("\${kafka.security.protocol}") private val securityProtocol: String
 ) {
+
+    private val logger = LoggerFactory.getLogger(KafkaConfig::class.java)
+
+
     @Bean
     fun producerFactory(): ProducerFactory<String, String> {
         val configMap: MutableMap<String, Any> = HashMap()
@@ -44,6 +49,8 @@ class KafkaConfig(
         configMap[ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG] = StringSerializer::class.java
         configMap[ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG] = JsonSerializer::class.java
         configMap[ProducerConfig.BOOTSTRAP_SERVERS_CONFIG] = bootstrapServers
+
+        logger.debug("ProducerFactory config: $configMap")
         return DefaultKafkaProducerFactory(configMap)
     }
 
@@ -69,6 +76,8 @@ class KafkaConfig(
         configMap[ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG] = JsonDeserializer::class.java
         configMap[ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG] = bootstrapServers
         configMap[ConsumerConfig.AUTO_OFFSET_RESET_CONFIG] = "earliest"
+
+        logger.debug("ConsumerFactory config: $configMap")
         return DefaultKafkaConsumerFactory(configMap)
     }
 
