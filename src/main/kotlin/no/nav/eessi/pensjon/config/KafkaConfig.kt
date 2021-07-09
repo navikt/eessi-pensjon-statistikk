@@ -8,15 +8,18 @@ import org.apache.kafka.common.config.SslConfigs
 import org.apache.kafka.common.serialization.StringDeserializer
 import org.apache.kafka.common.serialization.StringSerializer
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.boot.ApplicationRunner
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Profile
 import org.springframework.kafka.annotation.EnableKafka
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory
+import org.springframework.kafka.config.KafkaListenerEndpointRegistry
 import org.springframework.kafka.core.*
 import org.springframework.kafka.listener.ContainerProperties
 import org.springframework.kafka.support.serializer.JsonDeserializer
 import org.springframework.kafka.support.serializer.JsonSerializer
+import java.time.Duration
 
 
 @EnableKafka
@@ -68,6 +71,23 @@ class KafkaConfig(
         factory.containerProperties.ackMode = ContainerProperties.AckMode.MANUAL
 
         return factory
+    }
+
+    @Bean
+    fun listenerConfig(registry: KafkaListenerEndpointRegistry): ApplicationRunner? {
+        return ApplicationRunner {
+            val statisikkListener = registry.getListenerContainer("statistikkListener")
+            statisikkListener.containerProperties.authorizationExceptionRetryInterval = Duration.ofSeconds(4L)
+            statisikkListener.start()
+
+            val sedSendtListener = registry.getListenerContainer("sedSendtListener")
+            sedSendtListener.containerProperties.authorizationExceptionRetryInterval = Duration.ofSeconds(4L)
+            sedSendtListener.start()
+
+            val sedMottattListener = registry.getListenerContainer("sedMottattListener")
+            sedMottattListener.containerProperties.authorizationExceptionRetryInterval = Duration.ofSeconds(4L)
+            sedMottattListener.start()
+        }
     }
 
     private fun populerCommonConfig(configMap: MutableMap<String, Any>) {

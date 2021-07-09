@@ -29,8 +29,11 @@ class StatistikkListener(
     fun getLatch() = latch
 
     @KafkaListener(
-        topics = ["eessipensjon.privat-statistikk-q2"],
-        groupId = "eessi-pensjon-statistikk-group",
+        id = "statistikkListener",
+        idIsGroup = false,
+        topics = ["\${kafka.statistikk-inn.topic}"],
+        groupId = "\${kafka.statistikk-inn.groupid}",
+        autoStartup = "false"
     )
     fun consumeOpprettelseMelding(
         hendelse: String,
@@ -70,8 +73,11 @@ class StatistikkListener(
         }
 
         @KafkaListener(
+            id = "sedMottattListener",
+            idIsGroup = false,
             topics = ["\${kafka.statistikk-sed-mottatt.topic}"],
             groupId = "\${kafka.statistikk-sed-mottatt.groupid}",
+            autoStartup = "false"
         )
         fun consumeSedMottatt(hendelse: String, cr: ConsumerRecord<String, String>, acknowledgment: Acknowledgment) {
             MDC.putCloseable("x_request_id", UUID.randomUUID().toString()).use {}
@@ -96,8 +102,11 @@ class StatistikkListener(
         }
 
         @KafkaListener(
+            id = "sedSendtListener",
+            idIsGroup = false,
             topics = ["\${kafka.statistikk-sed-sendt.topic}"],
             groupId = "\${kafka.statistikk-sed-sendt.groupid}",
+            autoStartup = "false"
         )
         fun consumeSedSendt(hendelse: String, cr: ConsumerRecord<String, String>, acknowledgment: Acknowledgment) {
             MDC.putCloseable("x_request_id", UUID.randomUUID().toString()).use {
