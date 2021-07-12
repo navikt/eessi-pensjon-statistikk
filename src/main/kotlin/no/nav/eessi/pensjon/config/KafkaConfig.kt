@@ -65,7 +65,7 @@ class KafkaConfig(
         return DefaultKafkaConsumerFactory(configMap)
     }
 
-    @Bean("listenerFactory", "opprettelseListener")
+    @Bean("listenerFactory")
     fun kafkaListenerContainerFactory(): ConcurrentKafkaListenerContainerFactory<String, String>? {
         val factory = ConcurrentKafkaListenerContainerFactory<String, String>()
         factory.consumerFactory = consumerFactory()
@@ -75,7 +75,7 @@ class KafkaConfig(
     }
 
     @Bean
-    @DependsOn("listenerFactory")
+    @DependsOn("listenerFactory", "opprettelseListener")
     fun listenerConfig(registry: KafkaListenerEndpointRegistry): ApplicationRunner? {
         return ApplicationRunner {
             val statisikkListener = registry.getListenerContainer("opprettelseListener")
