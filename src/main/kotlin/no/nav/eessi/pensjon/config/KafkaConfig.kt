@@ -75,7 +75,7 @@ class KafkaConfig(
     }
 
     @Bean
-    @DependsOn("listenerFactory", "opprettelseListener")
+    @DependsOn("listenerFactory", "statistikkListener")
     fun listenerConfig(registry: KafkaListenerEndpointRegistry): ApplicationRunner? {
         return ApplicationRunner {
             val statisikkListener = registry.getListenerContainer("opprettelseListener")
