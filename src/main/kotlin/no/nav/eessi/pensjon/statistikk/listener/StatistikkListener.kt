@@ -68,61 +68,62 @@ class StatistikkListener(
             }
             latch.countDown()
         }
-
-        @KafkaListener(
-            topics = ["\${kafka.statistikk-sed-mottatt.topic}"],
-            groupId = "\${kafka.statistikk-sed-mottatt.groupid}",
-        )
-        fun consumeSedMottatt(hendelse: String, cr: ConsumerRecord<String, String>, acknowledgment: Acknowledgment) {
-            MDC.putCloseable("x_request_id", UUID.randomUUID().toString()).use {}
-
-            try {
-                val sedHendelseRina = mapJsonToAny(hendelse, typeRefs<SedHendelseRina>())
-                if (GyldigeHendelser.mottatt(sedHendelseRina)) {
-                    val sedMeldingUt = sedInfoService.populerSedMeldingUt(
-                        sedHendelseRina.rinaSakId,
-                        sedHendelseRina.rinaDokumentId,
-                        null,
-                        HendelseType.SED_MOTTATT,
-                        sedHendelseRina.avsenderLand
-                    )
-                    statistikkPublisher.publiserSedHendelse(sedMeldingUt)
-                }
-            } catch (ex: Exception) {
-                logger.error("Noe gikk galt under behandling av statistikk-sed-hendelse:\n $hendelse \n", ex)
-                throw RuntimeException(ex.message)
-            }
-            latch.countDown()
-        }
-
-        @KafkaListener(
-            topics = ["\${kafka.statistikk-sed-sendt.topic}"],
-            groupId = "\${kafka.statistikk-sed-sendt.groupid}",
-        )
-        fun consumeSedSendt(hendelse: String, cr: ConsumerRecord<String, String>, acknowledgment: Acknowledgment) {
-            MDC.putCloseable("x_request_id", UUID.randomUUID().toString()).use {
-            }
-
-            try {
-                val sedHendelseRina = mapJsonToAny(hendelse, typeRefs<SedHendelseRina>())
-                if (GyldigeHendelser.sendt(sedHendelseRina)) {
-                    logger.debug(sedHendelseRina.toJson())
-                    val vedtaksId =
-                        sedInfoService.hentVedtaksId(sedHendelseRina.rinaSakId, sedHendelseRina.rinaDokumentId)
-                    val sedMeldingUt = sedInfoService.populerSedMeldingUt(
-                        sedHendelseRina.rinaSakId,
-                        sedHendelseRina.rinaDokumentId,
-                        vedtaksId,
-                        HendelseType.SED_SENDT,
-                        sedHendelseRina.avsenderLand
-                    )
-                    statistikkPublisher.publiserSedHendelse(sedMeldingUt)
-                }
-            } catch (ex: Exception) {
-                logger.error("Noe gikk galt under behandling av statistikk-sed-hendelse:\n $hendelse \n", ex)
-                throw RuntimeException(ex.message)
-            }
-            latch.countDown()
-        }
     }
+
+    @KafkaListener(
+        topics = ["\${kafka.statistikk-sed-mottatt.topic}"],
+        groupId = "\${kafka.statistikk-sed-mottatt.groupid}",
+    )
+    fun consumeSedMottatt(hendelse: String, cr: ConsumerRecord<String, String>, acknowledgment: Acknowledgment) {
+        MDC.putCloseable("x_request_id", UUID.randomUUID().toString()).use {}
+
+        try {
+            val sedHendelseRina = mapJsonToAny(hendelse, typeRefs<SedHendelseRina>())
+            if (GyldigeHendelser.mottatt(sedHendelseRina)) {
+                val sedMeldingUt = sedInfoService.populerSedMeldingUt(
+                    sedHendelseRina.rinaSakId,
+                    sedHendelseRina.rinaDokumentId,
+                    null,
+                    HendelseType.SED_MOTTATT,
+                    sedHendelseRina.avsenderLand
+                )
+                statistikkPublisher.publiserSedHendelse(sedMeldingUt)
+            }
+        } catch (ex: Exception) {
+            logger.error("Noe gikk galt under behandling av statistikk-sed-hendelse:\n $hendelse \n", ex)
+            throw RuntimeException(ex.message)
+        }
+        latch.countDown()
+    }
+
+    @KafkaListener(
+        topics = ["\${kafka.statistikk-sed-sendt.topic}"],
+        groupId = "\${kafka.statistikk-sed-sendt.groupid}",
+    )
+    fun consumeSedSendt(hendelse: String, cr: ConsumerRecord<String, String>, acknowledgment: Acknowledgment) {
+        MDC.putCloseable("x_request_id", UUID.randomUUID().toString()).use {
+        }
+
+        try {
+            val sedHendelseRina = mapJsonToAny(hendelse, typeRefs<SedHendelseRina>())
+            if (GyldigeHendelser.sendt(sedHendelseRina)) {
+                logger.debug(sedHendelseRina.toJson())
+                val vedtaksId =
+                    sedInfoService.hentVedtaksId(sedHendelseRina.rinaSakId, sedHendelseRina.rinaDokumentId)
+                val sedMeldingUt = sedInfoService.populerSedMeldingUt(
+                    sedHendelseRina.rinaSakId,
+                    sedHendelseRina.rinaDokumentId,
+                    vedtaksId,
+                    HendelseType.SED_SENDT,
+                    sedHendelseRina.avsenderLand
+                )
+                statistikkPublisher.publiserSedHendelse(sedMeldingUt)
+            }
+        } catch (ex: Exception) {
+            logger.error("Noe gikk galt under behandling av statistikk-sed-hendelse:\n $hendelse \n", ex)
+            throw RuntimeException(ex.message)
+        }
+        latch.countDown()
+    }
+
 }
