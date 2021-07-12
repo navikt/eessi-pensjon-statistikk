@@ -29,7 +29,7 @@ class StatistikkListener(
     fun getLatch() = latch
 
     @KafkaListener(
-        id = "statistikkListener",
+        id = "opprettelseListener",
         idIsGroup = false,
         topics = ["\${kafka.statistikk-inn.topic}"],
         groupId = "\${kafka.statistikk-inn.groupid}",

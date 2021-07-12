@@ -65,7 +65,7 @@ class KafkaConfig(
         return DefaultKafkaConsumerFactory(configMap)
     }
 
-    @Bean("listenerFactory", "statistikkListener")
+    @Bean("listenerFactory", "opprettelseListener")
     fun kafkaListenerContainerFactory(): ConcurrentKafkaListenerContainerFactory<String, String>? {
         val factory = ConcurrentKafkaListenerContainerFactory<String, String>()
         factory.consumerFactory = consumerFactory()
@@ -78,7 +78,7 @@ class KafkaConfig(
     @DependsOn("listenerFactory")
     fun listenerConfig(registry: KafkaListenerEndpointRegistry): ApplicationRunner? {
         return ApplicationRunner {
-            val statisikkListener = registry.getListenerContainer("statistikkListener")
+            val statisikkListener = registry.getListenerContainer("opprettelseListener")
             statisikkListener.containerProperties.authorizationExceptionRetryInterval = Duration.ofSeconds(4L)
             statisikkListener.start()
 
