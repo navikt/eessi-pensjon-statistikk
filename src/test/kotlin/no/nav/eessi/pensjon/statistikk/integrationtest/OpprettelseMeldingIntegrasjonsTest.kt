@@ -11,9 +11,11 @@ import no.nav.eessi.pensjon.statistikk.listener.OpprettelseMelding
 import no.nav.eessi.pensjon.statistikk.listener.StatistikkListener
 import no.nav.eessi.pensjon.statistikk.models.OpprettelseType
 import no.nav.eessi.pensjon.statistikk.services.StatistikkPublisher
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.kafka.core.KafkaTemplate
 import org.springframework.kafka.test.context.EmbeddedKafka
 import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.ActiveProfiles
@@ -35,9 +37,11 @@ class OpprettelseMeldingIntegrasjonsTest : IntegrationBase(STATISTIKK_TOPIC) {
     @Autowired
     lateinit var statistikkPublisher: StatistikkPublisher
 
+    @Autowired
+    private lateinit var template: KafkaTemplate<String, String>
+
     @Test
     fun `En buc hendelse skal sendes videre til riktig kanal  `() {
-
         //init mock server
         CustomMockServer()
             .mockSTSToken()
@@ -54,16 +58,11 @@ class OpprettelseMeldingIntegrasjonsTest : IntegrationBase(STATISTIKK_TOPIC) {
             vedtaksId = null
         )
         //send msg
-        sendMelding(budMelding).let {
+        template.send(STATISTIKK_TOPIC, budMelding.toJson()).let {
             statistikkListener.getLatch().await(10, TimeUnit.SECONDS)
         }
 
-
         verify(exactly = 1) { statistikkPublisher.publiserBucOpprettetStatistikk(any()) }
+        assertThat(statistikkListener.getLatch().await(10, TimeUnit.SECONDS))
     }
-
-    private fun sendMelding(melding: OpprettelseMelding) {
-        sedMottattProducerTemplate.sendDefault(melding.toJson())
-    }
-
 }
