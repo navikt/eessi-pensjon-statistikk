@@ -76,7 +76,7 @@ class KafkaConfig(
         configMap[ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG] = onpremBootstrapServers
         configMap[ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG] = false
         configMap[ConsumerConfig.AUTO_OFFSET_RESET_CONFIG] = "earliest"
-        configMap[JsonDeserializer.TRUSTED_PACKAGES] = "java.util, java.lang,no.nav.eux.rina.app.kafka.KafkaMessage"
+        configMap[JsonDeserializer.TRUSTED_PACKAGES] = "java.util, java.lang,no.nav.eux.rina.app.kafka"
 
         return DefaultKafkaConsumerFactory(configMap)
     }
