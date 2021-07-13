@@ -29,14 +29,6 @@ eessi.pensjon.statistikk:
 ENV: 'q2'
 
 spring:
-  kafka:
-    listener:
-      ack-mode: manual
-    consumer:
-      enable-auto-commit: false
-    bootstrap-servers: ${spring.embedded.kafka.brokers}
-    properties:
-      security.protocol: plaintext
   main:
     allow-bean-definition-overriding: true
 

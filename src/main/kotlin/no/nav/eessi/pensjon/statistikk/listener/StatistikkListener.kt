@@ -29,6 +29,7 @@ class StatistikkListener(
     fun getLatch() = latch
 
     @KafkaListener(
+       containerFactory = "aivenKafkaListenerContainerFactory",
         topics = ["\${kafka.statistikk-inn.topic}"],
         groupId = "\${kafka.statistikk-inn.groupid}",
     )
@@ -71,6 +72,7 @@ class StatistikkListener(
     }
 
     @KafkaListener(
+        containerFactory = "onpremKafkaListenerContainerFactory",
         topics = ["\${kafka.statistikk-sed-mottatt.topic}"],
         groupId = "\${kafka.statistikk-sed-mottatt.groupid}",
     )
@@ -97,6 +99,7 @@ class StatistikkListener(
     }
 
     @KafkaListener(
+        containerFactory = "onpremKafkaListenerContainerFactory",
         topics = ["\${kafka.statistikk-sed-sendt.topic}"],
         groupId = "\${kafka.statistikk-sed-sendt.groupid}",
     )

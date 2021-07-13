@@ -4,6 +4,7 @@ package no.nav.eessi.pensjon.config
 import org.apache.kafka.clients.CommonClientConfigs
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.clients.producer.ProducerConfig
+import org.apache.kafka.common.config.SaslConfigs
 import org.apache.kafka.common.config.SslConfigs
 import org.apache.kafka.common.serialization.StringDeserializer
 import org.apache.kafka.common.serialization.StringSerializer
@@ -27,51 +28,77 @@ class KafkaConfig(
     @param:Value("\${kafka.keystore.path}") private val keystorePath: String,
     @param:Value("\${kafka.credstore.password}") private val credstorePassword: String,
     @param:Value("\${kafka.truststore.path}") private val truststorePath: String,
-    @param:Value("\${kafka.brokers}") private val bootstrapServers: String,
-    @param:Value("\${kafka.security.protocol}") private val securityProtocol: String
+    @param:Value("\${kafka.brokers}") private val aivenBootstrapServers: String,
+    @param:Value("\${ONPREM_KAFKA_BOOTSTRAP_SERVERS_URL}") private val onpremBootstrapServers: String,
+    @param:Value("\${kafka.security.protocol}") private val securityProtocol: String,
+    @param:Value("\${srvusername}") private val srvusername: String,
+    @param:Value("\${srvpassword}") private val srvpassword: String
+
 ) {
 
     @Bean
-    fun producerFactory(): ProducerFactory<String, String> {
+    fun aivenProducerFactory(): ProducerFactory<String, String> {
         val configMap: MutableMap<String, Any> = HashMap()
-        populerCommonConfig(configMap)
+        populerAivenCommonConfig(configMap)
         configMap[ProducerConfig.CLIENT_ID_CONFIG] = "eessi-pensjon-statistikk"
         configMap[ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG] = StringSerializer::class.java
         configMap[ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG] = JsonSerializer::class.java
-        configMap[ProducerConfig.BOOTSTRAP_SERVERS_CONFIG] = bootstrapServers
+        configMap[ProducerConfig.BOOTSTRAP_SERVERS_CONFIG] = aivenBootstrapServers
 
         return DefaultKafkaProducerFactory(configMap)
     }
 
     @Bean
-    fun kafkaTemplate(): KafkaTemplate<String, String> {
-        return KafkaTemplate(producerFactory())
+    fun aivenKafkaTemplate(): KafkaTemplate<String, String> {
+        return KafkaTemplate(aivenProducerFactory())
     }
 
     @Bean
-    fun consumerFactory(): ConsumerFactory<String, String> {
+    fun aivenKafkaConsumerFactory(): ConsumerFactory<String, String> {
         val configMap: MutableMap<String, Any> = HashMap()
-        populerCommonConfig(configMap)
+        populerAivenCommonConfig(configMap)
         configMap[ConsumerConfig.CLIENT_ID_CONFIG] = "eessi-pensjon-statistikk"
         configMap[ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG] = StringDeserializer::class.java
         configMap[ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG] = JsonDeserializer::class.java
-        configMap[ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG] = bootstrapServers
+        configMap[ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG] = aivenBootstrapServers
         configMap[ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG] = false
 
         return DefaultKafkaConsumerFactory(configMap)
     }
 
     @Bean
-    fun kafkaListenerContainerFactory(): ConcurrentKafkaListenerContainerFactory<String, String>? {
+    fun onpremKafkaConsumerFactory(): ConsumerFactory<String, String> {
+        val configMap: MutableMap<String, Any> = HashMap()
+        populerOnpremCommonConfig(configMap)
+        configMap[ConsumerConfig.CLIENT_ID_CONFIG] = "eessi-pensjon-statistikk"
+        configMap[ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG] = StringDeserializer::class.java
+        configMap[ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG] = JsonDeserializer::class.java
+        configMap[ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG] = onpremBootstrapServers
+        configMap[ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG] = false
+
+        return DefaultKafkaConsumerFactory(configMap)
+    }
+
+    @Bean
+    fun aivenKafkaListenerContainerFactory(): ConcurrentKafkaListenerContainerFactory<String, String>? {
         val factory = ConcurrentKafkaListenerContainerFactory<String, String>()
-        factory.consumerFactory = consumerFactory()
+        factory.consumerFactory = aivenKafkaConsumerFactory()
         factory.containerProperties.ackMode = ContainerProperties.AckMode.MANUAL
         factory.containerProperties.authorizationExceptionRetryInterval =  Duration.ofSeconds(4L)
-
         return factory
     }
 
-    private fun populerCommonConfig(configMap: MutableMap<String, Any>) {
+    @Bean
+    fun onpremKafkaListenerContainerFactory(): ConcurrentKafkaListenerContainerFactory<String, String>? {
+        val factory = ConcurrentKafkaListenerContainerFactory<String, String>()
+        factory.consumerFactory = onpremKafkaConsumerFactory()
+        factory.containerProperties.ackMode = ContainerProperties.AckMode.MANUAL
+        factory.containerProperties.authorizationExceptionRetryInterval =  Duration.ofSeconds(4L)
+        return factory
+    }
+
+
+    private fun populerAivenCommonConfig(configMap: MutableMap<String, Any>) {
         configMap[SslConfigs.SSL_KEYSTORE_LOCATION_CONFIG] = keystorePath
         configMap[SslConfigs.SSL_TRUSTSTORE_PASSWORD_CONFIG] = credstorePassword
         configMap[SslConfigs.SSL_KEYSTORE_PASSWORD_CONFIG] = credstorePassword
@@ -80,5 +107,12 @@ class KafkaConfig(
         configMap[SslConfigs.SSL_KEYSTORE_TYPE_CONFIG] = "PKCS12"
         configMap[SslConfigs.SSL_TRUSTSTORE_LOCATION_CONFIG] = truststorePath
         configMap[CommonClientConfigs.SECURITY_PROTOCOL_CONFIG] = securityProtocol
+    }
+
+    private fun populerOnpremCommonConfig(configMap: MutableMap<String, Any>) {
+        configMap[ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG] = false
+        configMap[CommonClientConfigs.SECURITY_PROTOCOL_CONFIG] = "SASL_SSL"
+        configMap[SaslConfigs.SASL_MECHANISM] = "PLAIN"
+        configMap[SaslConfigs.SASL_JAAS_CONFIG] = "org.apache.kafka.common.security.plain.PlainLoginModule required username=${srvusername} password=${srvpassword}"
     }
 }
