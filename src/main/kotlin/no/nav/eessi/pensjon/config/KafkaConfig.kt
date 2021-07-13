@@ -75,6 +75,7 @@ class KafkaConfig(
         configMap[ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG] = JsonDeserializer::class.java
         configMap[ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG] = onpremBootstrapServers
         configMap[ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG] = false
+        configMap[ConsumerConfig.AUTO_OFFSET_RESET_CONFIG] = "earliest"
 
         return DefaultKafkaConsumerFactory(configMap)
     }
