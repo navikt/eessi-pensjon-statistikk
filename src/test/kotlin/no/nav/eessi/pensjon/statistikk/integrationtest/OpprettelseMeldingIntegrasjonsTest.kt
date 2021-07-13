@@ -55,7 +55,7 @@ class OpprettelseMeldingIntegrasjonsTest : IntegrationBase(STATISTIKK_TOPIC) {
         )
         //send msg
         sendMelding(budMelding).let {
-            statistikkListener.getLatch().await(15000, TimeUnit.MILLISECONDS)
+            statistikkListener.getLatch().await(10, TimeUnit.SECONDS)
         }
 
 

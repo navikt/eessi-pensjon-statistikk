@@ -31,7 +31,6 @@ const val STATISTIKK_TOPIC_MOTATT = "eessi-pensjon-statistikk-sed-mottatt"
 )
 class SedMottattIntegrasjonsTest : IntegrationBase(STATISTIKK_TOPIC_MOTATT) {
 
-
     var euxService: EuxService = mockk()
 
     @Autowired
@@ -39,7 +38,6 @@ class SedMottattIntegrasjonsTest : IntegrationBase(STATISTIKK_TOPIC_MOTATT) {
 
     @Autowired
     lateinit var statistikkPublisher: StatistikkPublisher
-
 
     @Test
     fun `En sed hendelse skal sendes videre til riktig kanal  `() {
@@ -57,7 +55,7 @@ class SedMottattIntegrasjonsTest : IntegrationBase(STATISTIKK_TOPIC_MOTATT) {
         val model = mapJsonToAny(sedHendelse, typeRefs<SedHendelseRina>())
 
         sedMottattProducerTemplate.sendDefault(model.toJson()).let {
-            statistikkListener.getLatch().await(40000, TimeUnit.MILLISECONDS)
+            statistikkListener.getLatch().await(10, TimeUnit.SECONDS)
         }
         verify(exactly = 1) { statistikkPublisher.publiserSedHendelse(eq(sedMeldingP6000Ut())) }
     }

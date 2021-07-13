@@ -9,6 +9,7 @@ import no.nav.eessi.pensjon.s3.S3StorageService
 import no.nav.eessi.pensjon.security.sts.STSService
 import no.nav.eessi.pensjon.statistikk.S3StorageHelper
 import no.nav.eessi.pensjon.statistikk.services.StatistikkPublisher
+import org.apache.commons.lang3.RandomStringUtils
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.mockserver.integration.ClientAndServer
@@ -46,7 +47,6 @@ abstract class IntegrationBase(val topicName : String) {
     lateinit var sedMottattProducerTemplate: KafkaTemplate<Int, String>
     lateinit var container: KafkaMessageListenerContainer<String, String>
 
-
     @BeforeEach
     fun setup() {
         every { stsService.getSystemOidcToken() } returns "a nice little token?"
@@ -61,12 +61,13 @@ abstract class IntegrationBase(val topicName : String) {
     @AfterEach
     fun after() {
         embeddedKafka.kafkaServers.forEach { it.shutdown() }
+        container.stop()
         clearAllMocks()
     }
 
     private fun settOppUtitlityConsumer(topicNavn: String): KafkaMessageListenerContainer<String, String> {
         val consumerProperties = KafkaTestUtils.consumerProps(
-            "eessi-pensjon-group2",
+            RandomStringUtils.randomAlphabetic(10),
             "false",
             embeddedKafka
         )
@@ -80,7 +81,6 @@ abstract class IntegrationBase(val topicName : String) {
 
         return container
     }
-
 
     private fun settOppProducerTemplate(producer : String): KafkaTemplate<Int, String> {
         val senderProps = KafkaTestUtils.producerProps(embeddedKafka.brokersAsString)
@@ -108,13 +108,13 @@ abstract class IntegrationBase(val topicName : String) {
     init {
         val port = randomFrom()
         System.setProperty("mockserverport", port.toString())
+        println("Starting mockserver with port $port")
         mockServer = ClientAndServer.startClientAndServer(port)
 
     }
     private fun randomFrom(from: Int = 1024, to: Int = 65535): Int {
         return Random().nextInt(to - from) + from
     }
-
 
     class CustomMockServer() {
 
@@ -147,7 +147,5 @@ abstract class IntegrationBase(val topicName : String) {
                         .withBody(String(Files.readAllBytes(Paths.get(bucLocation))))
                 )
         }
-
     }
-
 }
