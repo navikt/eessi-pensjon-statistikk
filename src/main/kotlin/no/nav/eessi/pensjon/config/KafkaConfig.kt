@@ -92,7 +92,7 @@ class KafkaConfig(
         configMap[ConsumerConfig.AUTO_OFFSET_RESET_CONFIG] = "earliest"
 
 
-        return DefaultKafkaConsumerFactory(configMap, keyDeserializer, valueDeserializer)
+        return DefaultKafkaConsumerFactory(configMap, StringDeserializer(), StringDeserializer())
     }
 
     @Bean
