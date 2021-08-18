@@ -55,15 +55,20 @@ class KafkaConfig(
 
     @Bean
     fun aivenKafkaConsumerFactory(): ConsumerFactory<String, String> {
+        val keyDeserializer: JsonDeserializer<String> = JsonDeserializer(String::class.java)
+        keyDeserializer.setRemoveTypeHeaders(true)
+   /*     deserializer.addTrustedPackages("*")
+        deserializer.setUseTypeMapperForKey(true)*/
+
+        val valueDeserializer = StringDeserializer()
+
         val configMap: MutableMap<String, Any> = HashMap()
         populerAivenCommonConfig(configMap)
         configMap[ConsumerConfig.CLIENT_ID_CONFIG] = "eessi-pensjon-statistikk"
-        configMap[ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG] = StringDeserializer::class.java
-        configMap[ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG] = JsonDeserializer::class.java
         configMap[ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG] = aivenBootstrapServers
         configMap[ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG] = false
 
-        return DefaultKafkaConsumerFactory(configMap)
+        return DefaultKafkaConsumerFactory(configMap, keyDeserializer, valueDeserializer)
     }
 
     @Bean
