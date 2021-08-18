@@ -76,9 +76,9 @@ class KafkaConfig(
     @Bean
     fun onpremKafkaConsumerFactory(): ConsumerFactory<String, String> {
         val keyDeserializer: JsonDeserializer<String> = JsonDeserializer(String::class.java)
-        keyDeserializer.setRemoveTypeHeaders(true)
-        keyDeserializer.addTrustedPackages("*")
+        //keyDeserializer.setRemoveTypeHeaders(true)
         keyDeserializer.setUseTypeHeaders(false)
+        //keyDeserializer.addTrustedPackages("*")
         /*
       deserializer.setUseTypeMapperForKey(true)*/
 
