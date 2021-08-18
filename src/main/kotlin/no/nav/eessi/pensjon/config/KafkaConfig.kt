@@ -57,8 +57,9 @@ class KafkaConfig(
     fun aivenKafkaConsumerFactory(): ConsumerFactory<String, String> {
         val keyDeserializer: JsonDeserializer<String> = JsonDeserializer(String::class.java)
         keyDeserializer.setRemoveTypeHeaders(true)
-   /*     deserializer.addTrustedPackages("*")
-        deserializer.setUseTypeMapperForKey(true)*/
+        keyDeserializer.addTrustedPackages("*")
+        /*
+      deserializer.setUseTypeMapperForKey(true)*/
 
         val valueDeserializer = StringDeserializer()
 
