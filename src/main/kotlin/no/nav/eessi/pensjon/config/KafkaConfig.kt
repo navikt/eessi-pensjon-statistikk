@@ -58,6 +58,7 @@ class KafkaConfig(
         val keyDeserializer: JsonDeserializer<String> = JsonDeserializer(String::class.java)
         keyDeserializer.setRemoveTypeHeaders(true)
         keyDeserializer.addTrustedPackages("*")
+        keyDeserializer.setUseTypeHeaders(false)
         /*
       deserializer.setUseTypeMapperForKey(true)*/
 
