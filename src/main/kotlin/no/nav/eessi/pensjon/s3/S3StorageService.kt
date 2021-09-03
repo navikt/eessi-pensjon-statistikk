@@ -110,7 +110,7 @@ class S3StorageService(private val s3: AmazonS3){
         } catch (se: AmazonServiceException) {
             if (se.statusCode == 404) {
                 logger.info("Objektet som forsøkes å hentes finnes ikke $se")
-                throw se
+                return null
             } else {
                 logger.error("En feil oppstod under henting av objekt ex: $se message: ${se.errorMessage} errorcode: ${se.errorCode}")
                 throw se
