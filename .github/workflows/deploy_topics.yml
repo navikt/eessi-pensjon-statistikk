@@ -29,12 +29,12 @@ jobs:
           CLUSTER: dev-gcp
           RESOURCE: nais/topics/topic-privat-statistikk-q1.yaml
 
-#      - name: 'Deploy privat-statistikk to eessipensjon namespace'
-#        uses: nais/deploy/actions/deploy@v1
-#        env:
-#          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
-#          CLUSTER: prod-gcp
-#          RESOURCE: nais/topics/topic-privat-statistikk.yaml
+      - name: 'Deploy privat-statistikk to eessipensjon namespace'
+        uses: nais/deploy/actions/deploy@v1
+        env:
+          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+          CLUSTER: prod-gcp
+          RESOURCE: nais/topics/topic-privat-statistikk.yaml
 
       - name: 'Deploy public-statistikk-q2 to eessipensjon namespace'
         uses: nais/deploy/actions/deploy@v1
@@ -50,9 +50,9 @@ jobs:
           CLUSTER: dev-gcp
           RESOURCE: nais/topics/topic-public-statistikk-q1.yaml
 
-#      - name: 'Deploy public-statistikk to eessipensjon namespace'
-#        uses: nais/deploy/actions/deploy@v1
-#        env:
-#          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
-#          CLUSTER: prod-gcp
-#          RESOURCE: nais/topics/topic-public-statistikk.yaml
+      - name: 'Deploy public-statistikk to eessipensjon namespace'
+        uses: nais/deploy/actions/deploy@v1
+        env:
+          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+          CLUSTER: prod-gcp
+          RESOURCE: nais/topics/topic-public-statistikk.yaml
