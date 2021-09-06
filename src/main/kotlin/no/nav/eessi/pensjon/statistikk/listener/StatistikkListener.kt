@@ -90,6 +90,7 @@ class StatistikkListener(
                     sedHendelseRina.avsenderLand
                 )
                 statistikkPublisher.publiserSedHendelse(sedMeldingUt)
+                acknowledgment.acknowledge()
             }
         } catch (ex: Exception) {
             logger.error("Noe gikk galt under behandling av statistikk-sed-hendelse:\n $hendelse \n", ex)
@@ -121,6 +122,7 @@ class StatistikkListener(
                     sedHendelseRina.avsenderLand
                 )
                 statistikkPublisher.publiserSedHendelse(sedMeldingUt)
+                acknowledgment.acknowledge()
             }
         } catch (ex: Exception) {
             logger.error("Noe gikk galt under behandling av statistikk-sed-hendelse:\n $hendelse \n", ex)
