@@ -62,7 +62,7 @@ class StatistikkListener(
                     }
                 }
                 acknowledgment.acknowledge()
-                logger.info("Acket statistikk melding med offset: ${cr.offset()} i partisjon ${cr.partition()}")
+                logger.info("Acket opprettelse melding med offset: ${cr.offset()} i partisjon ${cr.partition()}")
             } catch (ex: Exception) {
                 logger.error("Noe gikk galt under behandling av statistikk-hendelse:\n $hendelse \n", ex)
                 throw RuntimeException(ex.message)
@@ -91,6 +91,7 @@ class StatistikkListener(
                 )
                 statistikkPublisher.publiserSedHendelse(sedMeldingUt)
                 acknowledgment.acknowledge()
+                logger.info("Acket sedMottatt melding med offset: ${cr.offset()} i partisjon ${cr.partition()}")
             }
         } catch (ex: Exception) {
             logger.error("Noe gikk galt under behandling av statistikk-sed-hendelse:\n $hendelse \n", ex)
@@ -123,6 +124,7 @@ class StatistikkListener(
                 )
                 statistikkPublisher.publiserSedHendelse(sedMeldingUt)
                 acknowledgment.acknowledge()
+                logger.info("Acket statistikk sedSendt melding med offset: ${cr.offset()} i partisjon ${cr.partition()}")
             }
         } catch (ex: Exception) {
             logger.error("Noe gikk galt under behandling av statistikk-sed-hendelse:\n $hendelse \n", ex)
