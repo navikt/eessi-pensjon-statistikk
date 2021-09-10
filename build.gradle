@@ -2,7 +2,7 @@ buildscript {
 
     ext {
         kotlinVersion = '1.4.31'
-        springBootVersion = '2.4.6'
+        springBootVersion = '2.5.4'
         logstashLogbackVersion = '6.6'
     }
 
@@ -45,7 +45,7 @@ version = '0.0.1-SNAPSHOT'
 dependencies {
 
     //eessi pensjon libs
-    implementation("no.nav.eessi.pensjon:ep-logging:1.0.6")
+    implementation("no.nav.eessi.pensjon:ep-logging:1.0.12")
     implementation("no.nav.eessi.pensjon:ep-personoppslag:7.1.2")
     implementation("no.nav.eessi.pensjon:ep-security-sts:0.0.10")
     implementation("no.nav.eessi.pensjon:ep-eux:1.0.40")
