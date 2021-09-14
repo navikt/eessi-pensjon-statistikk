@@ -50,7 +50,7 @@ class SedMottattIntegrasjonsTest : IntegrationBase(STATISTIKK_TOPIC_MOTATT) {
     lateinit var euxKlient: EuxKlient
 
     @Test
-    fun `En sed hendelse skal sendes videre til riktig kanal  `() {
+    fun `En sedmottatt hendelse skal sendes videre til riktig kanal `() {
 
         CustomMockServer()
             .mockSTSToken()
@@ -65,7 +65,7 @@ class SedMottattIntegrasjonsTest : IntegrationBase(STATISTIKK_TOPIC_MOTATT) {
         val model = mapJsonToAny(sedHendelse, typeRefs<SedHendelseRina>())
 
         template.send(STATISTIKK_TOPIC_MOTATT, model.toJson()).let {
-            statistikkListener.getLatch().await(10, TimeUnit.SECONDS)
+            statistikkListener.getLatch().await(30, TimeUnit.SECONDS)
         }
 
         verify(exactly = 1) { statistikkPublisher.publiserSedHendelse(eq(sedMeldingP6000Ut())) }
