@@ -25,7 +25,6 @@ import org.springframework.test.context.ActiveProfiles
 import java.util.concurrent.TimeUnit
 
 const val STATISTIKK_TOPIC_MOTATT = "eessi-pensjon-statistikk-sed-mottatt"
-/*private lateinit var mockServer: ClientAndServer*/
 
 @SpringBootTest(classes = [IntegrationBase.TestConfig::class])
 @ActiveProfiles("integrationtest")

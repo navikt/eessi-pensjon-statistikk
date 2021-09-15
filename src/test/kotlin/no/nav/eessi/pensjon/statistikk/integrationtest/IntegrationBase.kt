@@ -46,9 +46,6 @@ abstract class IntegrationBase(val topicName : String) {
     @MockkBean
     lateinit var stsService: STSService
 
-/*    @MockkBean
-    lateinit var aivenKafkaTemplate : Aiven*/
-
     @BeforeEach
     fun setup() {
         every { stsService.getSystemOidcToken() } returns "a nice little token?"
@@ -61,6 +58,7 @@ abstract class IntegrationBase(val topicName : String) {
             it.shutdown()
         }
         clearAllMocks()
+        embeddedKafka.destroy()
     }
 
     @TestConfiguration
