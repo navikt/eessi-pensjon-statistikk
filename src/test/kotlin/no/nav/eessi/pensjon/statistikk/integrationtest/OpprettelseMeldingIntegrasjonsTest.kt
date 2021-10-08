@@ -29,7 +29,7 @@ private const val STATISTIKK_TOPIC = "eessi-pensjon-statistikk-inn"
 @EmbeddedKafka(
     topics = [STATISTIKK_TOPIC]
 )
-class OpprettelseMeldingIntegrasjonsTest : IntegrationBase(STATISTIKK_TOPIC) {
+class OpprettelseMeldingIntegrasjonsTest : IntegrationBase() {
 
     @Autowired
     lateinit var statistikkListener: StatistikkListener

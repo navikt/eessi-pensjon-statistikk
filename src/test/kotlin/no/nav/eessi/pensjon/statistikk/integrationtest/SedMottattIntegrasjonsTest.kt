@@ -32,7 +32,7 @@ const val STATISTIKK_TOPIC_MOTATT = "eessi-pensjon-statistikk-sed-mottatt"
 @EmbeddedKafka(
     topics = [STATISTIKK_TOPIC_MOTATT]
 )
-class SedMottattIntegrasjonsTest : IntegrationBase(STATISTIKK_TOPIC_MOTATT) {
+class SedMottattIntegrasjonsTest : IntegrationBase() {
 
     var euxService: EuxService = mockk()
 
