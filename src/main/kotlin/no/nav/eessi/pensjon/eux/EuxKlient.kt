@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Component
 import org.springframework.web.client.HttpClientErrorException
+import org.springframework.web.client.HttpServerErrorException
 import org.springframework.web.client.RestTemplate
 import javax.annotation.PostConstruct
 
@@ -38,6 +39,9 @@ class EuxKlient(
         catch (ex: HttpClientErrorException) {
             logger.error("Feil ved henting av Buc metadata for rinasakId: $rinaSakId")
             throw ex
+        } catch (sx: HttpServerErrorException) {
+            logger.error("Serverfeil ved henting av Buc metadata for rinasakId: $rinaSakId")
+            throw sx
         }
     }
 
