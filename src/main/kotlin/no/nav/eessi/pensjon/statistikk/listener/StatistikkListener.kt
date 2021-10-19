@@ -43,7 +43,8 @@ class StatistikkListener(
 
             try {
                 logger.debug("Hendelse : ${hendelse.toJson()}")
-                val melding = mapJsonToAny(hendelse, typeRefs<OpprettelseMelding>())
+//                val melding = mapJsonToAny(hendelse, typeRefs<OpprettelseMelding>())
+                val melding = meldingsMapping(hendelse)
 
                 when (melding.opprettelseType) {
                     OpprettelseType.BUC -> {
@@ -131,6 +132,24 @@ class StatistikkListener(
             throw RuntimeException(ex.message)
         }
         latch.countDown()
+    }
+
+    fun meldingsMapping(hendelse: String): OpprettelseMelding {
+        return try {
+            logger.debug("Opprinnelig mapping av hendelse")
+            mapJsonToAny(hendelse, typeRefs<OpprettelseMelding>())
+        } catch (ex: Exception) {
+            try {
+            logger.debug("Trimming og mapping av hendelse")
+                val json = hendelse.replace("\\n", "").replace("\\", "")
+                logger.debug("Trimmet json: $json")
+                mapJsonToAny(json, typeRefs<OpprettelseMelding>())
+            } catch (ex2: Exception) {
+                logger.error("Could not compute")
+                throw RuntimeException()
+            }
+
+        }
     }
 
 }

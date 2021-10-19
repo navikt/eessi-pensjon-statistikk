@@ -8,6 +8,7 @@ import org.apache.kafka.common.config.SaslConfigs
 import org.apache.kafka.common.config.SslConfigs
 import org.apache.kafka.common.serialization.StringDeserializer
 import org.apache.kafka.common.serialization.StringSerializer
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -31,9 +32,11 @@ class KafkaConfig(
     @param:Value("\${ONPREM_KAFKA_BOOTSTRAP_SERVERS_URL}") private val onpremBootstrapServers: String,
     @param:Value("\${kafka.security.protocol}") private val securityProtocol: String,
     @param:Value("\${srvusername}") private val srvusername: String,
-    @param:Value("\${srvpassword}") private val srvpassword: String
+    @param:Value("\${srvpassword}") private val srvpassword: String,
+    @Autowired private val kafkaErrorHandler: KafkaErrorHandler?,
 
-) {
+
+    ) {
 
     @Bean
     fun aivenProducerFactory(): ProducerFactory<String, String> {
@@ -91,6 +94,9 @@ class KafkaConfig(
         factory.consumerFactory = aivenKafkaConsumerFactory()
         factory.containerProperties.ackMode = ContainerProperties.AckMode.MANUAL
         factory.containerProperties.authorizationExceptionRetryInterval =  Duration.ofSeconds(4L)
+        if (kafkaErrorHandler != null) {
+            factory.setErrorHandler(kafkaErrorHandler)
+        }
         return factory
     }
 
@@ -100,6 +106,9 @@ class KafkaConfig(
         factory.consumerFactory = onpremKafkaConsumerFactory()
         factory.containerProperties.ackMode = ContainerProperties.AckMode.MANUAL
         factory.containerProperties.authorizationExceptionRetryInterval =  Duration.ofSeconds(4L)
+        if (kafkaErrorHandler != null) {
+            factory.setErrorHandler(kafkaErrorHandler)
+        }
         return factory
     }
 
