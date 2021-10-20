@@ -20,7 +20,10 @@ internal class EuxServiceTest {
 
     @BeforeEach
     fun before() {
-        euxService = EuxService(EuxKlient(euxOidcRestTemplate))
+        val euxKlient  = EuxKlient(euxOidcRestTemplate)
+        euxKlient.initMetrics()
+        euxService = EuxService(euxKlient)
+
     }
 
     @Test

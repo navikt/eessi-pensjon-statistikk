@@ -22,44 +22,43 @@ class EuxKlient(
     private val logger = LoggerFactory.getLogger(EuxKlient::class.java)
 
     private lateinit var hentBucMetadata: MetricsHelper.Metric
+    private lateinit var hentSedMetadata: MetricsHelper.Metric
 
     @PostConstruct
     fun initMetrics() {
         hentBucMetadata = metricsHelper.init("hentBucMetadata")
+        hentSedMetadata = metricsHelper.init("hentSedMetadata")
     }
 
     fun getBucMetadata(rinaSakId: String): BucMetadata? {
         logger.info("Henter BUC metadata for rinasakId: $rinaSakId")
-
-        return try {
-            euxOidcRestTemplate.getForObject(
-            "/buc/$rinaSakId",
-            BucMetadata::class.java)
-        }
-        catch (ex: HttpClientErrorException) {
-            logger.error("Feil ved henting av Buc metadata for rinasakId: $rinaSakId")
-            throw ex
-        } catch (sx: HttpServerErrorException) {
-            logger.error("Serverfeil ved henting av Buc metadata for rinasakId: $rinaSakId")
-            throw sx
+        return hentBucMetadata.measure {
+            try {
+                euxOidcRestTemplate.getForObject("/buc/$rinaSakId", BucMetadata::class.java)
+            } catch (ex: HttpClientErrorException) {
+                logger.error("Feil ved henting av Buc metadata for rinasakId: $rinaSakId")
+                throw ex
+            } catch (sx: HttpServerErrorException) {
+                logger.error("Serverfeil ved henting av Buc metadata for rinasakId: $rinaSakId")
+                throw sx
+            }
         }
     }
 
     fun getSed(rinaSakId: String, rinaDokumentId: String): Sed {
         logger.info("Henter BUC metadata for rinasakId: $rinaSakId")
 
-        return try {
-            euxOidcRestTemplate.getForObject(
-                "/buc/$rinaSakId/sed/$rinaDokumentId",
-                Sed::class.java)!!
-        }
-        catch (ex: HttpClientErrorException) {
-            if(ex.statusCode == HttpStatus.NOT_FOUND){
-                logger.warn("Fant ikke SED for rinasakId: $rinaSakId rinaDokumentId $rinaDokumentId")
-                throw RuntimeException("Fant ikke SED for rinasakId: $rinaSakId rinaDokumentId $rinaDokumentId")
+        return hentSedMetadata.measure {
+            try {
+                euxOidcRestTemplate.getForObject("/buc/$rinaSakId/sed/$rinaDokumentId", Sed::class.java)!!
+            } catch (ex: HttpClientErrorException) {
+                if (ex.statusCode == HttpStatus.NOT_FOUND) {
+                    logger.warn("Fant ikke SED for rinasakId: $rinaSakId rinaDokumentId $rinaDokumentId")
+                    throw RuntimeException("Fant ikke SED for rinasakId: $rinaSakId rinaDokumentId $rinaDokumentId")
+                }
+                logger.error("Feil ved henting av SED metadata for rinasakId: $rinaSakId rinaDokumentId $rinaDokumentId")
+                throw ex
             }
-            logger.error("Feil ved henting av SED metadata for rinasakId: $rinaSakId rinaDokumentId $rinaDokumentId")
-            throw ex
         }
     }
 
