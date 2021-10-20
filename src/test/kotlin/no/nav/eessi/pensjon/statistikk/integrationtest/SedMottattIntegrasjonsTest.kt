@@ -50,6 +50,7 @@ class SedMottattIntegrasjonsTest : IntegrationBase() {
 
     @Test
     fun `En sed hendelse skal sendes videre til riktig kanal  `() {
+        euxKlient.initMetrics()
 
         CustomMockServer()
             .mockSTSToken()

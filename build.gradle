@@ -4,6 +4,7 @@ buildscript {
         kotlinVersion = '1.4.31'
         springBootVersion = '2.5.4'
         logstashLogbackVersion = '6.6'
+        archunitVersion = '0.11.0'
     }
 
     repositories {
@@ -47,7 +48,7 @@ dependencies {
     implementation("no.nav.eessi.pensjon:ep-logging:1.0.12")
     implementation("no.nav.eessi.pensjon:ep-personoppslag:7.1.2")
     implementation("no.nav.eessi.pensjon:ep-security-sts:0.0.10")
-    implementation("no.nav.eessi.pensjon:ep-eux:1.0.40")
+    implementation("no.nav.eessi.pensjon:ep-eux:1.0.54")
 
     // Spring-boot
     implementation("org.springframework.boot:spring-boot-starter-web:${springBootVersion}")
@@ -92,7 +93,7 @@ dependencies {
         exclude module: 'junit'
     }
     // Architecture tests
-    testImplementation 'com.tngtech.archunit:archunit:0.14.1'
+    testImplementation ("com.tngtech.archunit:archunit:${archunitVersion}")
 
 
 }
@@ -170,4 +171,3 @@ dependencyUpdates {
     }
     revision = 'release'
 }
-

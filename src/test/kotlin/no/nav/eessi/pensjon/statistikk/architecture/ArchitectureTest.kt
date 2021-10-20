@@ -3,6 +3,8 @@ package no.nav.eessi.pensjon.statistikk.architecture
 import com.tngtech.archunit.core.importer.ClassFileImporter
 import com.tngtech.archunit.core.importer.ImportOption
 import com.tngtech.archunit.core.importer.ImportOptions
+import com.tngtech.archunit.lang.syntax.ArchRuleDefinition.classes
+import com.tngtech.archunit.lang.syntax.ArchRuleDefinition.fields
 import com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses
 import com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noMethods
 import com.tngtech.archunit.library.Architectures.layeredArchitecture
@@ -12,6 +14,9 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
+import org.springframework.web.bind.annotation.RestController
+import java.util.logging.Logger
+
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class ArchitectureTest {
@@ -35,7 +40,6 @@ class ArchitectureTest {
     }
 
     @Test
-
     fun `Packages should not have cyclic depenedencies`() {
         slices().matching("$root.(*)..").should().beFreeOfCycles().check(classesToAnalyze)
     }
@@ -44,6 +48,28 @@ class ArchitectureTest {
     @Test
     fun `Services should not depend on eachother`() {
         slices().matching("..$root.services.(**)").should().notDependOnEachOther().check(classesToAnalyze)
+    }
+
+    @Test
+    fun `Loggers should be private`(){
+        fields().that().haveRawType(Logger::class.java).should().bePrivate().andShould().beStatic().andShould().beFinal() .check(classesToAnalyze)
+    }
+
+    @Test
+    fun `Controllers should have RestController-annotation`() {
+        classes().that()
+            .haveSimpleNameEndingWith("Controller")
+            .should().beAnnotatedWith(RestController::class.java)
+            .check(classesToAnalyze)
+    }
+
+    @Test
+    fun `controllers should not call each other`() {
+        classes().that()
+            .areAnnotatedWith(RestController::class.java)
+            .should().onlyBeAccessed().byClassesThat().areNotAnnotatedWith(RestController::class.java)
+            .because("Controllers should not call each other")
+            .check(classesToAnalyze)
     }
 
     @Test

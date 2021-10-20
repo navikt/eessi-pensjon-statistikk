@@ -6,12 +6,10 @@ import io.mockk.verify
 import no.nav.eessi.pensjon.eux.BucMetadata
 import no.nav.eessi.pensjon.eux.EuxService
 import no.nav.eessi.pensjon.eux.model.buc.BucType
-import no.nav.eessi.pensjon.json.toJson
-import no.nav.eessi.pensjon.statistikk.listener.OpprettelseMelding
 import no.nav.eessi.pensjon.statistikk.listener.StatistikkListener
-import no.nav.eessi.pensjon.statistikk.models.OpprettelseType
 import no.nav.eessi.pensjon.statistikk.services.StatistikkPublisher
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -39,6 +37,11 @@ class OpprettelseEscapetMeldingTest : IntegrationBase() {
 
     @Autowired
     private lateinit var template: KafkaTemplate<String, String>
+
+    @BeforeEach
+    fun before() {
+        statistikkListener.initMetrics()
+    }
 
     @Test
     fun `En buc hendelse med escapet character skal sendes videre til riktig kanal  `() {
