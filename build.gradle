@@ -2,7 +2,7 @@ buildscript {
 
     ext {
         kotlinVersion = '1.4.31'
-        springBootVersion = '2.5.4'
+        springBootVersion = '2.5.6'
         logstashLogbackVersion = '6.6'
         archunitVersion = '0.11.0'
     }
