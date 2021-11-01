@@ -34,7 +34,7 @@ class EuxKlient(
         logger.info("Henter BUC metadata for rinasakId: $rinaSakId")
         return hentBucMetadata.measure {
             try {
-                euxOidcRestTemplate.getForObject("/buc/$rinaSakId", BucMetadata::class.java)
+                retryHelper({ euxOidcRestTemplate.getForObject("/buc/$rinaSakId", BucMetadata::class.java)} )
             } catch (ex: HttpClientErrorException) {
                 logger.error("Feil ved henting av Buc metadata for rinasakId: $rinaSakId")
                 throw ex
@@ -50,7 +50,7 @@ class EuxKlient(
 
         return hentSedMetadata.measure {
             try {
-                euxOidcRestTemplate.getForObject("/buc/$rinaSakId/sed/$rinaDokumentId", Sed::class.java)!!
+                retryHelper({ euxOidcRestTemplate.getForObject("/buc/$rinaSakId/sed/$rinaDokumentId", Sed::class.java)!! })
             } catch (ex: HttpClientErrorException) {
                 if (ex.statusCode == HttpStatus.NOT_FOUND) {
                     logger.warn("Fant ikke SED for rinasakId: $rinaSakId rinaDokumentId $rinaDokumentId")
@@ -61,6 +61,25 @@ class EuxKlient(
             }
         }
     }
+
+    @Throws(Throwable::class)
+    fun <T> retryHelper(func: () -> T, maxAttempts: Int = 3, waitTimes: Long = 3000L): T {
+        var failException: Throwable? = null
+        var count = 0
+        while (count < maxAttempts) {
+            try {
+                return func.invoke()
+            } catch (ex: Throwable) {
+                count++
+                logger.warn("feilet å kontakte eux prøver på nytt. nr.: $count, feilmelding: ${ex.message}")
+                failException = ex
+                Thread.sleep(waitTimes)
+            }
+        }
+        logger.error("Feilet å kontakte eux melding: ${failException?.message}", failException)
+        throw failException!!
+    }
+
 
 }
 
