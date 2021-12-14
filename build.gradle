@@ -1,7 +1,7 @@
 buildscript {
 
     ext {
-        kotlinVersion = '1.4.31'
+        kotlinVersion = '1.6.0'
         springBootVersion = '2.5.6'
         logstashLogbackVersion = '6.6'
         archunitVersion = '0.11.0'
@@ -47,9 +47,9 @@ dependencies {
 
     //eessi pensjon libs
     implementation("no.nav.eessi.pensjon:ep-logging:1.0.12")
-    implementation("no.nav.eessi.pensjon:ep-personoppslag:7.1.2")
     implementation("no.nav.eessi.pensjon:ep-security-sts:0.0.10")
     implementation("no.nav.eessi.pensjon:ep-eux:1.0.54")
+    implementation("no.nav.eessi.pensjon:ep-metrics:$epMetricsVersion")
 
     // Spring-boot
     implementation("org.springframework.boot:spring-boot-starter-web:${springBootVersion}")
@@ -58,8 +58,9 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-actuator:${springBootVersion}")
 
     implementation 'com.fasterxml.jackson.module:jackson-module-kotlin'
+
+    implementation(platform("org.jetbrains.kotlin:kotlin-bom:$kotlinVersion"))
     implementation 'org.jetbrains.kotlin:kotlin-reflect'
-    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8'
     implementation 'org.springframework.kafka:spring-kafka'
 
     //aws and s3
@@ -67,7 +68,6 @@ dependencies {
 
     // Micrometer
     implementation("io.micrometer:micrometer-registry-prometheus")
-    implementation("no.nav.eessi.pensjon:ep-metrics:$epMetricsVersion")
 
     // Logging
     implementation("net.logstash.logback:logstash-logback-encoder:${logstashLogbackVersion}")
