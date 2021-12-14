@@ -5,6 +5,7 @@ buildscript {
         springBootVersion = '2.5.6'
         logstashLogbackVersion = '6.6'
         archunitVersion = '0.11.0'
+        epMetricsVersion = "0.4.12"
     }
 
     repositories {
@@ -66,7 +67,7 @@ dependencies {
 
     // Micrometer
     implementation("io.micrometer:micrometer-registry-prometheus")
-    implementation("no.nav.eessi.pensjon:ep-metrics:0.4.0")
+    implementation("no.nav.eessi.pensjon:ep-metrics:$epMetricsVersion")
 
     // Logging
     implementation("net.logstash.logback:logstash-logback-encoder:${logstashLogbackVersion}")
