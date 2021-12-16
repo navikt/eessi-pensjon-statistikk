@@ -15,9 +15,12 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Profile
 import org.springframework.kafka.annotation.EnableKafka
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory
-import org.springframework.kafka.core.*
+import org.springframework.kafka.core.ConsumerFactory
+import org.springframework.kafka.core.DefaultKafkaConsumerFactory
+import org.springframework.kafka.core.DefaultKafkaProducerFactory
+import org.springframework.kafka.core.KafkaTemplate
+import org.springframework.kafka.core.ProducerFactory
 import org.springframework.kafka.listener.ContainerProperties
-import org.springframework.kafka.support.serializer.JsonDeserializer
 import java.time.Duration
 
 
@@ -33,9 +36,7 @@ class KafkaConfig(
     @param:Value("\${kafka.security.protocol}") private val securityProtocol: String,
     @param:Value("\${srvusername}") private val srvusername: String,
     @param:Value("\${srvpassword}") private val srvpassword: String,
-    @Autowired private val kafkaErrorHandler: KafkaErrorHandler?,
-
-
+    @Autowired private val kafkaErrorHandler: KafkaErrorHandler?
     ) {
 
     @Bean
@@ -56,27 +57,16 @@ class KafkaConfig(
     }
 
     fun aivenKafkaConsumerFactory(): ConsumerFactory<String, String> {
-        val keyDeserializer: StringDeserializer = StringDeserializer()
-       /* keyDeserializer.setRemoveTypeHeaders(true)
-        keyDeserializer.addTrustedPackages("*")
-        keyDeserializer.setUseTypeHeaders(false)*/
-
-        val valueDeserializer = StringDeserializer()
-
         val configMap: MutableMap<String, Any> = HashMap()
         populerAivenCommonConfig(configMap)
         configMap[ConsumerConfig.CLIENT_ID_CONFIG] = "eessi-pensjon-statistikk"
         configMap[ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG] = aivenBootstrapServers
         configMap[ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG] = false
 
-
-        return DefaultKafkaConsumerFactory(configMap, keyDeserializer, valueDeserializer)
+        return DefaultKafkaConsumerFactory(configMap, StringDeserializer(), StringDeserializer())
     }
 
     fun onpremKafkaConsumerFactory(): ConsumerFactory<String, String> {
-        val keyDeserializer: JsonDeserializer<String> = JsonDeserializer(String::class.java)
-        keyDeserializer.setUseTypeHeaders(false)
-
         val configMap: MutableMap<String, Any> = HashMap()
         populerOnpremCommonConfig(configMap)
         configMap[ConsumerConfig.CLIENT_ID_CONFIG] = "eessi-pensjon-statistikk"
@@ -93,7 +83,9 @@ class KafkaConfig(
         val factory = ConcurrentKafkaListenerContainerFactory<String, String>()
         factory.consumerFactory = aivenKafkaConsumerFactory()
         factory.containerProperties.ackMode = ContainerProperties.AckMode.MANUAL
-        factory.containerProperties.authorizationExceptionRetryInterval =  Duration.ofSeconds(4L)
+        //factory.containerProperties.authorizationExceptionRetryInterval =  Duration.ofSeconds(4L)
+        factory.containerProperties.setAuthExceptionRetryInterval(Duration.ofSeconds(4L))
+
         if (kafkaErrorHandler != null) {
             factory.setErrorHandler(kafkaErrorHandler)
         }
@@ -105,7 +97,8 @@ class KafkaConfig(
         val factory = ConcurrentKafkaListenerContainerFactory<String, String>()
         factory.consumerFactory = onpremKafkaConsumerFactory()
         factory.containerProperties.ackMode = ContainerProperties.AckMode.MANUAL
-        factory.containerProperties.authorizationExceptionRetryInterval =  Duration.ofSeconds(4L)
+        //factory.containerProperties.authorizationExceptionRetryInterval =  Duration.ofSeconds(4L)
+        factory.containerProperties.setAuthExceptionRetryInterval(Duration.ofSeconds(4L))
         if (kafkaErrorHandler != null) {
             factory.setErrorHandler(kafkaErrorHandler)
         }

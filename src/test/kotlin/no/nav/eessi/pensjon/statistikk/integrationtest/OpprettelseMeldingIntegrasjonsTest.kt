@@ -32,12 +32,6 @@ private const val STATISTIKK_TOPIC = "eessi-pensjon-statistikk-inn"
 class OpprettelseMeldingIntegrasjonsTest : IntegrationBase() {
 
     @Autowired
-    lateinit var statistikkListener: StatistikkListener
-
-    @Autowired
-    lateinit var statistikkPublisher: StatistikkPublisher
-
-    @Autowired
     private lateinit var template: KafkaTemplate<String, String>
 
     @Test

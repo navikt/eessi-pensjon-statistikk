@@ -1,7 +1,7 @@
 package no.nav.eessi.pensjon.statistikk.listener
 
+import no.nav.eessi.pensjon.eux.model.SedType
 import no.nav.eessi.pensjon.eux.model.buc.BucType
-import no.nav.eessi.pensjon.eux.model.sed.SedType
 
 data class SedHendelseRina(
     val id: Long? = 0,

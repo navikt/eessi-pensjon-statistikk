@@ -50,11 +50,12 @@ class KafkaConfigIntegrationtest(
 
     @Bean
     fun onpremKafkaListenerContainerFactory(): ConcurrentKafkaListenerContainerFactory<String, String>? {
-        val factory = ConcurrentKafkaListenerContainerFactory<String, String>()
-        factory.consumerFactory = kafkaConsumerFactory()
-        factory.containerProperties.ackMode = ContainerProperties.AckMode.MANUAL
-        factory.containerProperties.authorizationExceptionRetryInterval =  Duration.ofSeconds(4L)
-        return factory
+        return ConcurrentKafkaListenerContainerFactory<String, String>().apply {
+            consumerFactory = kafkaConsumerFactory()
+            containerProperties.ackMode = ContainerProperties.AckMode.MANUAL
+            //containerProperties.authorizationExceptionRetryInterval =  Duration.ofSeconds(4L)
+            containerProperties.setAuthExceptionRetryInterval(Duration.ofSeconds(4L))
+        }
     }
 
     @Bean
@@ -64,11 +65,12 @@ class KafkaConfigIntegrationtest(
 
     @Bean
     fun aivenKafkaListenerContainerFactory(): ConcurrentKafkaListenerContainerFactory<String, String>? {
-        val factory = ConcurrentKafkaListenerContainerFactory<String, String>()
-        factory.consumerFactory = kafkaConsumerFactory()
-        factory.containerProperties.ackMode = ContainerProperties.AckMode.MANUAL
-        factory.containerProperties.authorizationExceptionRetryInterval =  Duration.ofSeconds(4L)
-        return factory
+        return ConcurrentKafkaListenerContainerFactory<String, String>().apply {
+            consumerFactory = kafkaConsumerFactory()
+            containerProperties.ackMode = ContainerProperties.AckMode.MANUAL
+            //containerProperties.authorizationExceptionRetryInterval =  Duration.ofSeconds(4L)
+            containerProperties.setAuthExceptionRetryInterval(Duration.ofSeconds(4L))
+        }
     }
 
     private fun populerCommonConfig(configMap: MutableMap<String, Any>) {

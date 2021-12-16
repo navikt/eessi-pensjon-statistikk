@@ -37,12 +37,6 @@ class SedMottattIntegrasjonsTest : IntegrationBase() {
     var euxService: EuxService = mockk()
 
     @Autowired
-    lateinit var statistikkListener: StatistikkListener
-
-    @Autowired
-    lateinit var statistikkPublisher: StatistikkPublisher
-
-    @Autowired
     private lateinit var template: KafkaTemplate<String, String>
 
     @Autowired
