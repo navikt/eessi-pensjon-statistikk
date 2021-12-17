@@ -1,4 +1,4 @@
-package no.nav.eessi.pensjon.config
+package no.nav.eessi.pensjon.statistikk.integrationtest
 
 
 import org.apache.kafka.clients.CommonClientConfigs
@@ -16,11 +16,10 @@ import org.springframework.kafka.core.*
 import org.springframework.kafka.listener.ContainerProperties
 import java.time.Duration
 
-
 @EnableKafka
 @Profile("integrationtest")
 @Configuration
-class KafkaConfigIntegrationtest(
+class IntegrationtestConfig(
     @param:Value("\${spring.embedded.kafka.brokers}") private val bootstrapServers: String) {
 
     @Bean
@@ -53,7 +52,6 @@ class KafkaConfigIntegrationtest(
         return ConcurrentKafkaListenerContainerFactory<String, String>().apply {
             consumerFactory = kafkaConsumerFactory()
             containerProperties.ackMode = ContainerProperties.AckMode.MANUAL
-            //containerProperties.authorizationExceptionRetryInterval =  Duration.ofSeconds(4L)
             containerProperties.setAuthExceptionRetryInterval(Duration.ofSeconds(4L))
         }
     }
@@ -68,7 +66,6 @@ class KafkaConfigIntegrationtest(
         return ConcurrentKafkaListenerContainerFactory<String, String>().apply {
             consumerFactory = kafkaConsumerFactory()
             containerProperties.ackMode = ContainerProperties.AckMode.MANUAL
-            //containerProperties.authorizationExceptionRetryInterval =  Duration.ofSeconds(4L)
             containerProperties.setAuthExceptionRetryInterval(Duration.ofSeconds(4L))
         }
     }

@@ -3,6 +3,7 @@ package no.nav.eessi.pensjon.statistikk.integrationtest
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import no.nav.eessi.pensjon.EessiPensjonStatistikkApplication
 import no.nav.eessi.pensjon.ResourceHelper
 import no.nav.eessi.pensjon.eux.BucMetadata
 import no.nav.eessi.pensjon.eux.EuxKlient
@@ -12,9 +13,7 @@ import no.nav.eessi.pensjon.json.mapJsonToAny
 import no.nav.eessi.pensjon.json.toJson
 import no.nav.eessi.pensjon.json.typeRefs
 import no.nav.eessi.pensjon.statistikk.listener.SedHendelseRina
-import no.nav.eessi.pensjon.statistikk.listener.StatistikkListener
 import no.nav.eessi.pensjon.statistikk.models.SedMeldingP6000Ut
-import no.nav.eessi.pensjon.statistikk.services.StatistikkPublisher
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -24,9 +23,8 @@ import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.ActiveProfiles
 import java.util.concurrent.TimeUnit
 
-const val STATISTIKK_TOPIC_MOTATT = "eessi-pensjon-statistikk-sed-mottatt"
 
-@SpringBootTest(classes = [IntegrationBase.TestConfig::class])
+@SpringBootTest(classes = [IntegrationBase.TestConfig::class, IntegrationtestConfig::class, EessiPensjonStatistikkApplication::class], value = ["SPRING_PROFILES_ACTIVE", "integrationtest"])
 @ActiveProfiles("integrationtest")
 @DirtiesContext
 @EmbeddedKafka(
@@ -35,9 +33,6 @@ const val STATISTIKK_TOPIC_MOTATT = "eessi-pensjon-statistikk-sed-mottatt"
 class SedMottattIntegrasjonsTest : IntegrationBase() {
 
     var euxService: EuxService = mockk()
-
-    @Autowired
-    private lateinit var template: KafkaTemplate<String, String>
 
     @Autowired
     lateinit var euxKlient: EuxKlient
@@ -58,8 +53,9 @@ class SedMottattIntegrasjonsTest : IntegrationBase() {
         val sedHendelse = ResourceHelper.getResourceSedHendelseRina("eux/P_BUC_01_P2000.json").toJson()
         val model = mapJsonToAny(sedHendelse, typeRefs<SedHendelseRina>())
 
-        template.send(STATISTIKK_TOPIC_MOTATT, model.toJson()).let {
-            statistikkListener.getLatch().await(10, TimeUnit.SECONDS)
+        initAndRunContainer(STATISTIKK_TOPIC_MOTATT).also {
+            it.sendMsgOnDefaultTopic(model.toJson())
+            it.waitForlatchMottatt(statistikkListener)
         }
 
         verify(exactly = 1) { statistikkPublisher.publiserSedHendelse(eq(sedMeldingP6000Ut())) }

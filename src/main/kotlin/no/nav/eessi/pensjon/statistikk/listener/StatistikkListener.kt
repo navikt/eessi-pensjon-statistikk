@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.kafka.support.Acknowledgment
 import org.springframework.stereotype.Component
+import org.springframework.stereotype.Service
 import java.util.*
 import java.util.concurrent.CountDownLatch
 import javax.annotation.PostConstruct
@@ -30,11 +31,15 @@ class StatistikkListener(
     private val logger = LoggerFactory.getLogger(StatistikkListener::class.java)
 
     private val latch = CountDownLatch(1)
+    private val latchMottatt = CountDownLatch(1)
+
     private lateinit var opprettMeldingMetric: MetricsHelper.Metric
     private lateinit var sedMottattMeldingMetric: MetricsHelper.Metric
     private lateinit var sedSedSendMeldingtMetric: MetricsHelper.Metric
 
     fun getLatch() = latch
+    fun getLatchMottatt() = latchMottatt
+
 
     @PostConstruct
     fun initMetrics() {
@@ -59,7 +64,6 @@ class StatistikkListener(
             opprettMeldingMetric.measure {
                 try {
                     logger.debug("Hendelse : ${hendelse.toJson()}")
-    //                val melding = mapJsonToAny(hendelse, typeRefs<OpprettelseMelding>())
                     val melding = meldingsMapping(hendelse)
 
                     when (melding.opprettelseType) {
@@ -115,7 +119,7 @@ class StatistikkListener(
                     logger.error("Noe gikk galt under behandling av statistikk-sed-hendelse:\n $hendelse \n", ex)
                     throw RuntimeException(ex.message)
                 }
-                latch.countDown()
+                latchMottatt.countDown()
             }
         }
     }

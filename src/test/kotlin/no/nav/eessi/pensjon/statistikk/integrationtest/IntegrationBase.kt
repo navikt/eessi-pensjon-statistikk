@@ -10,13 +10,13 @@ import no.nav.eessi.pensjon.security.sts.STSService
 import no.nav.eessi.pensjon.statistikk.S3StorageHelper
 import no.nav.eessi.pensjon.statistikk.listener.StatistikkListener
 import no.nav.eessi.pensjon.statistikk.services.StatistikkPublisher
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.mockserver.integration.ClientAndServer
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.test.context.TestConfiguration
 import org.springframework.context.annotation.Bean
-import org.springframework.kafka.core.ConsumerFactory
+import org.springframework.kafka.core.DefaultKafkaConsumerFactory
 import org.springframework.kafka.core.KafkaTemplate
 import org.springframework.kafka.core.ProducerFactory
 import org.springframework.kafka.listener.ContainerProperties
@@ -27,6 +27,9 @@ import org.springframework.kafka.test.utils.ContainerTestUtils
 import org.springframework.kafka.test.utils.KafkaTestUtils
 import java.util.*
 import java.util.concurrent.TimeUnit
+
+const val STATISTIKK_TOPIC = "eessi-pensjon-statistikk-inn"
+const val STATISTIKK_TOPIC_MOTATT = "eessi-pensjon-statistikk-sed-mottatt"
 
 abstract class IntegrationBase() {
 
@@ -41,22 +44,26 @@ abstract class IntegrationBase() {
 
     @MockkBean
     lateinit var stsService: STSService
-    @Autowired
-    lateinit var consumerFactory: ConsumerFactory<String, String>
 
     @Autowired
     lateinit var producerFactory: ProducerFactory<String, String>
 
-     var mockServer: ClientAndServer
+    var mockServer: ClientAndServer
+
+    init {
+        randomFrom().apply {
+            System.setProperty("mockserverport", "" + this)
+            mockServer = ClientAndServer.startClientAndServer(this)
+        }
+    }
 
     @BeforeEach
     fun setup() {
         every { stsService.getSystemOidcToken() } returns "a nice little token?"
     }
 
-
+    @AfterEach
     fun after() {
-        println("****************************** after ********************************")
         println("************************* CLEANING UP AFTER CLASS*****************************")
         clearAllMocks()
         embeddedKafka.kafkaServers.forEach { it.shutdown() }
@@ -65,16 +72,13 @@ abstract class IntegrationBase() {
     }
 
     fun initAndRunContainer(topic: String): TestResult {
-        println("*************************  INIT START *****************************")
-
-        val container = settOppUtitlityConsumer(topic)
+        val container = initConsumer(topic)
         container.start()
         ContainerTestUtils.waitForAssignment(container, embeddedKafka.partitionsPerTopic)
-
-        println("*************************  INIT DONE *****************************")
-
         var template = KafkaTemplate(producerFactory).apply { defaultTopic = topic }
-        return TestResult(template, container)
+        return TestResult(template, container).also {
+            println("*************************  INIT DONE *****************************")
+        }
     }
 
     data class TestResult(
@@ -83,20 +87,21 @@ abstract class IntegrationBase() {
     ) {
 
         fun sendMsgOnDefaultTopic(kafkaMsgFromPath : String){
-            kafkaTemplate.sendDefault(javaClass.getResource(kafkaMsgFromPath).readText())
+            kafkaTemplate.sendDefault(kafkaMsgFromPath)
         }
 
         fun waitForlatch(sendtListner: StatistikkListener) = sendtListner.getLatch().await(10, TimeUnit.SECONDS)
+        fun waitForlatchMottatt(sendtListner: StatistikkListener) = sendtListner.getLatchMottatt().await(10, TimeUnit.SECONDS)
     }
 
-    private fun settOppUtitlityConsumer(topicName: String): KafkaMessageListenerContainer<String, String> {
+    private fun initConsumer(topicName: String): KafkaMessageListenerContainer<String, String> {
         val consumerProperties = KafkaTestUtils.consumerProps(
             "eessi-pensjon-group2",
             "false",
             embeddedKafka
         )
         consumerProperties["auto.offset.reset"] = "earliest"
-
+        val consumerFactory = DefaultKafkaConsumerFactory<String, String>(consumerProperties)
         val container = KafkaMessageListenerContainer(consumerFactory, ContainerProperties(topicName))
 
         container.setupMessageListener(
@@ -107,8 +112,6 @@ abstract class IntegrationBase() {
 
     @TestConfiguration
     class TestConfig {
-        @Value("\${" + EmbeddedKafkaBroker.SPRING_EMBEDDED_KAFKA_BROKERS + "}")
-        private lateinit var brokerAddresses: String
 
         @Bean
         fun statistikkPublisher(): StatistikkPublisher {
@@ -121,13 +124,6 @@ abstract class IntegrationBase() {
         }
     }
 
-    init {
-        val port = randomFrom()
-        println("****************************** init med post: $port ********************************")
-
-        System.setProperty("mockserverport", "" + port)
-        mockServer = ClientAndServer.startClientAndServer(port)
-    }
     private fun randomFrom(from: Int = 1024, to: Int = 65535): Int {
         return Random().nextInt(to - from) + from
     }
