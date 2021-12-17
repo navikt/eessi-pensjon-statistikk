@@ -2,8 +2,8 @@ package no.nav.eessi.pensjon.statistikk.models
 
 import no.nav.eessi.pensjon.ResourceHelper
 import no.nav.eessi.pensjon.eux.Sed
+import no.nav.eessi.pensjon.eux.model.SedType
 import no.nav.eessi.pensjon.eux.model.buc.BucType
-import no.nav.eessi.pensjon.eux.model.sed.SedType
 import no.nav.eessi.pensjon.json.mapAnyToJson
 import no.nav.eessi.pensjon.json.mapJsonToAny
 import no.nav.eessi.pensjon.json.toJson

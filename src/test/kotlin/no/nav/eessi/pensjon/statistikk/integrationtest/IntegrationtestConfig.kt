@@ -1,4 +1,4 @@
-package no.nav.eessi.pensjon.config
+package no.nav.eessi.pensjon.statistikk.integrationtest
 
 
 import org.apache.kafka.clients.CommonClientConfigs
@@ -16,11 +16,10 @@ import org.springframework.kafka.core.*
 import org.springframework.kafka.listener.ContainerProperties
 import java.time.Duration
 
-
 @EnableKafka
 @Profile("integrationtest")
 @Configuration
-class KafkaConfigIntegrationtest(
+class IntegrationtestConfig(
     @param:Value("\${spring.embedded.kafka.brokers}") private val bootstrapServers: String) {
 
     @Bean
@@ -50,11 +49,11 @@ class KafkaConfigIntegrationtest(
 
     @Bean
     fun onpremKafkaListenerContainerFactory(): ConcurrentKafkaListenerContainerFactory<String, String>? {
-        val factory = ConcurrentKafkaListenerContainerFactory<String, String>()
-        factory.consumerFactory = kafkaConsumerFactory()
-        factory.containerProperties.ackMode = ContainerProperties.AckMode.MANUAL
-        factory.containerProperties.authorizationExceptionRetryInterval =  Duration.ofSeconds(4L)
-        return factory
+        return ConcurrentKafkaListenerContainerFactory<String, String>().apply {
+            consumerFactory = kafkaConsumerFactory()
+            containerProperties.ackMode = ContainerProperties.AckMode.MANUAL
+            containerProperties.setAuthExceptionRetryInterval(Duration.ofSeconds(4L))
+        }
     }
 
     @Bean
@@ -64,11 +63,11 @@ class KafkaConfigIntegrationtest(
 
     @Bean
     fun aivenKafkaListenerContainerFactory(): ConcurrentKafkaListenerContainerFactory<String, String>? {
-        val factory = ConcurrentKafkaListenerContainerFactory<String, String>()
-        factory.consumerFactory = kafkaConsumerFactory()
-        factory.containerProperties.ackMode = ContainerProperties.AckMode.MANUAL
-        factory.containerProperties.authorizationExceptionRetryInterval =  Duration.ofSeconds(4L)
-        return factory
+        return ConcurrentKafkaListenerContainerFactory<String, String>().apply {
+            consumerFactory = kafkaConsumerFactory()
+            containerProperties.ackMode = ContainerProperties.AckMode.MANUAL
+            containerProperties.setAuthExceptionRetryInterval(Duration.ofSeconds(4L))
+        }
     }
 
     private fun populerCommonConfig(configMap: MutableMap<String, Any>) {
