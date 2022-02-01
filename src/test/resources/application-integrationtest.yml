@@ -25,7 +25,7 @@ s3_fss_url: "http://objectstore.rook-ceph.svc.nais.local"
 
 eessi.pensjon.statistikk:
   s3:
-    bucket.name: 'eessipensjon'
+    bucket.name: 'eessi-pensjon-statistikk'
 ENV: 'q2'
 
 spring:

@@ -27,7 +27,7 @@ class S3StorageHelper {
                     AwsClientBuilder.EndpointConfiguration("http://localhost:$s3Port", "us-east-1")
                 )
                 .build()
-                .also { it.createBucket("eessipensjon") }
+                .also { it.createBucket("eessi-pensjon-statistikk") }
 
             return S3StorageService(s3MockClient).also {
                 it.bucketname  = s3MockClient.listBuckets().get(0).name
