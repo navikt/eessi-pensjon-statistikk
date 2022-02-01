@@ -21,6 +21,3 @@ spec:
     - team: eessipensjon
       application: eessi-pensjon-fagmodul-q2
       access: write
-    - team: eessipensjon
-      application: eessi-pensjon-karapace
-      access: readwrite   # read, write, readwrite

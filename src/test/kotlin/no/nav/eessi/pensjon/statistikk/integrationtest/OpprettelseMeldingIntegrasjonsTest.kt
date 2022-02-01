@@ -3,7 +3,7 @@ package no.nav.eessi.pensjon.statistikk.integrationtest
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import no.nav.eessi.pensjon.EessiPensjonStatistikkApplication
+import no.nav.eessi.pensjon.StatistikkApplicationIntegration
 import no.nav.eessi.pensjon.eux.BucMetadata
 import no.nav.eessi.pensjon.eux.EuxService
 import no.nav.eessi.pensjon.eux.model.buc.BucType
@@ -16,7 +16,7 @@ import org.springframework.kafka.test.context.EmbeddedKafka
 import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.ActiveProfiles
 
-@SpringBootTest(classes = [IntegrationBase.TestConfig::class, IntegrationtestConfig::class, EessiPensjonStatistikkApplication::class], value = ["SPRING_PROFILES_ACTIVE", "integrationtest"])
+@SpringBootTest(classes = [IntegrationBase.TestConfig::class, IntegrationtestConfig::class, StatistikkApplicationIntegration::class], value = ["SPRING_PROFILES_ACTIVE", "integrationtest"])
 @ActiveProfiles("integrationtest")
 @DirtiesContext
 @EmbeddedKafka(
@@ -28,7 +28,6 @@ class OpprettelseMeldingIntegrasjonsTest : IntegrationBase() {
     fun `En buc hendelse skal sendes videre til riktig kanal  `() {
         //init mock server
         CustomMockServer()
-            .mockSTSToken()
             .medBuc("/buc/123", "src/test/resources/buc/bucMedP2000.json")
 
         val bucMetadata  = BucMetadata (listOf(), BucType.P_BUC_01, "2020-12-08T09:52:55.345+0000")

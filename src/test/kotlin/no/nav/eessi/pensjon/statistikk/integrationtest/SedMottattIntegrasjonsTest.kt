@@ -3,8 +3,8 @@ package no.nav.eessi.pensjon.statistikk.integrationtest
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import no.nav.eessi.pensjon.EessiPensjonStatistikkApplication
 import no.nav.eessi.pensjon.ResourceHelper
+import no.nav.eessi.pensjon.StatistikkApplicationIntegration
 import no.nav.eessi.pensjon.eux.BucMetadata
 import no.nav.eessi.pensjon.eux.EuxKlient
 import no.nav.eessi.pensjon.eux.EuxService
@@ -17,14 +17,12 @@ import no.nav.eessi.pensjon.statistikk.models.SedMeldingP6000Ut
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.kafka.core.KafkaTemplate
 import org.springframework.kafka.test.context.EmbeddedKafka
 import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.ActiveProfiles
-import java.util.concurrent.TimeUnit
 
 
-@SpringBootTest(classes = [IntegrationBase.TestConfig::class, IntegrationtestConfig::class, EessiPensjonStatistikkApplication::class], value = ["SPRING_PROFILES_ACTIVE", "integrationtest"])
+@SpringBootTest(classes = [IntegrationBase.TestConfig::class, IntegrationtestConfig::class, StatistikkApplicationIntegration::class], value = ["SPRING_PROFILES_ACTIVE", "integrationtest"])
 @ActiveProfiles("integrationtest")
 @DirtiesContext
 @EmbeddedKafka(
@@ -42,7 +40,6 @@ class SedMottattIntegrasjonsTest : IntegrationBase() {
         euxKlient.initMetrics()
 
         CustomMockServer()
-            .mockSTSToken()
             .medBuc("/buc/147729", "src/test/resources/buc/bucMedP6000.json")
             .medBuc("/buc/147729/sed/ae000ec3d718416a934e94e22c844ba6", "src/test/resources/sed/P6000-komplett.json")
 

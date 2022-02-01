@@ -15,10 +15,10 @@ private val logger = LoggerFactory.getLogger(S3StorageConfig::class.java)
 @Configuration
 class S3StorageConfig {
 
-    @Value("\${eessi_pensjon_statistikk_s3_creds_username}")
+    @Value("\${s3username}")
     lateinit var accessKey: String
 
-    @Value("\${eessi_pensjon_statistikk_s3_creds_password}")
+    @Value("\${s3password}")
     lateinit var secretKey: String
 
     @Value("\${s3_fss_url}")
