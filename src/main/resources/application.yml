@@ -35,7 +35,7 @@ kafka:
 
 eessi.pensjon.statistikk:
   s3:
-    bucket.name: 'eessiPensjonStatistikk'
+    bucket.name: 'eessi-pensjon-statistikk'
 
 s3_region: EUROPE-NORTH1
 
