@@ -1,7 +1,5 @@
 package no.nav.eessi.pensjon.statistikk
 
-import com.amazonaws.auth.AWSStaticCredentialsProvider
-import com.amazonaws.auth.AnonymousAWSCredentials
 import com.amazonaws.client.builder.AwsClientBuilder
 import com.amazonaws.services.s3.AmazonS3ClientBuilder
 import io.findify.s3mock.S3Mock
@@ -22,7 +20,9 @@ class S3StorageHelper {
 
             val s3MockClient = AmazonS3ClientBuilder.standard()
                 .withPathStyleAccessEnabled(true)
+/*
                 .withCredentials(AWSStaticCredentialsProvider(AnonymousAWSCredentials()))
+*/
                 .withEndpointConfiguration(
                     AwsClientBuilder.EndpointConfiguration("http://localhost:$s3Port", "us-east-1")
                 )
