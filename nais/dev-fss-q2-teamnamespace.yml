@@ -44,7 +44,7 @@ spec:
     - name: EUX_RINA_API_V1_URL
       value: https://eux-rina-api-q2.nais.preprod.local/cpi
     - name: S3_FSS_URL
-      value: gs://eessi-pensjon-statistikk
+      value: https://www.googleapis.com/storage/v1/b/eessi-pensjon-statistikk
     - name: ENV
       value: q2
     - name: PENSJONSINFORMASJON_URL
