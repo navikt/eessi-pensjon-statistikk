@@ -1,6 +1,5 @@
 package no.nav.eessi.pensjon.s3
 
-import com.amazonaws.auth.AWSStaticCredentialsProvider
 import com.amazonaws.auth.BasicAWSCredentials
 import com.amazonaws.client.builder.AwsClientBuilder
 import com.amazonaws.services.s3.AmazonS3
@@ -34,7 +33,7 @@ class S3StorageConfig {
         return AmazonS3ClientBuilder.standard()
                 .withEndpointConfiguration(AwsClientBuilder.EndpointConfiguration(s3Endpoint, s3Region))
                 .enablePathStyleAccess()
-                .withCredentials(AWSStaticCredentialsProvider(credentials))
+                //.withCredentials(AWSStaticCredentialsProvider(credentials))
                 .build()
     }
 }
