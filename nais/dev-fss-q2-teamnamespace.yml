@@ -6,6 +6,15 @@ metadata:
   labels:
     team: eessipensjon
 spec:
+  gcp:
+    buckets:
+      - name: eessiPensjonStatistikk
+        retentionPeriodDays: 30
+        lifecycleCondition:
+          age: 7
+          createdBefore: 2020-01-01
+          numNewerVersions: 2
+          withState: ANY
   envFrom:
     - secret: statistikk # value is the secret name in Google Secret Manager
   azure:
