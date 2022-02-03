@@ -17,7 +17,8 @@ import org.springframework.test.context.ActiveProfiles
 @ActiveProfiles("integrationtest")
 @DirtiesContext
 @EmbeddedKafka(
-    topics = [STATISTIKK_TOPIC]
+    topics = [STATISTIKK_TOPIC],
+    brokerProperties = ["log.dir=/tmp/embedded-OpprettelseEscapetMeldingTest"]
 )
 class OpprettelseEscapetMeldingTest : IntegrationBase() {
 
