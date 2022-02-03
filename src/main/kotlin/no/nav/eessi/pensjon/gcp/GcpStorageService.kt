@@ -4,7 +4,6 @@ import com.google.cloud.storage.BlobId
 import com.google.cloud.storage.BlobInfo
 import com.google.cloud.storage.Storage
 import com.google.cloud.storage.StorageException
-import com.google.cloud.storage.StorageOptions
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
@@ -12,11 +11,10 @@ import java.nio.ByteBuffer
 
 @Component
 class GcpStorageService(
-    @param:Value("\${eessi.pensjon.statistikk.s3.bucket.name}") var bucketname: String
+    @param:Value("\${eessi.pensjon.statistikk.s3.bucket.name}") var bucketname: String,
+    private val gcpStorage: Storage
 ) {
     private val logger = LoggerFactory.getLogger(GcpStorageService::class.java)
-
-    var gcpStorage: Storage = StorageOptions.getDefaultInstance().service
 
     init {
         ensureBucketExists()
@@ -30,9 +28,7 @@ class GcpStorageService(
     }
 
     fun lagre(storageKey: String, storageValue: String) {
-        val blobInfo =
-            BlobInfo.newBuilder(BlobId.of(bucketname, storageKey))
-                .setContentType("application/octet-stream").build() // todo contentType?
+        val blobInfo =  BlobInfo.newBuilder(BlobId.of(bucketname, storageKey)).setContentType("application/octet-stream").build()
         kotlin.runCatching {
             gcpStorage.writer(blobInfo).use {
                 it.write(ByteBuffer.wrap(storageValue.toByteArray()))
@@ -61,13 +57,7 @@ class GcpStorageService(
         }
     }
 
-    fun list(s: String): List<String>  {
-        TODO("Not yet implemented")
+    fun list(keyPrefix: String) : List<String> {
+        return gcpStorage.list(bucketname , Storage.BlobListOption.prefix(keyPrefix))?.values?.map { v -> v.name}  ?:  emptyList()
     }
-
-/*    fun list(keyPrefix: String): List<String> {
-        return gcpStorage.list(    bucketname,
-            Storage.BlobListOption.prefix(keyPrefix)
-        )?.values?.map { v -> String(v.name) } ?: emptyList()
-    }*/
 }

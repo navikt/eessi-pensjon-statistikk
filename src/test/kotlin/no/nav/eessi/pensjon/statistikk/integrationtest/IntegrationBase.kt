@@ -36,7 +36,7 @@ import javax.net.ssl.SSLContext
 
 const val STATISTIKK_TOPIC = "eessi-pensjon-statistikk-inn"
 const val STATISTIKK_TOPIC_MOTATT = "eessi-pensjon-statistikk-sed-mottatt"
-var mockServerPort = PortFactory.findFreePort()
+private var mockServerPort = PortFactory.findFreePort()
 
 abstract class IntegrationBase() {
 
