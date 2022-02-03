@@ -1,12 +1,22 @@
 package no.nav.eessi.pensjon.statistikk.services
 
-import no.nav.eessi.pensjon.eux.*
+import no.nav.eessi.pensjon.eux.Beregning
+import no.nav.eessi.pensjon.eux.BucMetadata
+import no.nav.eessi.pensjon.eux.Document
+import no.nav.eessi.pensjon.eux.EuxService
+import no.nav.eessi.pensjon.eux.Participant
+import no.nav.eessi.pensjon.eux.Vedtak
+import no.nav.eessi.pensjon.gcp.GcpStorageService
 import no.nav.eessi.pensjon.json.mapAnyToJson
 import no.nav.eessi.pensjon.json.mapJsonToAny
 import no.nav.eessi.pensjon.json.toJson
 import no.nav.eessi.pensjon.json.typeRefs
-import no.nav.eessi.pensjon.s3.S3StorageService
-import no.nav.eessi.pensjon.statistikk.models.*
+import no.nav.eessi.pensjon.statistikk.models.BucOpprettetMeldingUt
+import no.nav.eessi.pensjon.statistikk.models.HendelseType
+import no.nav.eessi.pensjon.statistikk.models.PensjonsType
+import no.nav.eessi.pensjon.statistikk.models.SedMeldingP6000Ut
+import no.nav.eessi.pensjon.statistikk.models.SedMeldingUt
+import no.nav.eessi.pensjon.statistikk.models.VedtakStatus
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 import java.time.OffsetDateTime
@@ -14,7 +24,7 @@ import java.time.format.DateTimeFormatter
 
 @Component
 class HendelsesAggregeringsService(private val euxService: EuxService,
-                                   private val s3StorageService: S3StorageService
+                                   private val gcpStorageService: GcpStorageService
 ) {
     private val offsetTimeDatePattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
     private val logger = LoggerFactory.getLogger(HendelsesAggregeringsService::class.java)
@@ -100,7 +110,7 @@ class HendelsesAggregeringsService(private val euxService: EuxService,
         val path = "${sedhendelse.rinaid}/${sedhendelse.dokumentId}"
         logger.info("Storing sedhendelse to S3: $path")
 
-        s3StorageService.put(path, mapAnyToJson(sedhendelse))
+        gcpStorageService.lagre(path, mapAnyToJson(sedhendelse))
     }
 
 
@@ -108,7 +118,7 @@ class HendelsesAggregeringsService(private val euxService: EuxService,
         val path = "$rinaSakId/$rinaDokumentId"
         logger.info("Getting SedhendelseID: $rinaSakId from $path")
 
-        val sedHendelseAsJson = s3StorageService.get(path)
+        val sedHendelseAsJson = gcpStorageService.hent(path)
 
         return sedHendelseAsJson?.let { mapJsonToAny(it, typeRefs<SedMeldingUt>()) }?.vedtaksId
         }
