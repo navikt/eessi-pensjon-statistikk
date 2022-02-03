@@ -8,8 +8,7 @@ metadata:
 spec:
   gcp:
     buckets:
-      - cascadingDelete: true
-        name: eessi-pensjon-statistikk
+      - name: eessi-pensjon-statistikk
         retentionPeriodDays: 30
         lifecycleCondition:
           age: 7
