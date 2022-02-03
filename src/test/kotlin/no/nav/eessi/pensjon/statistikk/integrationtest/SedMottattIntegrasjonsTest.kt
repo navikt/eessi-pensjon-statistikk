@@ -26,7 +26,8 @@ import org.springframework.test.context.ActiveProfiles
 @ActiveProfiles("integrationtest")
 @DirtiesContext
 @EmbeddedKafka(
-    topics = [STATISTIKK_TOPIC_MOTATT]
+    topics = [STATISTIKK_TOPIC_MOTATT],
+    brokerProperties = ["log.dir=/tmp/embedded-SedMottattIntegrasjonsTest"]
 )
 class SedMottattIntegrasjonsTest : IntegrationBase() {
 
