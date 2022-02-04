@@ -17,7 +17,11 @@ import org.testcontainers.containers.BindMode
 import org.testcontainers.containers.GenericContainer
 import org.testcontainers.junit.jupiter.Testcontainers
 import java.net.ServerSocket
+import java.net.URI
+import java.net.http.HttpClient
+import java.net.http.HttpRequest
 import java.net.http.HttpRequest.BodyPublishers
+import java.net.http.HttpResponse
 import java.net.http.HttpResponse.BodyHandlers
 import java.nio.ByteBuffer
 import java.time.LocalDateTime
@@ -43,6 +47,8 @@ class S3StorageServiceTest {
         gcs.start()
         val fakeGcsExternalUrl = "http://" + gcs.getContainerIpAddress().toString() + ":" + gcs.getFirstMappedPort()
 
+        updateExternalUrlWithContainerUrl(fakeGcsExternalUrl)
+
         storage = StorageOptions.newBuilder()
             .setCredentials(NoCredentials.getInstance())
             .setHost(fakeGcsExternalUrl)
@@ -55,9 +61,7 @@ class S3StorageServiceTest {
     @Throws(Exception::class)
     private fun updateExternalUrlWithContainerUrl(fakeGcsExternalUrl: String) {
         val modifyExternalUrlRequestUri = "$fakeGcsExternalUrl/_internal/config"
-        val updateExternalUrlJson = ("{"
-                + "\"externalUrl\": \"" + fakeGcsExternalUrl + "\""
-                + "}")
+        val updateExternalUrlJson = ("{" + "\"externalUrl\": \"" + fakeGcsExternalUrl + "\"" + "}")
         val req: HttpRequest = HttpRequest.newBuilder()
             .uri(URI.create(modifyExternalUrlRequestUri))
             .header("Content-Type", "application/json")
@@ -66,10 +70,7 @@ class S3StorageServiceTest {
         val response: HttpResponse<Void> = HttpClient.newBuilder().build()
             .send(req, BodyHandlers.discarding())
         if (response.statusCode() !== 200) {
-            throw RuntimeException(
-                "error updating fake-gcs-server with external url, response status code " + response.statusCode()
-                    .toString() + " != 200"
-            )
+            throw RuntimeException("error updating fake-gcs-server with external url, response status code " + response.statusCode().toString() + " != 200")
         }
     }
 
@@ -93,23 +94,19 @@ class S3StorageServiceTest {
         val nextFile = "sample2.txt"
         val newBucket2 = "bucket2"
 
+        //hent fra storage
         val blobId = BlobId.of(newBucket2, nextFile)
         storage.create(BucketInfo.newBuilder(newBucket2).build())
         val channel = storage.writer(BlobInfo.newBuilder(blobId).build())
         channel.write(ByteBuffer.wrap("textContent".toByteArray()))
         channel.close()
-/*
+
         var blobValue2 = storage.get(newBucket2, nextFile)
         val fileContent2 = String(blobValue2.getContent())
         assertEquals("textContent", fileContent2)
-*/
-
     }
 
-
-
-
-        @Test
+    @Test
     @Disabled
     fun `add files in different directories and list them all`() {
         val aktoerId1 = "14725802541"
