@@ -55,7 +55,7 @@ class S3StorageServiceTest {
             .build()
             .service
 
-        //gcpStorageService = GcpStorageService( "bucket", storage)
+        gcpStorageService = GcpStorageService( "bucket", storage)
     }
 
     @Throws(Exception::class)
@@ -84,7 +84,6 @@ class S3StorageServiceTest {
         val newBucket = "bucket"
         val newFile = "sample.txt"
         val textContent = "sample"
-
         //hent fra storage
         var blobValue = storage.get(newBucket, newFile)
         val fileContent = String(blobValue.getContent())
@@ -104,6 +103,7 @@ class S3StorageServiceTest {
         var blobValue2 = storage.get(newBucket2, nextFile)
         val fileContent2 = String(blobValue2.getContent())
         assertEquals("textContent", fileContent2)
+
     }
 
     @Test
