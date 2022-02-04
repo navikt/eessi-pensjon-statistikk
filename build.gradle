@@ -112,7 +112,7 @@ dependencies {
     }
 
     //testcontainers
-    testImplementation("org.testcontainers:junit-jupiter:1.14.3")
+    testImplementation('org.testcontainers:junit-jupiter:1.16.3')
     testImplementation "org.testcontainers:testcontainers:1.16.3"
 
 

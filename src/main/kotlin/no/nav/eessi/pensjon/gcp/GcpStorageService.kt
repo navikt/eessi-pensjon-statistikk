@@ -1,13 +1,15 @@
 package no.nav.eessi.pensjon.gcp
 
+import com.google.cloud.storage.Blob
 import com.google.cloud.storage.BlobId
-import com.google.cloud.storage.BlobInfo
 import com.google.cloud.storage.Storage
 import com.google.cloud.storage.StorageException
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import java.nio.ByteBuffer
+import java.nio.channels.WritableByteChannel
+
 
 @Component
 class GcpStorageService(
@@ -28,15 +30,27 @@ class GcpStorageService(
     }
 
     fun lagre(storageKey: String, storageValue: String) {
-        val blobInfo =  BlobInfo.newBuilder(BlobId.of(bucketname, storageKey)).setContentType("application/octet-stream").build()
-        kotlin.runCatching {
-            gcpStorage.writer(blobInfo).use {
+
+        //val blobInfo =  BlobInfo.newBuilder(BucketInfo.of(bucketname), storageKey).build()
+        val blob: Blob = gcpStorage.get(BlobId.of(bucketname, "bucket.txt"))
+
+        if(blob.exists()){
+            val channel: WritableByteChannel = blob.writer()
+            channel.write(ByteBuffer.wrap(storageValue.toByteArray()))
+            kotlin.runCatching {
+                gcpStorage.writer(blob)
+/*            gcpStorage.writer(blobInfo).use {
                 it.write(ByteBuffer.wrap(storageValue.toByteArray()))
+            }*/
+            }.onFailure { e ->
+                logger.error("Feilet med å lagre dokument med id: ${blob.blobId.name}", e)
+            }.onSuccess {
+                logger.info("Lagret fil med blobid:  ${blob.blobId.name} og bytes: $it  and value: $storageValue")
             }
-        }.onFailure { e ->
-            logger.error("Feilet med å lagre dokument med id: ${blobInfo.blobId.name}", e)
-        }.onSuccess {
-            logger.info("Lagret fil med blobid:  ${blobInfo.blobId.name} og bytes: $it")
+
+        }
+        else{
+            logger.info("Finner ikke lagret bucket $bucketname, genererer ny")
         }
     }
 
@@ -58,6 +72,6 @@ class GcpStorageService(
     }
 
     fun list(keyPrefix: String) : List<String> {
-        return gcpStorage.list(bucketname , Storage.BlobListOption.prefix(keyPrefix))?.values?.map { v -> v.name}  ?:  emptyList()
+        return gcpStorage.list(bucketname, Storage.BlobListOption.prefix(keyPrefix)).values?.map { v -> v.name } ?: emptyList()
     }
 }
