@@ -25,8 +25,6 @@ spec:
       value: https://eux-rina-api-q1.dev-fss-pub.nais.io/cpi
     - name: ENV
       value: q1
-    - name: PENSJONSINFORMASJON_URL
-      value: https://pensjon-pen-q1.nais.preprod.local/pen/api/pensjonsinformasjon/v1
     - name: GCP_STORAGE_API_URL
       value: https://storage.googleapis.com
 

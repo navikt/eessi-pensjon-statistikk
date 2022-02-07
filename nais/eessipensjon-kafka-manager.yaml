@@ -31,11 +31,6 @@ spec:
     requests:
       cpu: 250m
       memory: 512Mi
-  vault:   # Optional. Required for on-prem (the env variables SERVICE_USER_NAME, SERVICE_USER_PASSWORD can also be used)
-    enabled: true
-    paths:
-      - kvPath: /serviceuser/data/<dev|prod>/srveessipensjon-kafka-manager
-        mountPath: /var/run/secrets/nais.io/service_user
   azure: # Required
     application:
       enabled: true

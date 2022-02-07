@@ -9,6 +9,8 @@ spec:
   kafka:
     pool: nav-prod
   env:
+    - name: AZURE_APP_EUX_CLIENT_ID
+      value: prod-fss.eessibasis.eux-rina-api
     - name: SPRING_PROFILES_ACTIVE
       value: prod
     - name: ONPREM_KAFKA_BOOTSTRAP_SERVERS_URL
@@ -22,14 +24,37 @@ spec:
     - name: KAFKA_SEDMOTTATT_TOPIC
       value: eessi-basis-sedMottatt-v1
     - name: EUX_RINA_API_V1_URL
-      value: https://eux-rina-api.nais.adeo.no/cpi
+      value: https://eux-rina-api.prod-fss-pub.nais.io/cpi
     - name: ENV
       value: p
-    - name: PENSJONSINFORMASJON_URL
-      value: https://pensjon-pen.nais.adeo.no/pen/api/pensjonsinformasjon/v1
-    - name: PDL_URL
-      value: https://pdl-api.nais.adeo.no/graphql
 
+  gcp:
+    buckets:
+      - name: eessi-pensjon-statistikk
+        retentionPeriodDays: 30
+        lifecycleCondition:
+          age: 7
+          createdBefore: 2020-01-01
+          numNewerVersions: 2
+          withState: ANY
+        uniformBucketLevelAccess: true
+    permissions:
+      - resource:
+          apiVersion: storagebuckets.storage.cnrm.cloud.google.com
+          kind: Project
+          name: eessipensjon
+        role: roles/storage.objectAdmin
+
+  envFrom:
+    - secret: statistikk # value is the secret name in Google Secret Manager
+  azure:
+    application:
+      enabled: true
+    accessPolicy:
+      outbound:
+        external:
+          - host: https://eessi-pensjon-statistikk.intern.nav.no
+  webproxy: true
 
   image: {{ image }}
   ingresses:
@@ -57,10 +82,3 @@ spec:
     requests:
       cpu: 400m
       memory: 4024Mi
-  vault:
-    enabled: true
-    paths:
-      - kvPath: {{serviceuserkv}}
-        mountPath: /var/run/secrets/nais.io/srveessipensjonstats
-      - kvPath: {{appsecrets}}
-        mountPath: /var/run/secrets/nais.io/appcredentials

@@ -1,4 +1,0 @@
-{
-  "serviceuserkv": "/serviceuser/data/prod/srveessipensjonstats",
-  "appsecrets": "/kv/prod/fss/eessi-pensjon-statistikk/eessipensjon"
-}
