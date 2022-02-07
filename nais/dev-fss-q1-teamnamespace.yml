@@ -27,8 +27,6 @@ spec:
       value: q1
     - name: PENSJONSINFORMASJON_URL
       value: https://pensjon-pen-q1.nais.preprod.local/pen/api/pensjonsinformasjon/v1
-    - name: VIRKSOMHET_PERSON_V3_ENDPOINTURL
-      value: https://app-q1.adeo.no/tpsws-aura/ws/Person/v3
     - name: GCP_STORAGE_API_URL
       value: https://storage.googleapis.com
 

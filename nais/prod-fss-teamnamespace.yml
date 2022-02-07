@@ -27,8 +27,6 @@ spec:
       value: p
     - name: PENSJONSINFORMASJON_URL
       value: https://pensjon-pen.nais.adeo.no/pen/api/pensjonsinformasjon/v1
-    - name: VIRKSOMHET_PERSON_V3_ENDPOINTURL
-      value: https://app.adeo.no/tpsws-aura/ws/Person/v3
     - name: PDL_URL
       value: https://pdl-api.nais.adeo.no/graphql
 

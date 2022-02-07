@@ -32,11 +32,12 @@ spec:
       outbound:
         external:
           - host: https://eessi-pensjon-statistikk-q2.dev.intern.nav.no
+  webproxy: true
   kafka:
     pool: nav-dev
   env:
     - name: AZURE_APP_EUX_CLIENT_ID
-      value: ae915475-2c6d-49dd-a80b-52f634dbf781
+      value: dev-fss.eessibasis.eux-rina-api-q2
     - name: SPRING_PROFILES_ACTIVE
       value: test
     - name: ONPREM_KAFKA_BOOTSTRAP_SERVERS_URL
@@ -55,8 +56,6 @@ spec:
       value: q2
     - name: PENSJONSINFORMASJON_URL
       value: https://pensjon-pen-q2.nais.preprod.local/pen/api/pensjonsinformasjon/v1
-    - name: VIRKSOMHET_PERSON_V3_ENDPOINTURL
-      value: https://app-q1.adeo.no/tpsws-aura/ws/Person/v3
     - name: GCP_STORAGE_API_URL
       value: https://storage.googleapis.com
 
@@ -86,10 +85,3 @@ spec:
     requests:
       cpu: 400m
       memory: 4024Mi
-  vault:
-    enabled: true
-    paths:
-      - kvPath: {{serviceuserkv}}
-        mountPath: /var/run/secrets/nais.io/srveessipensjonstats
-      - kvPath: {{appsecrets}}
-        mountPath: /var/run/secrets/nais.io/appcredentials
