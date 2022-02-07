@@ -51,14 +51,14 @@ spec:
       value: eessi-basis-sedMottatt-v1-q2
     - name: EUX_RINA_API_V1_URL
       value: https://eux-rina-api-q2.nais.preprod.local/cpi
-    - name: S3_FSS_URL
-      value: https://www.googleapis.com/storage/v1/b/eessi-pensjon-statistikk
     - name: ENV
       value: q2
     - name: PENSJONSINFORMASJON_URL
       value: https://pensjon-pen-q2.nais.preprod.local/pen/api/pensjonsinformasjon/v1
     - name: VIRKSOMHET_PERSON_V3_ENDPOINTURL
       value: https://app-q1.adeo.no/tpsws-aura/ws/Person/v3
+    - name: GCP_STORAGE_API_URL
+      value: https://storage.googleapis.com
 
   image: {{ image }}
   ingresses:

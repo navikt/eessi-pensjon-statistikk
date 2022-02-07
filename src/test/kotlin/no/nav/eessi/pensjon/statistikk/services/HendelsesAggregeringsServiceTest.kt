@@ -6,8 +6,8 @@ import no.nav.eessi.pensjon.ResourceHelper
 import no.nav.eessi.pensjon.eux.BucMetadata
 import no.nav.eessi.pensjon.eux.EuxService
 import no.nav.eessi.pensjon.eux.Sed
-import no.nav.eessi.pensjon.gcp.GcpStorageService
 import no.nav.eessi.pensjon.json.toJson
+import no.nav.eessi.pensjon.s3.S3StorageService
 import no.nav.eessi.pensjon.statistikk.models.HendelseType
 import no.nav.eessi.pensjon.statistikk.models.PensjonsType
 import no.nav.eessi.pensjon.statistikk.models.SedMeldingP6000Ut
@@ -18,7 +18,7 @@ import org.junit.jupiter.api.Test
 internal class HendelsesAggregeringsServiceTest {
 
     private var euxService = mockk<EuxService>(relaxed = true)
-    private var s3Service = mockk<GcpStorageService>(relaxed = true)
+    private var s3Service = mockk<S3StorageService>(relaxed = true)
     private var infoService = HendelsesAggregeringsService(euxService,  s3Service)
 
     @Test

@@ -1,5 +1,4 @@
 package no.nav.eessi.pensjon.s3
-/*
 import com.amazonaws.AmazonServiceException
 import com.amazonaws.services.s3.AmazonS3
 import com.amazonaws.services.s3.model.BucketVersioningConfiguration
@@ -20,10 +19,9 @@ import java.util.stream.Collectors.joining
 
 private val logger = LoggerFactory.getLogger(S3StorageService::class.java)
 
-}
 @Component
 @Profile("!integrationtest")
-class S3StorageService(private val s3: AmazonS3){
+class S3StorageService(private val s3: AmazonS3) {
 
     @Value("\${eessi.pensjon.statistikk.s3.bucket.name}")
     lateinit var bucketname: String
@@ -35,7 +33,7 @@ class S3StorageService(private val s3: AmazonS3){
         return bucketname
     }
 
-    private fun postfixFasitEnv(): String {
+/*    private fun postfixFasitEnv(): String {
         var environmentPostfix = "-$env"
 
         // Det settes nå kun default i prod, namespace brukes i alle andre miljø
@@ -43,7 +41,7 @@ class S3StorageService(private val s3: AmazonS3){
             environmentPostfix = ""
         }
         return environmentPostfix
-    }
+    }*/
 
     @EventListener(ApplicationReadyEvent::class)
     fun init() {
@@ -77,20 +75,19 @@ class S3StorageService(private val s3: AmazonS3){
 
     private fun ensureBucketExists() {
         logger.debug("Checking if bucket exists")
-        val bucketExists = s3.listBuckets().stream()
-            .anyMatch { it.name == getBucketName() }
+        val bucketExists = s3.listBuckets().stream().anyMatch { it.name == getBucketName() }
         if (!bucketExists) {
             logger.debug("Bucket does not exist, creating new bucket")
             s3.createBucket(CreateBucketRequest(getBucketName()).withCannedAcl(CannedAccessControlList.Private))
         }
     }
 
-    */
-/**
- * Lister objekter med prefix $path, path må begynne med fnr/dnr dersom innlogget bruker er borger
- *
- * @param path
- *//*
+
+    /**
+     * Lister objekter med prefix $path, path må begynne med fnr/dnr dersom innlogget bruker er borger
+     *
+     * @param path
+     */
 
     fun list(path: String): List<String> {
         return try {
@@ -141,13 +138,13 @@ class S3StorageService(private val s3: AmazonS3){
         }
     }
 
-    */
-/**
- * Lagrer nytt S3 objekt.
- *
- * @param path <fnr/dnr/ad-bruker>___<valgfri filending>
- * @param content innholdet i objektet
- *//*
+
+    /**
+     * Lagrer nytt S3 objekt.
+     *
+     * @param path <fnr/dnr/ad-bruker>___<valgfri filending>
+     * @param content innholdet i objektet
+     */
 
     fun put(path: String, content: String) {
         try {
@@ -179,5 +176,5 @@ class S3StorageService(private val s3: AmazonS3){
         inputStreamReader.close()
         return content
     }
-*/
+}
 
