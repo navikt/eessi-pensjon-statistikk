@@ -7,6 +7,8 @@ metadata:
     team: eessipensjon
 spec:
   env:
+    - name: AZURE_APP_EUX_CLIENT_ID
+      value: dev-fss.eessibasis.eux-rina-api-q1
     - name: SPRING_PROFILES_ACTIVE
       value: test
     - name: KAFKA_BOOTSTRAP_SERVERS_URL
@@ -20,7 +22,7 @@ spec:
     - name: KAFKA_SEDMOTTATT_TOPIC
       value: eessi-basis-sedMottatt-v1-q1
     - name: EUX_RINA_API_V1_URL
-      value: https://eux-rina-api-q1.nais.preprod.local/cpi
+      value: https://eux-rina-api-q1.dev-fss-pub.nais.io/cpi
     - name: ENV
       value: q1
     - name: PENSJONSINFORMASJON_URL
