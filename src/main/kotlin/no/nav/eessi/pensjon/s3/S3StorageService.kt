@@ -47,7 +47,7 @@ class S3StorageService(private val s3: AmazonS3) {
     fun init() {
         try {
             ensureBucketExists()
-            ensureVersioningIsEnabled()
+            //ensureVersioningIsEnabled()
             logger.debug("S3-storage ready with bucket: ${getBucketName()}")
         } catch (e: Exception) {
             logger.warn("Failed to connect to or create bucket ${getBucketName()}", e)
