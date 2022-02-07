@@ -1,5 +1,6 @@
 package no.nav.eessi.pensjon.gcp
 
+/*
 import com.google.cloud.storage.BlobId
 import com.google.cloud.storage.BlobInfo
 import com.google.cloud.storage.Storage
@@ -60,4 +61,4 @@ class GcpStorageService(
     fun list(keyPrefix: String) : List<String> {
         return gcpStorage.list(bucketname , Storage.BlobListOption.prefix(keyPrefix))?.values?.map { v -> v.name}  ?:  emptyList()
     }
-}
+}*/

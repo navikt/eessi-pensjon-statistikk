@@ -23,8 +23,6 @@ spec:
       value: eessi-basis-sedMottatt-v1
     - name: EUX_RINA_API_V1_URL
       value: https://eux-rina-api.nais.adeo.no/cpi
-    - name: S3_FSS_URL
-      value: http://objectstore.rook-ceph.svc.nais.local
     - name: ENV
       value: p
     - name: PENSJONSINFORMASJON_URL

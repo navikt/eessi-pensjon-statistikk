@@ -3,7 +3,8 @@ package no.nav.eessi.pensjon.statistikk.integrationtest
 import io.mockk.clearAllMocks
 import io.mockk.mockk
 import io.mockk.spyk
-import no.nav.eessi.pensjon.gcp.GcpStorageService
+import no.nav.eessi.pensjon.s3.S3StorageService
+import no.nav.eessi.pensjon.statistikk.S3StorageHelper
 import no.nav.eessi.pensjon.statistikk.listener.StatistikkListener
 import no.nav.eessi.pensjon.statistikk.services.StatistikkPublisher
 import org.apache.http.conn.ssl.NoopHostnameVerifier
@@ -116,9 +117,8 @@ abstract class IntegrationBase() {
         }
 
         @Bean
-        fun gcpStorageService(): GcpStorageService {
-            //return S3StorageHelper.createStoreService().also { it.init() }
-            return mockk()
+        fun s3StorageService(): S3StorageService {
+            return S3StorageHelper.createStoreService().also { it.init() }
         }
 
         @Bean
