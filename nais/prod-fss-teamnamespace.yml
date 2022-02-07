@@ -25,6 +25,8 @@ spec:
       value: eessi-basis-sedMottatt-v1
     - name: EUX_RINA_API_V1_URL
       value: https://eux-rina-api.prod-fss-pub.nais.io/cpi
+    - name: GCP_STORAGE_API_URL
+      value: https://storage.googleapis.com
     - name: ENV
       value: p
 
