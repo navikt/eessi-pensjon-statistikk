@@ -33,12 +33,6 @@ kafka:
     topic: ${KAFKA_SEDMOTTATT_TOPIC}
     groupid: eessi-pensjon-statistikk-group
 
-eessi.pensjon.statistikk:
-  s3:
-    bucket.name: 'eessi-pensjon-statistikk'
-
-s3_region: EUROPE-NORTH1
-
 #Metrics
 management:
   metrics:

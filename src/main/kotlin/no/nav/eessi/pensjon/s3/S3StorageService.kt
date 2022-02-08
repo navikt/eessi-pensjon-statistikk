@@ -23,7 +23,7 @@ private val logger = LoggerFactory.getLogger(S3StorageService::class.java)
 @Profile("!integrationtest")
 class S3StorageService(private val s3: AmazonS3) {
 
-    @Value("\${eessi.pensjon.statistikk.s3.bucket.name}")
+    @Value("\${GCP_BUCKET_NAME}")
     lateinit var bucketname: String
 
     @Value("\${ENV}")
@@ -32,16 +32,6 @@ class S3StorageService(private val s3: AmazonS3) {
     fun getBucketName(): String {
         return bucketname
     }
-
-/*    private fun postfixFasitEnv(): String {
-        var environmentPostfix = "-$env"
-
-        // Det settes nå kun default i prod, namespace brukes i alle andre miljø
-        if (env.contains("p", true)) {
-            environmentPostfix = ""
-        }
-        return environmentPostfix
-    }*/
 
     @EventListener(ApplicationReadyEvent::class)
     fun init() {

@@ -41,12 +41,12 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       # DEPLOYER TIL NAIS
-      - name: 'Deploy to eessipensjon Q2'
+      - name: 'Deploy to eessipensjon DEV GCP'
         uses: nais/deploy/actions/deploy@v1
         env:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           CLUSTER: dev-gcp
-          RESOURCE: nais/dev-fss-q2-teamnamespace.yml
+          RESOURCE: nais/dev-gcp.yml
           IMAGE: ${{ env.IMAGE }}
 
       # OPPRETTER GIT TAG
