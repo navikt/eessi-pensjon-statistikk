@@ -24,7 +24,7 @@ spec:
         role: roles/storage.objectAdmin
 
   envFrom:
-    - secret: statistikk # value is the secret name in Google Secret Manager
+    - secret: statistikk # value is the secret name in GCP Secret Manager
   azure:
     application:
       enabled: true
