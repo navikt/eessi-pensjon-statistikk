@@ -32,7 +32,7 @@ spec:
 
   gcp:
     buckets:
-      - name: eessi-pensjon-statistikk
+      - name: eessi-pensjon-statistikk-prod
         retentionPeriodDays: 30
         lifecycleCondition:
           age: 7
