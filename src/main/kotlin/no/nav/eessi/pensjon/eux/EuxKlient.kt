@@ -73,7 +73,7 @@ class EuxKlient(
                 count++
                 logger.warn("feilet å kontakte eux prøver på nytt. nr.: $count, feilmelding: ${ex.message}")
                 failException = ex
-                Thread.sleep(waitTimes)
+                Thread.sleep(waitTimes * count)
             }
         }
         logger.error("Feilet å kontakte eux melding: ${failException?.message}", failException)
