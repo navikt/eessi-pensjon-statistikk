@@ -22,14 +22,14 @@ class GyldigeHendelser {
         fun mottatt(hendelse: SedHendelseRina) =
                 when {
                     (hendelse.bucType in gyldigeInnkommendeBucTyper || gyldigSektorKode == hendelse.sektorKode)
-                            || hendelse.sedType !in ugyldigeTyper -> true
+                            && hendelse.sedType !in ugyldigeTyper -> true
                     else -> false
                 }
 
         fun sendt(hendelse: SedHendelseRina) =
                 when {
                     (gyldigUtgaaendeBucType == hendelse.bucType || gyldigSektorKode == hendelse.sektorKode)
-                            || hendelse.sedType !in ugyldigeTyper -> true
+                            && hendelse.sedType !in ugyldigeTyper -> true
                     else -> false
                 }
     }
