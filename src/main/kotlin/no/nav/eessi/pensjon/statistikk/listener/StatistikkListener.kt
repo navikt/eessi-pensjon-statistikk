@@ -36,6 +36,7 @@ class StatistikkListener(
     private lateinit var opprettMeldingMetric: MetricsHelper.Metric
     private lateinit var sedMottattMeldingMetric: MetricsHelper.Metric
     private lateinit var sedSedSendMeldingtMetric: MetricsHelper.Metric
+    private val umigrerteBucIder = listOf("9364403")
 
     fun getLatch() = latch
     fun getLatchMottatt() = latchMottatt
@@ -103,7 +104,7 @@ class StatistikkListener(
             sedMottattMeldingMetric.measure {
                 try {
                     val sedHendelseRina = mapJsonToAny(hendelse, typeRefs<SedHendelseRina>())
-                    if (GyldigeHendelser.mottatt(sedHendelseRina)) {
+                    if (GyldigeHendelser.mottatt(sedHendelseRina) && sedHendelseRina.rinaSakId !in umigrerteBucIder) {
                         val sedMeldingUt = sedInfoService.populerSedMeldingUt(
                             sedHendelseRina.rinaSakId,
                             sedHendelseRina.rinaDokumentId,
@@ -134,7 +135,7 @@ class StatistikkListener(
             sedSedSendMeldingtMetric.measure {
                 try {
                     val sedHendelseRina = mapJsonToAny(hendelse, typeRefs<SedHendelseRina>())
-                    if (GyldigeHendelser.sendt(sedHendelseRina)) {
+                    if (GyldigeHendelser.sendt(sedHendelseRina) && sedHendelseRina.rinaSakId !in umigrerteBucIder) {
                         logger.debug(sedHendelseRina.toJson())
                         val vedtaksId =
                             sedInfoService.hentVedtaksId(sedHendelseRina.rinaSakId, sedHendelseRina.rinaDokumentId)
