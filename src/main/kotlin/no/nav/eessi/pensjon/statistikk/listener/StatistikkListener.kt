@@ -36,7 +36,7 @@ class StatistikkListener(
     private lateinit var opprettMeldingMetric: MetricsHelper.Metric
     private lateinit var sedMottattMeldingMetric: MetricsHelper.Metric
     private lateinit var sedSedSendMeldingtMetric: MetricsHelper.Metric
-    private val umigrerteBucIder = listOf("9364403")
+    private val umigrerteBucIder = listOf("9364403", "9857012")
 
     fun getLatch() = latch
     fun getLatchMottatt() = latchMottatt
