@@ -16,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.kafka.support.Acknowledgment
 import org.springframework.stereotype.Component
-import org.springframework.stereotype.Service
 import java.util.*
 import java.util.concurrent.CountDownLatch
 import javax.annotation.PostConstruct
@@ -67,6 +66,7 @@ class StatistikkListener(
                     logger.debug("Hendelse : ${hendelse.toJson()}")
                     val melding = meldingsMapping(hendelse)
 
+                    logger.info("Oppretter melding av type: ${melding.opprettelseType}")
                     when (melding.opprettelseType) {
                         OpprettelseType.BUC -> {
                             val bucHendelse = sedInfoService.aggregateBucData(melding.rinaId)

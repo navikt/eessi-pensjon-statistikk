@@ -63,7 +63,7 @@ class EuxKlient(
     }
 
     @Throws(Throwable::class)
-    fun <T> retryHelper(func: () -> T, maxAttempts: Int = 3, waitTimes: Long = 3000L): T {
+    fun <T> retryHelper(func: () -> T, maxAttempts: Int = 3, waitTimes: Long = 30000L): T {
         var failException: Throwable? = null
         var count = 0
         while (count < maxAttempts) {
@@ -79,7 +79,5 @@ class EuxKlient(
         logger.error("Feilet å kontakte eux melding: ${failException?.message}", failException)
         throw failException!!
     }
-
-
 }
 
