@@ -54,10 +54,10 @@ spec:
   azure:
     application:
       enabled: true
-    accessPolicy:
-      outbound:
-        external:
-          - host: https://eessi-pensjon-statistikk.intern.nav.no
+  accessPolicy:
+    outbound:
+      external:
+        - host: https://eessi-pensjon-statistikk.intern.nav.no
   webproxy: true
 
   image: {{ image }}
