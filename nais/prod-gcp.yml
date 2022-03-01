@@ -10,7 +10,7 @@ spec:
     pool: nav-prod
   env:
     - name: GCP_BUCKET_NAME
-      value: eessi-pensjon-statistikk-p
+      value: eessi-pensjon-statistikk-prod
     - name: AZURE_APP_EUX_CLIENT_ID
       value: prod-fss.eessibasis.eux-rina-api
     - name: SPRING_PROFILES_ACTIVE
@@ -34,7 +34,7 @@ spec:
 
   gcp:
     buckets:
-      - name: eessi-pensjon-statistikk-p
+      - name: eessi-pensjon-statistikk-prod
         retentionPeriodDays: 30
         lifecycleCondition:
           age: 7
