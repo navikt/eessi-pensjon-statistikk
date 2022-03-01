@@ -6,11 +6,11 @@ import no.nav.eessi.pensjon.eux.Document
 import no.nav.eessi.pensjon.eux.EuxService
 import no.nav.eessi.pensjon.eux.Participant
 import no.nav.eessi.pensjon.eux.Vedtak
+import no.nav.eessi.pensjon.gcp.GcpStorageService
 import no.nav.eessi.pensjon.json.mapAnyToJson
 import no.nav.eessi.pensjon.json.mapJsonToAny
 import no.nav.eessi.pensjon.json.toJson
 import no.nav.eessi.pensjon.json.typeRefs
-import no.nav.eessi.pensjon.s3.S3StorageService
 import no.nav.eessi.pensjon.statistikk.models.BucOpprettetMeldingUt
 import no.nav.eessi.pensjon.statistikk.models.HendelseType
 import no.nav.eessi.pensjon.statistikk.models.PensjonsType
@@ -24,7 +24,7 @@ import java.time.format.DateTimeFormatter
 
 @Component
 class HendelsesAggregeringsService(private val euxService: EuxService,
-                                   private val s3StorageService: S3StorageService
+                                   private val gcpStorageService: GcpStorageService
 ) {
     private val offsetTimeDatePattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
     private val logger = LoggerFactory.getLogger(HendelsesAggregeringsService::class.java)
@@ -110,7 +110,7 @@ class HendelsesAggregeringsService(private val euxService: EuxService,
         val path = "${sedhendelse.rinaid}/${sedhendelse.dokumentId}"
         logger.info("Storing sedhendelse to S3: $path")
 
-        s3StorageService.put(path, mapAnyToJson(sedhendelse))
+        gcpStorageService.lagre(path, mapAnyToJson(sedhendelse))
     }
 
 
@@ -118,7 +118,7 @@ class HendelsesAggregeringsService(private val euxService: EuxService,
         val path = "$rinaSakId/$rinaDokumentId"
         logger.info("Getting SedhendelseID: $rinaSakId from $path")
 
-        val sedHendelseAsJson = s3StorageService.get(path)
+        val sedHendelseAsJson = gcpStorageService.hent(path)
 
         return sedHendelseAsJson?.let { mapJsonToAny(it, typeRefs<SedMeldingUt>()) }?.vedtaksId
         }

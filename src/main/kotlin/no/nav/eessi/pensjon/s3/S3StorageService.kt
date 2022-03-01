@@ -1,4 +1,5 @@
 package no.nav.eessi.pensjon.s3
+/*
 import com.amazonaws.AmazonServiceException
 import com.amazonaws.services.s3.AmazonS3
 import com.amazonaws.services.s3.model.BucketVersioningConfiguration
@@ -19,11 +20,12 @@ import java.util.stream.Collectors.joining
 
 private val logger = LoggerFactory.getLogger(S3StorageService::class.java)
 
+}
 @Component
 @Profile("!integrationtest")
-class S3StorageService(private val s3: AmazonS3) {
+class S3StorageService(private val s3: AmazonS3){
 
-    @Value("\${GCP_BUCKET_NAME}")
+    @Value("\${eessi.pensjon.statistikk.s3.bucket.name}")
     lateinit var bucketname: String
 
     @Value("\${ENV}")
@@ -33,11 +35,21 @@ class S3StorageService(private val s3: AmazonS3) {
         return bucketname
     }
 
+    private fun postfixFasitEnv(): String {
+        var environmentPostfix = "-$env"
+
+        // Det settes nå kun default i prod, namespace brukes i alle andre miljø
+        if (env.contains("p", true)) {
+            environmentPostfix = ""
+        }
+        return environmentPostfix
+    }
+
     @EventListener(ApplicationReadyEvent::class)
     fun init() {
         try {
             ensureBucketExists()
-            //ensureVersioningIsEnabled()
+            ensureVersioningIsEnabled()
             logger.debug("S3-storage ready with bucket: ${getBucketName()}")
         } catch (e: Exception) {
             logger.warn("Failed to connect to or create bucket ${getBucketName()}", e)
@@ -64,22 +76,21 @@ class S3StorageService(private val s3: AmazonS3) {
     }
 
     private fun ensureBucketExists() {
-        logger.info("Checking if bucket exists")
-        s3.listBuckets().map { logger.info("s3 Bucketname: ${it.name}") }
-        val bucketExists = s3.listBuckets().stream().anyMatch { it.name == getBucketName() }
+        logger.debug("Checking if bucket exists")
+        val bucketExists = s3.listBuckets().stream()
+            .anyMatch { it.name == getBucketName() }
         if (!bucketExists) {
-            logger.info("Bucket does not exist, creating new bucket")
+            logger.debug("Bucket does not exist, creating new bucket")
             s3.createBucket(CreateBucketRequest(getBucketName()).withCannedAcl(CannedAccessControlList.Private))
-            logger.info("Opprettet bucket: ${getBucketName()}")
         }
     }
 
-
-    /**
-     * Lister objekter med prefix $path, path må begynne med fnr/dnr dersom innlogget bruker er borger
-     *
-     * @param path
-     */
+    */
+/**
+ * Lister objekter med prefix $path, path må begynne med fnr/dnr dersom innlogget bruker er borger
+ *
+ * @param path
+ *//*
 
     fun list(path: String): List<String> {
         return try {
@@ -130,13 +141,13 @@ class S3StorageService(private val s3: AmazonS3) {
         }
     }
 
-
-    /**
-     * Lagrer nytt S3 objekt.
-     *
-     * @param path <fnr/dnr/ad-bruker>___<valgfri filending>
-     * @param content innholdet i objektet
-     */
+    */
+/**
+ * Lagrer nytt S3 objekt.
+ *
+ * @param path <fnr/dnr/ad-bruker>___<valgfri filending>
+ * @param content innholdet i objektet
+ *//*
 
     fun put(path: String, content: String) {
         try {
@@ -168,5 +179,5 @@ class S3StorageService(private val s3: AmazonS3) {
         inputStreamReader.close()
         return content
     }
-}
+*/
 

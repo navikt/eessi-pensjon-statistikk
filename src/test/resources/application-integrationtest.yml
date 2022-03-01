@@ -18,7 +18,6 @@ kafka:
 
 GCP_ACCESS_KEY: 'dummy'
 GCP_ACCESS_SECRET: 'dummy'
-GCP_STORAGE_API_URL: "http://objectstore.rook-ceph.svc.nais.local"
 GCP_BUCKET_NAME: 'eessi-pensjon-statistikk'
 ENV: 'q2'
 

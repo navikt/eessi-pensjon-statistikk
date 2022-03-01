@@ -1,6 +1,5 @@
 package no.nav.eessi.pensjon.gcp
 
-/*
 import com.google.cloud.storage.BlobId
 import com.google.cloud.storage.BlobInfo
 import com.google.cloud.storage.Storage
@@ -12,7 +11,7 @@ import java.nio.ByteBuffer
 
 @Component
 class GcpStorageService(
-    @param:Value("\${eessi.pensjon.statistikk.s3.bucket.name}") var bucketname: String,
+    @param:Value("\${GCP_BUCKET_NAME}") var bucketname: String,
     private val gcpStorage: Storage
 ) {
     private val logger = LoggerFactory.getLogger(GcpStorageService::class.java)
@@ -61,4 +60,4 @@ class GcpStorageService(
     fun list(keyPrefix: String) : List<String> {
         return gcpStorage.list(bucketname , Storage.BlobListOption.prefix(keyPrefix))?.values?.map { v -> v.name}  ?:  emptyList()
     }
-}*/
+}

@@ -70,7 +70,11 @@ dependencies {
     implementation 'org.springframework.kafka:spring-kafka'
 
     //aws and s3
-    implementation 'com.amazonaws:aws-java-sdk-s3:1.12.129'
+    /*implementation 'com.amazonaws:aws-java-sdk-s3:1.12.129'*/
+
+    //GCP
+    implementation("com.google.cloud:google-cloud-storage:$gcpStorageVersion")
+    implementation(platform("com.google.cloud:libraries-bom:23.0.0"))
 
     //GCP
     implementation(platform("com.google.cloud:libraries-bom:23.0.0"))
@@ -108,10 +112,11 @@ dependencies {
         exclude module: 'junit'
     }
 
-    //testcontainers
     // Architecture tests
     testImplementation ("com.tngtech.archunit:archunit:${archunitVersion}")
-    testImplementation "org.testcontainers:kafka:1.16.2"
+    //testcontainers
+    testImplementation("org.testcontainers:junit-jupiter:1.14.3")
+    testImplementation "org.testcontainers:testcontainers:1.16.3"
 
 
 
