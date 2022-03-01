@@ -64,12 +64,13 @@ class S3StorageService(private val s3: AmazonS3) {
     }
 
     private fun ensureBucketExists() {
-        logger.debug("Checking if bucket exists")
+        logger.info("Checking if bucket exists")
         s3.listBuckets().map { logger.info("s3 Bucketname: ${it.name}") }
         val bucketExists = s3.listBuckets().stream().anyMatch { it.name == getBucketName() }
         if (!bucketExists) {
-            logger.debug("Bucket does not exist, creating new bucket")
+            logger.info("Bucket does not exist, creating new bucket")
             s3.createBucket(CreateBucketRequest(getBucketName()).withCannedAcl(CannedAccessControlList.Private))
+            logger.info("Opprettet bucket: ${getBucketName()}")
         }
     }
 
