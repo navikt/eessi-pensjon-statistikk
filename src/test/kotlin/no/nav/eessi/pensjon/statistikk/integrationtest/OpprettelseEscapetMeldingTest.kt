@@ -7,7 +7,9 @@ import no.nav.eessi.pensjon.StatistikkApplicationIntegration
 import no.nav.eessi.pensjon.eux.BucMetadata
 import no.nav.eessi.pensjon.eux.EuxService
 import no.nav.eessi.pensjon.eux.model.buc.BucType
+import no.nav.eessi.pensjon.gcp.GcpStorageService
 import org.junit.jupiter.api.Test
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.kafka.test.context.EmbeddedKafka
 import org.springframework.test.annotation.DirtiesContext
@@ -21,6 +23,9 @@ import org.springframework.test.context.ActiveProfiles
     brokerProperties = ["log.dir=/tmp/embedded-OpprettelseEscapetMeldingTest"]
 )
 class OpprettelseEscapetMeldingTest : IntegrationBase() {
+
+    @Autowired
+    lateinit var gcpStorageService: GcpStorageService
 
     @Test
     fun `En buc hendelse med escapet character skal sendes videre til riktig kanal  `() {
