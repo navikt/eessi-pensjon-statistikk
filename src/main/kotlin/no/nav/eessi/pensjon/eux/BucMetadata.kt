@@ -10,7 +10,7 @@ import java.time.format.DateTimeFormatter
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class BucMetadata(
-    val documents: List<Document>,
+    val documents: List<Document> = emptyList(),
     val processDefinitionName: BucType,
     val startDate: String){
 

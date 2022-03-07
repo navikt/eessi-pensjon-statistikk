@@ -55,6 +55,8 @@ class HendelsesAggregeringsService(private val euxService: EuxService,
         val mottakerLand = populerMottakerland(bucMetadata!!)
         val beregning  = hentBeregning(sed?.pensjon?.vedtak)
 
+        logger.info("Oppretter melding med bucmetadata med size: ${bucMetadata.documents.size}")
+
         return when(hendelseType){
             HendelseType.SED_SENDT, HendelseType.SED_MOTTATT ->  SedMeldingP6000Ut(
                 dokumentId = dokumentId,
@@ -62,7 +64,7 @@ class HendelsesAggregeringsService(private val euxService: EuxService,
                 rinaid = rinaid,
                 mottakerLand = mottakerLand,
                 avsenderLand = avsenderLand!!,
-                rinaDokumentVersjon = bucMetadata.documents.filter { it.id == dokumentId }[0].versions.size.toString(),
+                rinaDokumentVersjon = getDocumentVersion(bucMetadata.documents, dokumentId),
                 sedType = sed!!.sed,
                 pid = sed.nav.bruker?.person?.pin?.firstOrNull { it.land == "NO" }?.identifikator,
                 hendelseType = hendelseType,
@@ -87,9 +89,16 @@ class HendelsesAggregeringsService(private val euxService: EuxService,
                 vedtaksId = vedtaksId,
                 avsenderLand = avsenderLand,
                 mottakerLand = mottakerLand,
-                rinaDokumentVersjon = bucMetadata.documents.filter { it.id == dokumentId }[0].versions.size.toString()
+                rinaDokumentVersjon = getDocumentVersion(bucMetadata.documents, dokumentId)
             )
         }
+    }
+
+    private fun getDocumentVersion(documents: List<Document>?, dokumentId: String): String {
+        if(documents == null){
+            return ""
+        }
+        return documents.filter { it.id == dokumentId }[0].versions.size.toString()
     }
 
     private fun hentBeregning(vedtak: List<Vedtak>?): Beregning? {
@@ -97,6 +106,10 @@ class HendelsesAggregeringsService(private val euxService: EuxService,
     }
 
     private fun populerMottakerland(bucMetadata: BucMetadata): List<String> {
+        if(bucMetadata.documents == null){
+            return emptyList()
+        }
+
         val list : List<Participant> = bucMetadata.documents
             .flatMap { it.conversations }
             .flatMap { it.participants.orEmpty() }
@@ -136,6 +149,10 @@ class HendelsesAggregeringsService(private val euxService: EuxService,
     }
 
     fun getTimeStampFromSedMetaDataInBuc(bucMetadata: BucMetadata, dokumentId : String ) : String {
+        if(bucMetadata.documents == null){
+            return ""
+        }
+
         val dokument : Document? = bucMetadata.documents.firstOrNull { it.id == dokumentId }
 
         logger.debug("Dokument: ${dokument?.toJson()}")
