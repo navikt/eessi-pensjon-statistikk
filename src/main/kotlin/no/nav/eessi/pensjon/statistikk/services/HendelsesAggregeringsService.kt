@@ -121,7 +121,7 @@ class HendelsesAggregeringsService(private val euxService: EuxService,
         val sedHendelseAsJson = gcpStorageService.hent(path)
 
         return sedHendelseAsJson?.let { mapJsonToAny(it, typeRefs<SedMeldingUt>()) }?.vedtaksId
-        }
+    }
 
     fun aggregateBucData(rinaId: String): BucOpprettetMeldingUt {
 

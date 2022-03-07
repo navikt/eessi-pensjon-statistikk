@@ -3,7 +3,6 @@ package no.nav.eessi.pensjon.gcp
 import com.google.cloud.storage.BlobId
 import com.google.cloud.storage.BlobInfo
 import com.google.cloud.storage.Storage
-import com.google.cloud.storage.StorageException
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
@@ -37,21 +36,10 @@ class GcpStorageService( @param:Value("\${GCP_BUCKET_NAME}") var bucketname: Str
         }
     }
 
-    fun hent(storageKey: String): String {
-        return gcpStorage.get(BlobId.of(bucketname, storageKey)).getContent().toString() ?: throw RuntimeException("FIXME")
-    }
+    fun hent(storageKey: String): String? {
+        val jsonHendelse =  gcpStorage.get(BlobId.of(bucketname, storageKey))
 
-    fun slett(storageKey: String) : Boolean {
-        val value = hent(storageKey)
-        return if (value == null) false else {
-            return try {
-                gcpStorage.delete(bucketname, storageKey)
-                true
-            } catch (cause: StorageException) {
-                logger.warn("Sletting av dokument med id ${storageKey} feilet.", cause)
-                false
-            }
-        }
+        return jsonHendelse.getContent()?.toString()
     }
 
     fun list(keyPrefix: String) : List<String> {
