@@ -14,7 +14,6 @@ import no.nav.eessi.pensjon.json.toJson
 import no.nav.eessi.pensjon.json.typeRefs
 import no.nav.eessi.pensjon.statistikk.listener.SedHendelseRina
 import no.nav.eessi.pensjon.statistikk.models.SedMeldingP6000Ut
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -30,7 +29,6 @@ import org.springframework.test.context.ActiveProfiles
     topics = [STATISTIKK_TOPIC_MOTATT],
     brokerProperties = ["log.dir=/tmp/embedded-SedMottattIntegrasjonsTest"]
 )
-@Disabled
 class SedMottattIntegrasjonsTest : IntegrationBase() {
 
     var euxService: EuxService = mockk()
