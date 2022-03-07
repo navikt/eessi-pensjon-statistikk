@@ -39,7 +39,10 @@ class GcpStorageService( @param:Value("\${GCP_BUCKET_NAME}") var bucketname: Str
     fun hent(storageKey: String): String? {
         val jsonHendelse =  gcpStorage.get(BlobId.of(bucketname, storageKey))
 
-        return jsonHendelse.getContent()?.toString()
+        if(jsonHendelse.exists()){
+            return jsonHendelse.getContent().toString()
+        }
+        return null
     }
 
     fun list(keyPrefix: String) : List<String> {
