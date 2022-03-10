@@ -1,6 +1,7 @@
 package no.nav.eessi.pensjon.statistikk.listener
 
 import io.micrometer.core.instrument.simple.SimpleMeterRegistry
+import no.nav.eessi.pensjon.eux.model.buc.MissingBuc
 import no.nav.eessi.pensjon.json.mapJsonToAny
 import no.nav.eessi.pensjon.json.toJson
 import no.nav.eessi.pensjon.json.typeRefs
@@ -108,13 +109,14 @@ class StatistikkListener(
     fun consumeSedMottatt(hendelse: String, cr: ConsumerRecord<String, String>, acknowledgment: Acknowledgment) {
         MDC.putCloseable("x_request_id", MDC.get("x_request_id") ?: UUID.randomUUID().toString()).use {
             sedMottattMeldingMetric.measure {
+                val sedHendelseRina = mapJsonToAny(hendelse, typeRefs<SedHendelseRina>())
+
                 val offsetToSkip = listOf(299742L, 299743L, 299746L)
                 try {
                     val offset = cr.offset()
-                    if (offsetToSkip.contains(offset)) {
+                    if (offsetToSkip.contains(offset) || MissingBuc.checkForMissingBuc(sedHendelseRina.rinaSakId)) {
                         logger.warn("Hopper over offset: $offset")
                     } else {
-                        val sedHendelseRina = mapJsonToAny(hendelse, typeRefs<SedHendelseRina>())
                         if (GyldigeHendelser.mottatt(sedHendelseRina) && sedHendelseRina.rinaSakId !in umigrerteBucIder) {
                             val sedMeldingUt = sedInfoService.populerSedMeldingUt(
                                 sedHendelseRina.rinaSakId,
