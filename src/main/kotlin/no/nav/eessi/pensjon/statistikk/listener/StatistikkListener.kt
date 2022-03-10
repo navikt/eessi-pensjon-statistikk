@@ -139,29 +139,34 @@ class StatistikkListener(
         }
     }
 
-/*    @KafkaListener(
+    @KafkaListener(
         containerFactory = "onpremKafkaListenerContainerFactory",
         topics = ["\${kafka.statistikk-sed-sendt.topic}"],
         groupId = "\${kafka.statistikk-sed-sendt.groupid}",
-    )*/
+    )
     fun consumeSedSendt(hendelse: String, cr: ConsumerRecord<String, String>, acknowledgment: Acknowledgment) {
         MDC.putCloseable("x_request_id", MDC.get("x_request_id") ?: UUID.randomUUID().toString()).use {
             sedSedSendMeldingtMetric.measure {
                 try {
+                    val offset = cr.offset()
                     val sedHendelseRina = mapJsonToAny(hendelse, typeRefs<SedHendelseRina>())
-                    if (GyldigeHendelser.sendt(sedHendelseRina) && sedHendelseRina.rinaSakId !in umigrerteBucIder) {
-                        logger.debug(sedHendelseRina.toJson())
-                        val vedtaksId =
-                            sedInfoService.hentVedtaksId(sedHendelseRina.rinaSakId, sedHendelseRina.rinaDokumentId)
-                        val sedMeldingUt = sedInfoService.populerSedMeldingUt(
-                            sedHendelseRina.rinaSakId,
-                            sedHendelseRina.rinaDokumentId,
-                            vedtaksId,
-                            HendelseType.SED_SENDT,
-                            sedHendelseRina.avsenderLand
-                        )
-                        logger.info("sedmeldingUt: $sedMeldingUt")
-                        statistikkPublisher.publiserSedHendelse(sedMeldingUt)
+                    if (MissingBuc.checkForMissingBuc(sedHendelseRina.rinaSakId)) {
+                        logger.warn("Hopper over offset: $offset")
+                    } else {
+                        if (GyldigeHendelser.sendt(sedHendelseRina) && sedHendelseRina.rinaSakId !in umigrerteBucIder) {
+                            logger.debug(sedHendelseRina.toJson())
+                            val vedtaksId =
+                                sedInfoService.hentVedtaksId(sedHendelseRina.rinaSakId, sedHendelseRina.rinaDokumentId)
+                            val sedMeldingUt = sedInfoService.populerSedMeldingUt(
+                                sedHendelseRina.rinaSakId,
+                                sedHendelseRina.rinaDokumentId,
+                                vedtaksId,
+                                HendelseType.SED_SENDT,
+                                sedHendelseRina.avsenderLand
+                            )
+                            logger.info("sedmeldingUt: $sedMeldingUt")
+                            statistikkPublisher.publiserSedHendelse(sedMeldingUt)
+                        }
                     }
                     acknowledgment.acknowledge()
                     logger.info("Acket sedSendt melding med offset: ${cr.offset()} i partisjon ${cr.partition()}")
