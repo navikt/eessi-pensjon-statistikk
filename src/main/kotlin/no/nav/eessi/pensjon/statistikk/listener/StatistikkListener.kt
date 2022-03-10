@@ -62,24 +62,30 @@ class StatistikkListener(
             logger.info("Innkommet statistikk hendelse i partisjon: ${cr.partition()}, med offset: ${cr.offset()}")
 
             opprettMeldingMetric.measure {
+                val offsetToSkip = emptyList<Long>()
                 try {
-                    logger.debug("Hendelse : ${hendelse.toJson()}")
-                    val melding = meldingsMapping(hendelse)
+                    val offset = cr.offset()
+                    if (offsetToSkip.contains(offset)) {
+                        logger.warn("Hopper over offset: $offset")
+                    } else {
+                        logger.debug("Hendelse : ${hendelse.toJson()}")
+                        val melding = meldingsMapping(hendelse)
 
-                    logger.info("Oppretter melding av type: ${melding.opprettelseType}")
-                    when (melding.opprettelseType) {
-                        OpprettelseType.BUC -> {
-                            val bucHendelse = sedInfoService.aggregateBucData(melding.rinaId)
-                            statistikkPublisher.publiserBucOpprettetStatistikk(bucHendelse)
-                        }
-                        OpprettelseType.SED -> {
-                            val sedHendelse = sedInfoService.aggregateSedOpprettetData(
-                                melding.rinaId,
-                                melding.dokumentId!!,
-                                melding.vedtaksId
-                            )
-                            if (sedHendelse != null) {
-                                statistikkPublisher.publiserSedHendelse(sedHendelse)
+                        logger.info("Oppretter melding av type: ${melding.opprettelseType}")
+                        when (melding.opprettelseType) {
+                            OpprettelseType.BUC -> {
+                                val bucHendelse = sedInfoService.aggregateBucData(melding.rinaId)
+                                statistikkPublisher.publiserBucOpprettetStatistikk(bucHendelse)
+                            }
+                            OpprettelseType.SED -> {
+                                val sedHendelse = sedInfoService.aggregateSedOpprettetData(
+                                    melding.rinaId,
+                                    melding.dokumentId!!,
+                                    melding.vedtaksId
+                                )
+                                if (sedHendelse != null) {
+                                    statistikkPublisher.publiserSedHendelse(sedHendelse)
+                                }
                             }
                         }
                     }
@@ -102,17 +108,23 @@ class StatistikkListener(
     fun consumeSedMottatt(hendelse: String, cr: ConsumerRecord<String, String>, acknowledgment: Acknowledgment) {
         MDC.putCloseable("x_request_id", MDC.get("x_request_id") ?: UUID.randomUUID().toString()).use {
             sedMottattMeldingMetric.measure {
+                val offsetToSkip = listOf(299742L)
                 try {
-                    val sedHendelseRina = mapJsonToAny(hendelse, typeRefs<SedHendelseRina>())
-                    if (GyldigeHendelser.mottatt(sedHendelseRina) && sedHendelseRina.rinaSakId !in umigrerteBucIder) {
-                        val sedMeldingUt = sedInfoService.populerSedMeldingUt(
-                            sedHendelseRina.rinaSakId,
-                            sedHendelseRina.rinaDokumentId,
-                            null,
-                            HendelseType.SED_MOTTATT,
-                            sedHendelseRina.avsenderLand
-                        )
-                        statistikkPublisher.publiserSedHendelse(sedMeldingUt)
+                    val offset = cr.offset()
+                    if (offsetToSkip.contains(offset)) {
+                        logger.warn("Hopper over offset: $offset")
+                    } else {
+                        val sedHendelseRina = mapJsonToAny(hendelse, typeRefs<SedHendelseRina>())
+                        if (GyldigeHendelser.mottatt(sedHendelseRina) && sedHendelseRina.rinaSakId !in umigrerteBucIder) {
+                            val sedMeldingUt = sedInfoService.populerSedMeldingUt(
+                                sedHendelseRina.rinaSakId,
+                                sedHendelseRina.rinaDokumentId,
+                                null,
+                                HendelseType.SED_MOTTATT,
+                                sedHendelseRina.avsenderLand
+                            )
+                            statistikkPublisher.publiserSedHendelse(sedMeldingUt)
+                        }
                     }
                     acknowledgment.acknowledge()
                     logger.info("Acket sedMottatt melding med offset: ${cr.offset()} i partisjon ${cr.partition()}")
