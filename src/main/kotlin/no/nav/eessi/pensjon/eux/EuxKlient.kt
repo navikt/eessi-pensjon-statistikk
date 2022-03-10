@@ -46,7 +46,7 @@ class EuxKlient(
     }
 
     fun getSed(rinaSakId: String, rinaDokumentId: String): Sed {
-        logger.info("Henter SED for rinasakId: $rinaSakId")
+        logger.info("Henter SED for rinasakId: $rinaSakId ,  rinaDokumentId: $rinaDokumentId")
 
         return hentSedMetadata.measure {
             try {
