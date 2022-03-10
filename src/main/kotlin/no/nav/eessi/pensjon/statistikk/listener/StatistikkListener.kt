@@ -108,7 +108,7 @@ class StatistikkListener(
     fun consumeSedMottatt(hendelse: String, cr: ConsumerRecord<String, String>, acknowledgment: Acknowledgment) {
         MDC.putCloseable("x_request_id", MDC.get("x_request_id") ?: UUID.randomUUID().toString()).use {
             sedMottattMeldingMetric.measure {
-                val offsetToSkip = listOf(299742L)
+                val offsetToSkip = listOf(299742L, 299743L)
                 try {
                     val offset = cr.offset()
                     if (offsetToSkip.contains(offset)) {
