@@ -1,8 +1,6 @@
 package no.nav.eessi.pensjon.gcp
 
-import com.google.cloud.storage.BlobId
-import com.google.cloud.storage.BlobInfo
-import com.google.cloud.storage.Storage
+import com.google.cloud.storage.*
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
@@ -37,10 +35,14 @@ class GcpStorageService( @param:Value("\${GCP_BUCKET_NAME}") var bucketname: Str
     }
 
     fun hent(storageKey: String): String? {
-        val jsonHendelse =  gcpStorage.get(BlobId.of(bucketname, storageKey))
-
-        if(jsonHendelse!= null && jsonHendelse.exists()){
-            return jsonHendelse.getContent().toString()
+        val jsonHendelse: Blob
+        try {
+            jsonHendelse =  gcpStorage.get(BlobId.of(bucketname, storageKey))
+            if(jsonHendelse.exists()){
+                return jsonHendelse.getContent().toString()
+            }
+        } catch ( ex: StorageException) {
+            logger.error("En feil oppstod under henting av objekt: $storageKey i bucket")
         }
         return null
     }
