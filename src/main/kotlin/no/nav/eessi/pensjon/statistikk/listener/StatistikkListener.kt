@@ -158,7 +158,7 @@ class StatistikkListener(
                             HendelseType.SED_SENDT,
                             sedHendelseRina.avsenderLand
                         )
-                        logger.debug("sedmeldingUt: $sedMeldingUt")
+                        logger.info("sedmeldingUt: $sedMeldingUt")
                         statistikkPublisher.publiserSedHendelse(sedMeldingUt)
                     }
                     acknowledgment.acknowledge()
