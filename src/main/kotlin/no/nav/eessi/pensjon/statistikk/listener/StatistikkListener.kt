@@ -52,6 +52,7 @@ class StatistikkListener(
        containerFactory = "aivenKafkaListenerContainerFactory",
         topics = ["\${kafka.statistikk-inn.topic}"],
         groupId = "\${kafka.statistikk-inn.groupid}",
+        errorHandler = "KafkaErrorHandler"
     )
     fun consumeOpprettelseMelding(
         hendelse: String,
@@ -62,24 +63,30 @@ class StatistikkListener(
             logger.info("Innkommet statistikk hendelse i partisjon: ${cr.partition()}, med offset: ${cr.offset()}")
 
             opprettMeldingMetric.measure {
+                val offsetToSkip = emptyList<Long>()
                 try {
-                    logger.debug("Hendelse : ${hendelse.toJson()}")
-                    val melding = meldingsMapping(hendelse)
+                    val offset = cr.offset()
+                    if (offsetToSkip.contains(offset)) {
+                        logger.warn("Hopper over offset: $offset grunnet feil ved henting av vedlegg...")
+                    } else {
+                        logger.debug("Hendelse : ${hendelse.toJson()}")
+                        val melding = meldingsMapping(hendelse)
 
-                    logger.info("Oppretter melding av type: ${melding.opprettelseType}")
-                    when (melding.opprettelseType) {
-                        OpprettelseType.BUC -> {
-                            val bucHendelse = sedInfoService.aggregateBucData(melding.rinaId)
-                            statistikkPublisher.publiserBucOpprettetStatistikk(bucHendelse)
-                        }
-                        OpprettelseType.SED -> {
-                            val sedHendelse = sedInfoService.aggregateSedOpprettetData(
-                                melding.rinaId,
-                                melding.dokumentId!!,
-                                melding.vedtaksId
-                            )
-                            if (sedHendelse != null) {
-                                statistikkPublisher.publiserSedHendelse(sedHendelse)
+                        logger.info("Oppretter melding av type: ${melding.opprettelseType}")
+                        when (melding.opprettelseType) {
+                            OpprettelseType.BUC -> {
+                                val bucHendelse = sedInfoService.aggregateBucData(melding.rinaId)
+                                statistikkPublisher.publiserBucOpprettetStatistikk(bucHendelse)
+                            }
+                            OpprettelseType.SED -> {
+                                val sedHendelse = sedInfoService.aggregateSedOpprettetData(
+                                    melding.rinaId,
+                                    melding.dokumentId!!,
+                                    melding.vedtaksId
+                                )
+                                if (sedHendelse != null) {
+                                    statistikkPublisher.publiserSedHendelse(sedHendelse)
+                                }
                             }
                         }
                     }
@@ -98,6 +105,7 @@ class StatistikkListener(
         containerFactory = "onpremKafkaListenerContainerFactory",
         topics = ["\${kafka.statistikk-sed-mottatt.topic}"],
         groupId = "\${kafka.statistikk-sed-mottatt.groupid}",
+        errorHandler = "KafkaErrorHandler"
     )
     fun consumeSedMottatt(hendelse: String, cr: ConsumerRecord<String, String>, acknowledgment: Acknowledgment) {
         MDC.putCloseable("x_request_id", MDC.get("x_request_id") ?: UUID.randomUUID().toString()).use {
@@ -129,6 +137,7 @@ class StatistikkListener(
         containerFactory = "onpremKafkaListenerContainerFactory",
         topics = ["\${kafka.statistikk-sed-sendt.topic}"],
         groupId = "\${kafka.statistikk-sed-sendt.groupid}",
+        errorHandler = "KafkaErrorHandler"
     )
     fun consumeSedSendt(hendelse: String, cr: ConsumerRecord<String, String>, acknowledgment: Acknowledgment) {
         MDC.putCloseable("x_request_id", MDC.get("x_request_id") ?: UUID.randomUUID().toString()).use {
