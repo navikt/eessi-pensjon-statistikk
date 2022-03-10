@@ -48,11 +48,11 @@ class StatistikkListener(
         sedSedSendMeldingtMetric = metricsHelper.init("sedSedSendMeldingtMetric")
     }
 
-    @KafkaListener(
+/*    @KafkaListener(
        containerFactory = "aivenKafkaListenerContainerFactory",
         topics = ["\${kafka.statistikk-inn.topic}"],
         groupId = "\${kafka.statistikk-inn.groupid}",
-    )
+    )*/
     fun consumeOpprettelseMelding(
         hendelse: String,
         cr: ConsumerRecord<String, String>,
@@ -137,11 +137,11 @@ class StatistikkListener(
         }
     }
 
-    @KafkaListener(
+/*    @KafkaListener(
         containerFactory = "onpremKafkaListenerContainerFactory",
         topics = ["\${kafka.statistikk-sed-sendt.topic}"],
         groupId = "\${kafka.statistikk-sed-sendt.groupid}",
-    )
+    )*/
     fun consumeSedSendt(hendelse: String, cr: ConsumerRecord<String, String>, acknowledgment: Acknowledgment) {
         MDC.putCloseable("x_request_id", MDC.get("x_request_id") ?: UUID.randomUUID().toString()).use {
             sedSedSendMeldingtMetric.measure {
