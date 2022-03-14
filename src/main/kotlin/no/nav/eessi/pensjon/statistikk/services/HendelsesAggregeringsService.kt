@@ -135,7 +135,7 @@ class HendelsesAggregeringsService(private val euxService: EuxService,
         logger.debug("sedHendelseAsJson: $sedHendelseAsJson")
 
         val hendelse = sedHendelseAsJson?.let { mapJsonToAny(it, typeRefs<SedMeldingUt>()) }
-        logger.debug("sedHendelse etter mapping: ${hendelse.toString()}")
+        logger.info("sedHendelse etter mapping: dokumentId='${hendelse?.dokumentId}', bucType=${hendelse?.bucType}, rinaid='${hendelse?.rinaid}'}")
 
         return hendelse?.vedtaksId ?: ""
     }
