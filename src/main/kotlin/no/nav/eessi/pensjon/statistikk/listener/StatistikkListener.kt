@@ -49,11 +49,11 @@ class StatistikkListener(
         sedSedSendMeldingtMetric = metricsHelper.init("sedSedSendMeldingtMetric")
     }
 
-/*    @KafkaListener(
+    @KafkaListener(
        containerFactory = "aivenKafkaListenerContainerFactory",
         topics = ["\${kafka.statistikk-inn.topic}"],
         groupId = "\${kafka.statistikk-inn.groupid}",
-    )*/
+    )
     fun consumeOpprettelseMelding(
         hendelse: String,
         cr: ConsumerRecord<String, String>,
