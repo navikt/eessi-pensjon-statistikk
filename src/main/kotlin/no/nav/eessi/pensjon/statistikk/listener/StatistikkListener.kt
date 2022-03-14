@@ -63,7 +63,7 @@ class StatistikkListener(
             logger.info("Innkommet statistikk hendelse i partisjon: ${cr.partition()}, med offset: ${cr.offset()}")
 
             opprettMeldingMetric.measure {
-                val offsetToSkip = emptyList<Long>()
+                val offsetToSkip = listOf(10062844L)
                 try {
                     val offset = cr.offset()
                     if (offsetToSkip.contains(offset)) {
