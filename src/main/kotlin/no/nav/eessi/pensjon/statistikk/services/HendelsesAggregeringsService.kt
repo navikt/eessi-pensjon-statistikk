@@ -132,10 +132,10 @@ class HendelsesAggregeringsService(private val euxService: EuxService,
         logger.info("Getting SedhendelseID: $rinaSakId from $path")
 
         val sedHendelseAsJson = gcpStorageService.hent(path)
-        logger.info("sedHendelseAsJson: $sedHendelseAsJson")
+        logger.debug("sedHendelseAsJson: $sedHendelseAsJson")
 
         val hendelse = sedHendelseAsJson?.let { mapJsonToAny(it, typeRefs<SedMeldingUt>()) }
-        logger.info("sedHendelse etter mapping: ${hendelse.toString()}")
+        logger.debug("sedHendelse etter mapping: ${hendelse.toString()}")
 
         return hendelse?.vedtaksId ?: ""
     }

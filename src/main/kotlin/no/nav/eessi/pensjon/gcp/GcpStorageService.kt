@@ -4,7 +4,6 @@ import com.google.cloud.storage.Blob
 import com.google.cloud.storage.BlobId
 import com.google.cloud.storage.BlobInfo
 import com.google.cloud.storage.Storage
-import com.google.cloud.storage.StorageException
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
@@ -45,7 +44,7 @@ class GcpStorageService( @param:Value("\${GCP_BUCKET_NAME}") var bucketname: Str
             if(jsonHendelse.exists()){
                 return jsonHendelse.getContent().decodeToString()
             }
-        } catch ( ex: StorageException) {
+        } catch ( ex: Exception) {
             logger.error("En feil oppstod under henting av objekt: $storageKey i bucket")
         }
         return null
