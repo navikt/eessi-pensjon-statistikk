@@ -10,6 +10,6 @@ data class OpprettelseMelding(
     val rinaId: String,
     val dokumentId: String?,
     val vedtaksId: String?,
-    val sedtype: SedType?
+    val sedtype: SedType? = null
 )
 
