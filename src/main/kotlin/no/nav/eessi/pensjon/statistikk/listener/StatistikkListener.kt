@@ -64,8 +64,8 @@ class StatistikkListener(
 
             opprettMeldingMetric.measure {
                 val offsetToSkip = listOf(10514L, 10539L, 10546L, 10550L, 10555L, 10570L, 10578L, 10708L, 10710L, 10557L, 10711L, 10730L, 10764L, 10768L, 10697L, 10715L)
+                val offset = cr.offset()
                 try {
-                    val offset = cr.offset()
                     if (offsetToSkip.contains(offset)) {
                         logger.warn("Hopper over offset: $offset")
                     } else {
@@ -91,10 +91,11 @@ class StatistikkListener(
                         }
                     }
                     acknowledgment.acknowledge()
-                    logger.info("Acket opprettelse melding med offset: ${cr.offset()} i partisjon ${cr.partition()}")
+                    logger.info("Acket opprettelse melding med offset: $offset i partisjon ${cr.partition()}")
                 } catch (ex: Exception) {
-                    logger.error("Noe gikk galt under behandling av statistikk-hendelse:\n $hendelse \n", ex)
-                    throw RuntimeException(ex.message)
+                    logger.error("ERROR OFFSET: $offset")
+                    acknowledgment.acknowledge()
+                    //throw RuntimeException(ex.message)
                 }
                 latch.countDown()
             }
