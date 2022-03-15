@@ -42,6 +42,7 @@ class GcpStorageService( @param:Value("\${GCP_BUCKET_NAME}") var bucketname: Str
         try {
             jsonHendelse =  gcpStorage.get(BlobId.of(bucketname, storageKey))
             if(jsonHendelse.exists()){
+                logger.info("Blob med key:$storageKey funnet")
                 return jsonHendelse.getContent().decodeToString()
             }
         } catch ( ex: Exception) {
