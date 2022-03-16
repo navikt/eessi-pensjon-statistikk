@@ -94,7 +94,10 @@ class StatistikkListener(
                 } catch (ex: Exception) {
                     logger.error("Noe gikk galt med offset:$offset, og behandling av statistikk-hendelse:\n $hendelse \n", ex)
                     acknowledgment.acknowledge()
-                    //throw RuntimeException(ex.message)
+
+                    if(hendelse.contains("sedtype")){
+                        throw RuntimeException(ex.message)
+                    }
                 }
                 latch.countDown()
             }
