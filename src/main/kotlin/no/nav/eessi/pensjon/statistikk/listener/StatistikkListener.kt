@@ -111,8 +111,8 @@ class StatistikkListener(
                 val sedHendelseRina = mapJsonToAny(hendelse, typeRefs<SedHendelseRina>())
 
                 val offsetToSkip = listOf(299742L, 299743L, 299746L)
+                val offset = cr.offset()
                 try {
-                    val offset = cr.offset()
                     if (offsetToSkip.contains(offset) || MissingBuc.checkForMissingBuc(sedHendelseRina.rinaSakId)) {
                         logger.warn("Hopper over offset: $offset")
                     } else {
@@ -128,10 +128,11 @@ class StatistikkListener(
                         }
                     }
                     acknowledgment.acknowledge()
-                    logger.info("Acket sedMottatt melding med offset: ${cr.offset()} i partisjon ${cr.partition()}")
+                    logger.info("Acket sedMottatt melding med offset: $offset i partisjon ${cr.partition()}")
                 } catch (ex: Exception) {
-                    logger.error("Noe gikk galt under behandling av statistikk-sed-hendelse:\n $hendelse \n", ex)
-                    throw RuntimeException(ex.message)
+                    logger.error("Noe gikk galt med offset : $offset, under behandling av statistikk-sed-hendelse:\n $hendelse \n", ex)
+                    acknowledgment.acknowledge()
+                    //throw RuntimeException(ex.message)
                 }
                 latchMottatt.countDown()
             }

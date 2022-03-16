@@ -31,7 +31,7 @@ class GcpStorageService( @param:Value("\${GCP_BUCKET_NAME}") var bucketname: Str
                 it.write(ByteBuffer.wrap(storageValue.toByteArray()))
             }
         }.onFailure { e ->
-            logger.error("Feilet med å lagre dokument med id: ${blobInfo.blobId.name}", e)
+            logger.warn("Feilet med å lagre dokument med id: ${blobInfo.blobId.name}", e)
         }.onSuccess {
             logger.info("Lagret fil med blobid:  ${blobInfo.blobId.name} og bytes: $it")
         }
@@ -46,7 +46,7 @@ class GcpStorageService( @param:Value("\${GCP_BUCKET_NAME}") var bucketname: Str
                 return jsonHendelse.getContent().decodeToString()
             }
         } catch ( ex: Exception) {
-            logger.error("En feil oppstod under henting av objekt: $storageKey i bucket")
+            logger.warn("En feil oppstod under henting av objekt: $storageKey i bucket")
         }
         return null
     }
