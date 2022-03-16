@@ -8,8 +8,6 @@ import no.nav.eessi.pensjon.statistikk.services.HendelsesAggregeringsService
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.springframework.http.HttpStatus
-import org.springframework.web.client.HttpClientErrorException
 import org.springframework.web.client.RestTemplate
 
 internal class EuxServiceTest {
@@ -50,7 +48,8 @@ internal class EuxServiceTest {
         val mockEuxRinaid = "123456"
         val mockEuxDocumentId = "d740047e730f475aa34ae59f62e3bb99"
 
-        every { euxOidcRestTemplate.getForObject(eq("/buc/$mockEuxRinaid/sed/$mockEuxDocumentId"), eq(Sed::class.java))} throws HttpClientErrorException(HttpStatus.NOT_FOUND) andThen gyldigBuc
+        //every { euxOidcRestTemplate.getForObject(eq("/buc/$mockEuxRinaid/sed/$mockEuxDocumentId"), eq(Sed::class.java))} throws HttpClientErrorException(HttpStatus.NOT_FOUND) andThen gyldigBuc
+        every { euxOidcRestTemplate.getForObject(eq("/buc/$mockEuxRinaid/sed/$mockEuxDocumentId"), eq(Sed::class.java))} returns gyldigBuc
 
         val sed = euxService.getSed(mockEuxRinaid, mockEuxDocumentId)
         val saksNummer = hentSaksNummer(sed)
