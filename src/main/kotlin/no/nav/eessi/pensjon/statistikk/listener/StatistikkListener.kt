@@ -93,7 +93,8 @@ class StatistikkListener(
                     logger.info("Acket opprettelse melding med offset: $offset i partisjon ${cr.partition()}")
                 } catch (ex: Exception) {
                     logger.error("Noe gikk galt med offset:$offset, og behandling av statistikk-hendelse:\n $hendelse \n", ex)
-                    throw RuntimeException(ex.message)
+                    acknowledgment.acknowledge()
+                    //throw RuntimeException(ex.message)
                 }
                 latch.countDown()
             }
@@ -109,10 +110,9 @@ class StatistikkListener(
         MDC.putCloseable("x_request_id", MDC.get("x_request_id") ?: UUID.randomUUID().toString()).use {
             sedMottattMeldingMetric.measure {
                 val sedHendelseRina = mapJsonToAny(hendelse, typeRefs<SedHendelseRina>())
-
                 val offsetToSkip = listOf(299742L, 299743L, 299746L)
+                val offset = cr.offset()
                 try {
-                    val offset = cr.offset()
                     if (offsetToSkip.contains(offset) || MissingBuc.checkForMissingBuc(sedHendelseRina.rinaSakId)) {
                         logger.warn("Hopper over offset: $offset")
                     } else {
@@ -128,9 +128,9 @@ class StatistikkListener(
                         }
                     }
                     acknowledgment.acknowledge()
-                    logger.info("Acket sedMottatt melding med offset: ${cr.offset()} i partisjon ${cr.partition()}")
+                    logger.info("Acket sedMottatt melding med offset: $offset i partisjon ${cr.partition()}")
                 } catch (ex: Exception) {
-                    logger.error("Noe gikk galt under behandling av statistikk-sed-hendelse:\n $hendelse \n", ex)
+                    logger.error("Noe gikk galt med offset : $offset, under behandling av statistikk-sed-hendelse:\n $hendelse \n", ex)
                     throw RuntimeException(ex.message)
                 }
                 latchMottatt.countDown()
@@ -146,16 +146,15 @@ class StatistikkListener(
     fun consumeSedSendt(hendelse: String, cr: ConsumerRecord<String, String>, acknowledgment: Acknowledgment) {
         MDC.putCloseable("x_request_id", MDC.get("x_request_id") ?: UUID.randomUUID().toString()).use {
             sedSedSendMeldingtMetric.measure {
+                val offset = cr.offset()
                 try {
-                    val offset = cr.offset()
                     val sedHendelseRina = mapJsonToAny(hendelse, typeRefs<SedHendelseRina>())
                     if (MissingBuc.checkForMissingBuc(sedHendelseRina.rinaSakId)) {
                         logger.warn("Hopper over offset: $offset")
                     } else {
                         if (GyldigeHendelser.sendt(sedHendelseRina) && sedHendelseRina.rinaSakId !in umigrerteBucIder) {
                             logger.debug(sedHendelseRina.toJson())
-                            val vedtaksId =
-                                sedInfoService.hentVedtaksId(sedHendelseRina.rinaSakId, sedHendelseRina.rinaDokumentId)
+                            val vedtaksId = sedInfoService.hentVedtaksId(sedHendelseRina.rinaSakId, sedHendelseRina.rinaDokumentId)
                             val sedMeldingUt = sedInfoService.populerSedMeldingUt(
                                 sedHendelseRina.rinaSakId,
                                 sedHendelseRina.rinaDokumentId,
@@ -170,7 +169,7 @@ class StatistikkListener(
                     acknowledgment.acknowledge()
                     logger.info("Acket sedSendt melding med offset: ${cr.offset()} i partisjon ${cr.partition()}")
                 } catch (ex: Exception) {
-                    logger.error("Noe gikk galt under behandling av statistikk-sed-hendelse:\n $hendelse \n", ex)
+                    logger.error("Noe gikk galt med offset : $offset, under behandling av statistikk-sed-hendelse:\n $hendelse \n", ex)
                     throw RuntimeException(ex.message)
                 }
                 latch.countDown()
