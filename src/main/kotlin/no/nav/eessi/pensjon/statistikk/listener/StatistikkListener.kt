@@ -60,7 +60,7 @@ class StatistikkListener(
         acknowledgment: Acknowledgment
     ) {
         MDC.putCloseable("x_request_id", MDC.get("x_request_id") ?: UUID.randomUUID().toString()).use {
-            logger.info("Innkommet statistikk hendelse i partisjon: ${cr.partition()}, med offset: ${cr.offset()}")
+            logger.info("Innkommet statistikk hendelse i partisjon: ${cr.partition()}, med offset: ${cr.offset()}, og tidspunkt: ${cr.timestamp()}")
 
             opprettMeldingMetric.measure {
                 val offsetToSkip = listOf<Long>()
