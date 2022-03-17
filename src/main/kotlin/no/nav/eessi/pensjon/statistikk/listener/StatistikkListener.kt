@@ -62,7 +62,8 @@ class StatistikkListener(
         acknowledgment: Acknowledgment
     ) {
         MDC.putCloseable("x_request_id", MDC.get("x_request_id") ?: UUID.randomUUID().toString()).use {
-            logger.info("Innkommet statistikk hendelse i partisjon: ${cr.partition()}, med offset: ${cr.offset()}, og timestamp: ${timeWithFormat(cr.timestamp())}")
+            val timestamp = timeWithFormat(cr.timestamp())
+            logger.info("Innkommet statistikk hendelse i partisjon: ${cr.partition()}, med offset: ${cr.offset()}, tid:$timestamp")
 
             opprettMeldingMetric.measure {
                 val offsetToSkip = listOf<Long>()
@@ -93,7 +94,7 @@ class StatistikkListener(
                     acknowledgment.acknowledge()
                     logger.info("Acket opprettelse melding med offset: $offset i partisjon ${cr.partition()}")
                 } catch (ex: Exception) {
-                    logger.error("Noe gikk galt med offset:$offset, og behandling av statistikk-hendelse:\n $hendelse \n", ex)
+                    logger.error("Noe gikk galt med offset:$offset, tid:$timestamp, ved behandling av statistikk-hendelse:\n $hendelse \n", ex)
                     acknowledgment.acknowledge()
                 }
                 latch.countDown()
