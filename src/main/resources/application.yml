@@ -10,6 +10,8 @@ no.nav.security.jwt:
           client-jwk: ${AZURE_APP_JWK}
           client-auth-method: private_key_jwt
 
+METRICS_REQUESTFILTER_ENABLE: false
+
 kafka:
   topic: ${KAFKA_STATISTIKK_TOPICNAME}
   keystore.path: ${KAFKA_KEYSTORE_PATH:}
