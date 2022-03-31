@@ -10,15 +10,10 @@
             </encoder>
         </appender>
 
-        <logger name="io" level="ERROR"/>
         <logger name="org" level="ERROR"/>
         <logger name="com" level="ERROR"/>
         <logger name="no.nav" level="INFO"/>
-        <logger name="no.nav.security" level="ERROR"/>
-        <logger name="no.nav.eessi" level="INFO"/>
-        <logger name="no.nav.eessi.pensjon.logging.RequestResponseLoggerInterceptor" level="OFF"/>
-        <logger name="no.nav.security.token.support.core.validation" level="ERROR"/>
-
+        <logger name="no.nav.security.spring" level="ERROR"/>
 
         <root level="info">
             <appender-ref ref="stdout_json"/>
@@ -27,45 +22,24 @@
 
     <springProfile name="test">
         <appender name="stdout_json" class="ch.qos.logback.core.ConsoleAppender">
-            <encoder>
-                <pattern>%level %logger %msg %n</pattern>
-            </encoder>
             <encoder class="net.logstash.logback.encoder.LogstashEncoder">
                 <includeCallerData>true</includeCallerData>
             </encoder>
         </appender>
 
+        <logger name="org" level="INFO"/>
+        <logger name="com" level="INFO"/>
+        <logger name="no.nav" level="DEBUG"/>
+        <logger name="no.nav.security" level="DEBUG"/>
+
         <root level="info">
             <appender-ref ref="stdout_json"/>
         </root>
-
-        <logger name="io" level="ERROR"/>
-        <logger name="org" level="ERROR"/>
-        <logger name="com" level="ERROR"/>
-        <logger name="no.nav" level="DEBUG"/>
-        <logger name="no.nav.security" level="DEBUG"/>
-        <logger name="no.nav.eessi" level="DEBUG"/>
-        <logger name="no.nav.security.token.support.core.validation" level="ERROR"/>
-
     </springProfile>
 
-    <springProfile name="local, integrationtest">
-        <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-            <encoder>
-                <pattern>%d{dd-MM-yyyy HH:mm:ss.SSS} %magenta([%thread]) %highlight(%-5level) %logger{36}.%M - %msg%n</pattern>
-            </encoder>
-        </appender>
-        <root level="info">
-            <appender-ref ref="STDOUT" />
-        </root>
-
-        <logger name="io" level="ERROR"/>
-        <logger name="org" level="ERROR"/>
-        <logger name="com" level="ERROR"/>
+    <springProfile name="local">
+        <include resource="org/springframework/boot/logging/logback/base.xml"/>
         <logger name="no.nav" level="DEBUG"/>
-        <logger name="no.nav.security" level="DEBUG"/>
-        <logger name="no.nav.eessi" level="DEBUG"/>
-
     </springProfile>
 
 </configuration>
