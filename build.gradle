@@ -126,10 +126,8 @@ test {
         showStandardStreams true
     }
 }
-+
-/*
+
 assert JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_17): "Java 17 or newer is required"
-*/
 
 tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
     sourceCompatibility = JavaVersion.VERSION_17
