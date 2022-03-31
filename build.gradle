@@ -37,7 +37,6 @@ plugins {
     id 'se.patrikerdes.use-latest-versions' version '0.2.18'
     id "org.owasp.dependencycheck" version "6.5.0.1"
     id 'com.adarshr.test-logger' version '3.2.0'
-    id "org.sonarqube" version "3.3"
 }
 
 apply plugin: 'kotlin'
@@ -86,9 +85,6 @@ dependencies {
     implementation("no.nav.security:token-validation-jaxrs:${oidcTokenSupportVersion}")
 
     testImplementation("no.nav.security:token-validation-test-support:${oidcTokenSupportVersion}")
-    /*{
-        exclude module: "hk2"
-    }*/
 
     //test
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
@@ -114,8 +110,6 @@ dependencies {
     testImplementation("org.testcontainers:junit-jupiter:1.16.3")
     testImplementation "org.testcontainers:testcontainers:1.16.3"
 
-
-
 }
 test {
     useJUnitPlatform()
@@ -126,10 +120,6 @@ test {
 
     // set JVM arguments for the test JVM(s)
     failFast = true
-
-}
-
-tasks.withType(Test) {
     testLogging {
         exceptionFormat "full"
         events "started", "skipped", "passed", "failed"
@@ -137,8 +127,7 @@ tasks.withType(Test) {
     }
 }
 
-
-//assert JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_17): "Java 17 or newer is required"
+assert JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_17): "Java 17 or newer is required"
 
 tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
     sourceCompatibility = JavaVersion.VERSION_17
@@ -153,21 +142,6 @@ tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
 wrapper {
     distributionType = Wrapper.DistributionType.ALL
 }
-
-// https://docs.gradle.org/current/userguide/jacoco_plugin.html
-/*jacoco {
-    toolVersion = "0.8.7"
-}
-
-jacocoTestReport {
-    reports {
-        xml.enabled true
-    }
-}*/
-
-/*
-tasks.sonarqube.dependsOn tasks["jacocoTestReport"]
-*/
 
 repositories {
 
