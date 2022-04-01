@@ -83,6 +83,7 @@ dependencies {
     implementation("no.nav.security:token-client-spring:${oidcTokenSupportVersion}")
     implementation("no.nav.security:token-validation-spring:${oidcTokenSupportVersion}")
     implementation("no.nav.security:token-validation-jaxrs:${oidcTokenSupportVersion}")
+    implementation("no.nav.security:token-validation-test-support:${oidcTokenSupportVersion}")
 
     testImplementation("no.nav.security:token-validation-test-support:${oidcTokenSupportVersion}")
 
