@@ -11,10 +11,10 @@ import java.nio.file.Paths
 import java.util.concurrent.CompletableFuture
 
 class CustomMockServer() {
-    private val serverPort = CompletableFuture.completedFuture(System.getProperty("mockserverport").toInt())
+    private val serverPort = System.getProperty("mockserverport").toInt()
 
     fun medBuc(bucPath: String, bucLocation: String) = apply {
-        MockServerClient(serverPort).`when`(
+        MockServerClient("localhost", serverPort).`when`(
             HttpRequest.request()
                 .withMethod(HttpMethod.GET.name)
                 .withPath(bucPath)

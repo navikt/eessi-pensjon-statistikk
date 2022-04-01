@@ -52,7 +52,7 @@ class ArchitectureTest {
 
     @Test
     fun `Loggers should be private`(){
-        fields().that().haveRawType(Logger::class.java).should().bePrivate().andShould().beStatic().andShould().beFinal() .check(classesToAnalyze)
+        fields().that().haveRawType(Logger::class.java).should().bePrivate().andShould().beStatic().andShould().beFinal().check(classesToAnalyze)
     }
 
     @Test
@@ -61,6 +61,7 @@ class ArchitectureTest {
             .haveSimpleNameEndingWith("Controller")
             .should().beAnnotatedWith(RestController::class.java)
             .check(classesToAnalyze)
+
     }
 
     @Test
