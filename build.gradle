@@ -2,15 +2,15 @@ buildscript {
 
     ext {
         kotlinVersion = '1.6.10'
-        springBootVersion = '2.6.5'
+        springBootVersion = '2.6.6'
         logstashLogbackVersion = '7.0.1'
         archunitVersion = '0.23.1'              //nyere versjoner feiler på sirkulære tester
         microMeterPrometheusVersion = '1.8.2'
-        epMetricsVersion = "0.+"
         oidcTokenSupportVersion = '1.3.9'
-        epeuxVersion = '1.+'
         gcpStorageVersion = "2.4.5"
-
+        epMetricsVersion = "0.+"
+        epeuxVersion = '1.+'
+        epLoggingVersion = '1.+'
     }
 
     repositories {
@@ -49,7 +49,7 @@ group = 'no.nav.eessi.pensjon'
 dependencies {
 
     //eessi pensjon libs
-    implementation("no.nav.eessi.pensjon:ep-logging:1.+")
+    implementation("no.nav.eessi.pensjon:ep-logging:${epLoggingVersion}")
     implementation("no.nav.eessi.pensjon:ep-eux:${epeuxVersion}") {
         exclude module: 'ep-security-sts'
     }
