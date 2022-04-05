@@ -1,4 +1,4 @@
-FROM navikt/java:17-appdynamics
+FROM navikt/java:11-appdynamics
 
 COPY build/libs/eessi-pensjon-statistikk.jar /app/app.jar
 
