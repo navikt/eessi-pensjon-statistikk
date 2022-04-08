@@ -38,7 +38,6 @@ class StatistikkListener(
     private lateinit var opprettMeldingMetric: MetricsHelper.Metric
     private lateinit var sedMottattMeldingMetric: MetricsHelper.Metric
     private lateinit var sedSedSendMeldingtMetric: MetricsHelper.Metric
-    private val umigrerteBucIder = listOf("9364403", "9857012")
 
     fun getLatch() = latch
     fun getLatchMottatt() = latchMottatt
@@ -66,7 +65,7 @@ class StatistikkListener(
             logger.info("Innkommet statistikk hendelse i partisjon: ${cr.partition()}, med offset: ${cr.offset()}, tid:$timestamp")
 
             opprettMeldingMetric.measure {
-                val offsetToSkip = listOf<Long>(14574, 14504, 14606, 14544)
+                val offsetToSkip = listOf<Long>(14574, 14504, 14606, 14544, 14544)
                 val offset = cr.offset()
                 try {
                     if (offsetToSkip.contains(offset)) {
@@ -118,7 +117,7 @@ class StatistikkListener(
                     if (offsetToSkip.contains(offset) || MissingBuc.checkForMissingBuc(sedHendelseRina.rinaSakId)) {
                         logger.warn("Hopper over offset: $offset")
                     } else {
-                        if (GyldigeHendelser.mottatt(sedHendelseRina) && sedHendelseRina.rinaSakId !in umigrerteBucIder) {
+                        if (GyldigeHendelser.mottatt(sedHendelseRina) && MissingBuc.checkForMissingBuc(sedHendelseRina.rinaSakId).not()) {
                             val sedMeldingUt = sedInfoService.populerSedMeldingUt(
                                 sedHendelseRina.rinaSakId,
                                 sedHendelseRina.rinaDokumentId,
@@ -154,7 +153,7 @@ class StatistikkListener(
                     if (MissingBuc.checkForMissingBuc(sedHendelseRina.rinaSakId)) {
                         logger.warn("Hopper over offset: $offset")
                     } else {
-                        if (GyldigeHendelser.sendt(sedHendelseRina) && sedHendelseRina.rinaSakId !in umigrerteBucIder) {
+                        if (GyldigeHendelser.sendt(sedHendelseRina) && !MissingBuc.checkForMissingBuc(sedHendelseRina.rinaSakId)) {
                             logger.debug(sedHendelseRina.toJson())
                             val vedtaksId = sedInfoService.hentVedtaksId(sedHendelseRina.rinaSakId, sedHendelseRina.rinaDokumentId)
                             val sedMeldingUt = sedInfoService.populerSedMeldingUt(
