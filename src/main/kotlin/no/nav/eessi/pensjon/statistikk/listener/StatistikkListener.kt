@@ -117,7 +117,7 @@ class StatistikkListener(
                     if (offsetToSkip.contains(offset) || MissingBuc.checkForMissingBuc(sedHendelseRina.rinaSakId)) {
                         logger.warn("Hopper over offset: $offset")
                     } else {
-                        if (GyldigeHendelser.mottatt(sedHendelseRina) && MissingBuc.checkForMissingBuc(sedHendelseRina.rinaSakId).not()) {
+                        if (GyldigeHendelser.mottatt(sedHendelseRina)) {
                             val sedMeldingUt = sedInfoService.populerSedMeldingUt(
                                 sedHendelseRina.rinaSakId,
                                 sedHendelseRina.rinaDokumentId,
@@ -153,7 +153,7 @@ class StatistikkListener(
                     if (MissingBuc.checkForMissingBuc(sedHendelseRina.rinaSakId)) {
                         logger.warn("Hopper over offset: $offset")
                     } else {
-                        if (GyldigeHendelser.sendt(sedHendelseRina) && !MissingBuc.checkForMissingBuc(sedHendelseRina.rinaSakId)) {
+                        if (GyldigeHendelser.sendt(sedHendelseRina)) {
                             logger.debug(sedHendelseRina.toJson())
                             val vedtaksId = sedInfoService.hentVedtaksId(sedHendelseRina.rinaSakId, sedHendelseRina.rinaDokumentId)
                             val sedMeldingUt = sedInfoService.populerSedMeldingUt(
