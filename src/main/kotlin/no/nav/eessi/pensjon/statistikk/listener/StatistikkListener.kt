@@ -45,9 +45,9 @@ class StatistikkListener(
 
     @PostConstruct
     fun initMetrics() {
-        opprettMeldingMetric = metricsHelper.init("opprettMeldingMetric")
-        sedMottattMeldingMetric = metricsHelper.init("sedMottattMeldingMetric")
-        sedSedSendMeldingtMetric = metricsHelper.init("sedSedSendMeldingtMetric")
+        opprettMeldingMetric = metricsHelper.init("consumeOpprettMelding")
+        sedMottattMeldingMetric = metricsHelper.init("consumeSedMottatt")
+        sedSedSendMeldingtMetric = metricsHelper.init("consumeSedSendtMelding")
     }
 
     @KafkaListener(
