@@ -63,7 +63,7 @@ class EuxKlient(
     }
 
     @Throws(Throwable::class)
-    fun <T> retryHelper(func: () -> T, maxAttempts: Int = 3, waitTimes: Long = 5000L): T {
+    fun <T> retryHelper(func: () -> T, maxAttempts: Int = 3, waitTimes: Long = 10000L): T {
         var failException: Throwable? = null
         var count = 0
         while (count < maxAttempts) {
