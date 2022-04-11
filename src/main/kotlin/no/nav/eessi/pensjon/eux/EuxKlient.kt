@@ -34,7 +34,7 @@ class EuxKlient(
         logger.info("Henter BUC metadata for rinasakId: $rinaSakId")
         return hentBucMetadata.measure {
             try {
-                euxClientCredentialsResourceRestTemplate.getForObject("/buc/$rinaSakId", BucMetadata::class.java)
+                retryHelper({ euxClientCredentialsResourceRestTemplate.getForObject("/buc/$rinaSakId", BucMetadata::class.java)})
             } catch (ex: HttpClientErrorException) {
                 logger.error("Feil ved henting av Buc metadata for rinasakId: $rinaSakId")
                 throw ex
@@ -50,7 +50,7 @@ class EuxKlient(
 
         return hentSedMetadata.measure {
             try {
-                 euxClientCredentialsResourceRestTemplate.getForObject("/buc/$rinaSakId/sed/$rinaDokumentId", Sed::class.java)!!
+                retryHelper({ euxClientCredentialsResourceRestTemplate.getForObject("/buc/$rinaSakId/sed/$rinaDokumentId", Sed::class.java)})!!
             } catch (ex: HttpClientErrorException) {
                 if (ex.statusCode == HttpStatus.NOT_FOUND) {
                     logger.warn("Fant ikke SED for rinasakId: $rinaSakId rinaDokumentId $rinaDokumentId")
