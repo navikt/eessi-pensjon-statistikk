@@ -65,7 +65,7 @@ class StatistikkListener(
             logger.info("Innkommet statistikk hendelse i partisjon: ${cr.partition()}, med offset: ${cr.offset()}, tid:$timestamp")
 
             opprettMeldingMetric.measure {
-                val offsetToSkip = listOf<Long>(14574, 14504, 14606, 14544, 14544, 14639, 14731, 14555, 14564, 14773, 14881, 14908, 14913, 14580, 14616)
+                val offsetToSkip = listOf<Long>()
                 val offset = cr.offset()
                 try {
                     val melding = meldingsMapping(hendelse)
@@ -93,8 +93,9 @@ class StatistikkListener(
                     acknowledgment.acknowledge()
                     logger.info("Acket opprettelse melding med offset: $offset i partisjon ${cr.partition()}")
                 } catch (ex: Exception) {
+                    acknowledgment.acknowledge()
                     logger.error("Noe gikk galt med offset:$offset, tid:$timestamp, ved behandling av statistikk-hendelse:\n $hendelse \n", ex)
-                    throw RuntimeException(ex.message)
+                    //throw RuntimeException(ex.message)
                 }
                 latch.countDown()
             }
