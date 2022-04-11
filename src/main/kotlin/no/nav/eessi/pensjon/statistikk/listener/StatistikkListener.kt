@@ -65,14 +65,14 @@ class StatistikkListener(
             logger.info("Innkommet statistikk hendelse i partisjon: ${cr.partition()}, med offset: ${cr.offset()}, tid:$timestamp")
 
             opprettMeldingMetric.measure {
-                val offsetToSkip = listOf<Long>(14574, 14504, 14606, 14544, 14544, 14639, 14731, 14555, 14564, 14773, 14881, 14908, 14913, 14580)
+                val offsetToSkip = listOf<Long>(14574, 14504, 14606, 14544, 14544, 14639, 14731, 14555, 14564, 14773, 14881, 14908, 14913, 14580, 14616)
                 val offset = cr.offset()
                 try {
-                    if (offsetToSkip.contains(offset)) {
+                    val melding = meldingsMapping(hendelse)
+                    if (offsetToSkip.contains(offset) || MissingBuc.checkForMissingBuc(melding.rinaId)) {
                         logger.warn("Hopper over offset: $offset")
                     } else {
                         logger.info("Oppretter melding av type: $hendelse")
-                        val melding = meldingsMapping(hendelse)
                         when (melding.opprettelseType) {
                             OpprettelseType.BUC -> {
                                 val bucHendelse = sedInfoService.aggregateBucData(melding.rinaId)
