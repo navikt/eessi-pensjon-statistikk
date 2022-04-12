@@ -93,9 +93,8 @@ class StatistikkListener(
                     acknowledgment.acknowledge()
                     logger.info("Acket opprettelse melding med offset: $offset i partisjon ${cr.partition()}")
                 } catch (ex: Exception) {
-                    acknowledgment.acknowledge()
                     logger.error("Noe gikk galt med offset:$offset, tid:$timestamp, ved behandling av statistikk-hendelse:\n $hendelse \n", ex)
-                    //throw RuntimeException(ex.message)
+                    throw RuntimeException(ex.message)
                 }
                 latch.countDown()
             }
