@@ -36,7 +36,7 @@ class KafkaConfig(
     @param:Value("\${kafka.security.protocol}") private val securityProtocol: String,
     @param:Value("\${srvusername}") private val srvusername: String,
     @param:Value("\${srvpassword}") private val srvpassword: String,
-    @Autowired private val kafkaErrorHandler: KafkaErrorHandler?
+    @Autowired private val kafkaErrorHandler: KafkaStoppingErrorHandler?
     ) {
 
     @Bean
