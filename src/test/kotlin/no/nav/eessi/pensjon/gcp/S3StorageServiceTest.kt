@@ -25,6 +25,7 @@ class S3StorageServiceTest {
         val storage=  StorageOptions.newBuilder()
             .setCredentials(NoCredentials.getInstance())
             .setHost(fakeGcsExternalUrl)
+            .setProjectId("statistikk-int-test")
             .build()
             .service.also { it.create(BucketInfo.of(testBucket)) }
 
