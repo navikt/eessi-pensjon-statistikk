@@ -1,55 +1,38 @@
-package no.nav.eessi.pensjon.services.storage.amazons3
+package no.nav.eessi.pensjon.gcp
 
 import com.google.cloud.NoCredentials
-import com.google.cloud.storage.Storage
+import com.google.cloud.storage.BucketInfo
 import com.google.cloud.storage.StorageOptions
-import no.nav.eessi.pensjon.gcp.GcpStorageService
-import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestInstance
 import org.springframework.test.context.ActiveProfiles
-import org.testcontainers.containers.BindMode
-import org.testcontainers.containers.GenericContainer
-import org.testcontainers.junit.jupiter.Testcontainers
-import java.net.ServerSocket
 import java.time.LocalDateTime
 
-@Testcontainers
 @ActiveProfiles("integrationtest")
-@Disabled
+@TestInstance(TestInstance.Lifecycle.PER_CLASS) // Because we are using fixedPort testcontainer
 class S3StorageServiceTest {
 
-    private lateinit var gcpStorageService: GcpStorageService
-    private lateinit var gcs : GcpTestContainer
-
-    @BeforeEach
-    fun setup() {
-        gcs = GcpTestContainer("fsouza/fake-gcs-server")
-            .withExposedPorts(4443)
-            .withClasspathResourceMapping("data", "/data", BindMode.READ_WRITE)
-            .withCreateContainerCmdModifier {
-                it.withEntrypoint("/bin/fake-gcs-server", "-data", "/data", "-scheme", "http")
-            }
-        gcs.start()
-
-        val storage: Storage = StorageOptions.newBuilder()
-            .setCredentials(NoCredentials.getInstance())
-            .setHost("http://${gcs.host}:${gcs.firstMappedPort}")
-            .build()
-            .service
-
-        gcpStorageService = GcpStorageService( "bucket", storage)
+    companion object {
+        private const val FIXED_HOST_PORT = 44444
+        private const val testBucket = "test-bucket"
     }
 
-    @AfterEach
-    fun teardown() {
-        gcs.stop()
+    private val gcpStorageService by lazy {
+        val gcs = GoogleCloudStorageTestcontainer.createAndStart(FIXED_HOST_PORT)
+        val fakeGcsExternalUrl = "http://" + gcs.host + ":" + FIXED_HOST_PORT
+
+        val storage=  StorageOptions.newBuilder()
+            .setCredentials(NoCredentials.getInstance())
+            .setHost(fakeGcsExternalUrl)
+            .build()
+            .service.also { it.create(BucketInfo.of(testBucket)) }
+
+        GcpStorageService( "test-bucket", storage)
     }
 
     @Test
-    fun `add files in different directories and list them all`() {
+    fun `Add files in different directories and list them all`() {
         val aktoerId1 = "14725802541"
         val p2000Directory = "P2000"
         val p4000Directory = "P4000"
@@ -72,8 +55,8 @@ class S3StorageServiceTest {
         assertEquals(2, fileListAktoer2.size)
     }
 
-/*    @Test
-    fun `add multiple files and list them`() {
+    @Test
+    fun `Add multiple files and list them`() {
         val directory = "P4000"
         val aktoerId = "12345678910"
 
@@ -101,27 +84,6 @@ class S3StorageServiceTest {
         assertEquals(value2, fetchtedValue2)
         assertEquals(value3, fetchtedValue3)
     }
-
-    @Test
-    fun `lagre file into bucket, list it, read it back and finally delete it`() {
-        val directory = "P2000"
-        val aktoerId = "12435678910"
-        val value = "A string that has to be persisted.\nAnd this line too."
-
-        gcpStorageService.lagre(aktoerId + "___" + "$directory/testfile.txt", value)
-
-        val fileList = gcpStorageService.list(aktoerId + "___" + directory)
-        assertEquals(1, fileList.size, "Expect that 1 entry is returned")
-
-        val fetchedValue = gcpStorageService.hent(fileList[0])
-        assertEquals(value, fetchedValue, "The stored and fetched values should be equal")
-
-        gcpStorageService.slett(fileList[0])
-
-        val fileListAfterDelete = gcpStorageService.list(aktoerId + "___" + directory)
-        assertEquals(0, fileListAfterDelete.size, "Expect that 0 entries are returned")
-    }
-
     @Test
     fun `Given a logged in saksbehandler when listing in S3 then allow listing files for all citizens`() {
         val aktoerId1 = "12345678910"
@@ -135,8 +97,5 @@ class S3StorageServiceTest {
 
         val fileListAktoer1 = gcpStorageService.list(aktoerId2)
         assertEquals(1, fileListAktoer1.size)
-    }*/
-
-    fun randomOpenPort(): Int = ServerSocket(0).use { it.localPort }
+    }
 }
-class GcpTestContainer (imageName: String) : GenericContainer<GcpTestContainer>(imageName)
