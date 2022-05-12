@@ -1,6 +1,5 @@
 package no.nav.eessi.pensjon.statistikk.integrationtest
 
-import io.mockk.clearAllMocks
 import io.mockk.mockk
 import io.mockk.spyk
 import no.nav.eessi.pensjon.gcp.GcpStorageService
@@ -33,10 +32,11 @@ import java.security.cert.X509Certificate
 import java.util.concurrent.TimeUnit
 import javax.net.ssl.SSLContext
 
-
 const val STATISTIKK_TOPIC = "eessi-pensjon-statistikk-inn"
 const val STATISTIKK_TOPIC_MOTATT = "eessi-pensjon-statistikk-sed-mottatt"
+
 private var mockServerPort = PortFactory.findFreePort()
+private lateinit var mockServer: ClientAndServer
 
 abstract class IntegrationBase() {
 
@@ -52,27 +52,27 @@ abstract class IntegrationBase() {
     @Autowired
     lateinit var producerFactory: ProducerFactory<String, String>
 
-    var mockServer: ClientAndServer
+    lateinit var container: KafkaMessageListenerContainer<String, String>
 
-    init {
-        System.setProperty("mockserverport", "" + mockServerPort)
-        mockServer = ClientAndServer.startClientAndServer(mockServerPort)
+    companion object {
+        init {
+            System.setProperty("mockserverport", "" + mockServerPort)
+            mockServer = ClientAndServer.startClientAndServer(mockServerPort)
+        }
     }
 
     @AfterEach
-    fun after() {
+    fun afterEach() {
         println("************************* CLEANING UP AFTER CLASS*****************************")
-        clearAllMocks()
-        embeddedKafka.kafkaServers.forEach { it.shutdown() }
-        mockServer.stopAsync()
-        mockServer.stop().also { print("mockServer -> HasStopped: ${mockServer.hasStopped()}") }
+        container.stop()
     }
 
     fun initAndRunContainer(topic: String): TestResult {
-        val container = initConsumer(topic)
+        container = initConsumer(topic)
         container.start()
+        Thread.sleep(10000); // wait a bit for the container to start
         ContainerTestUtils.waitForAssignment(container, embeddedKafka.partitionsPerTopic)
-        var template = KafkaTemplate(producerFactory).apply { defaultTopic = topic }
+        val template = KafkaTemplate(producerFactory).apply { defaultTopic = topic }
         return TestResult(template, container).also {
             println("*************************  INIT DONE *****************************")
         }
