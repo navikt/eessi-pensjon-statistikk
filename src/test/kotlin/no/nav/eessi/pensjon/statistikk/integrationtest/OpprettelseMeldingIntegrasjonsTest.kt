@@ -10,7 +10,6 @@ import no.nav.eessi.pensjon.eux.model.buc.BucType
 import no.nav.eessi.pensjon.json.toJson
 import no.nav.eessi.pensjon.statistikk.listener.OpprettelseMelding
 import no.nav.eessi.pensjon.statistikk.models.OpprettelseType
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.kafka.test.context.EmbeddedKafka
@@ -23,7 +22,6 @@ import org.springframework.test.context.ActiveProfiles
 @EmbeddedKafka(
     topics = [STATISTIKK_TOPIC]
 )
-@Disabled
 class OpprettelseMeldingIntegrasjonsTest : IntegrationBase() {
 
     @Test

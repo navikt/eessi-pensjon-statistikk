@@ -1,5 +1,6 @@
 package no.nav.eessi.pensjon.gcp
 
+/*
 import org.testcontainers.containers.FixedHostPortGenericContainer
 import org.testcontainers.containers.wait.strategy.HostPortWaitStrategy
 
@@ -28,4 +29,4 @@ object GoogleCloudStorageTestcontainer {
                 container.start()
             }
     }
-}
+}*/

@@ -8,7 +8,6 @@ import no.nav.eessi.pensjon.eux.BucMetadata
 import no.nav.eessi.pensjon.eux.EuxService
 import no.nav.eessi.pensjon.eux.model.buc.BucType
 import no.nav.eessi.pensjon.gcp.GcpStorageService
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -23,7 +22,6 @@ import org.springframework.test.context.ActiveProfiles
     topics = [STATISTIKK_TOPIC],
     brokerProperties = ["log.dir=/tmp/embedded-OpprettelseEscapetMeldingTest"]
 )
-@Disabled
 class OpprettelseEscapetMeldingTest : IntegrationBase() {
 
     @Autowired

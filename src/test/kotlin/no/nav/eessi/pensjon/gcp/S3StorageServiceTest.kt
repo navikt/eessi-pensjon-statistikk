@@ -1,5 +1,6 @@
 package no.nav.eessi.pensjon.gcp
 
+/*
 import com.google.cloud.NoCredentials
 import com.google.cloud.storage.BucketInfo
 import com.google.cloud.storage.StorageOptions
@@ -100,3 +101,4 @@ class S3StorageServiceTest {
         assertEquals(1, fileListAktoer1.size)
     }
 }
+*/
