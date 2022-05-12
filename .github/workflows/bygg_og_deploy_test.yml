@@ -54,7 +54,7 @@ jobs:
         run: |
           curl -v -s -X POST https://api.github.com/repos/navikt/eessi-pensjon-statistikk/git/refs -H "Authorization: token  ${{ secrets.GITHUB_TOKEN }}" -d '{ "ref": "refs/tags/${{ env.DATE }}---${{ env.COMMIT_HASH }}",  "sha": "${{ env.COMMIT_HASH }}" }'
 
-      - name: 'Repository Dispatch PROD'
+      - name: 'Dispatch PROD GCP'
         uses: peter-evans/repository-dispatch@v1
         with:
           token: ${{ secrets.DISPATCH_TOKEN }}
