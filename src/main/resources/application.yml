@@ -37,14 +37,14 @@ kafka:
 
 #Metrics
 management:
-  metrics:
-    export:
-      prometheus:
-        enabled: true
   endpoints:
+    metrics:
+      enabled: true
     web:
       exposure:
         include: info, health, metrics, prometheus
-  endpoint:
-    info:
-      show-details: "ALWAYS"
+    export:
+      prometheus:
+        enabled: true
+    prometheus:
+      enabled: true
