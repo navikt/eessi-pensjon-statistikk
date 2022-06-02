@@ -9,8 +9,8 @@ buildscript {
         oidcTokenSupportVersion = '1.3.9'
         gcpStorageVersion = "2.4.5"
         epMetricsVersion = "0.4.21"
-        epeuxVersion = '1.+'
-        epLoggingVersion = '1.+'
+        epeuxVersion = '1.1.68'
+        epLoggingVersion = '1.0.19'
     }
 
     repositories {
