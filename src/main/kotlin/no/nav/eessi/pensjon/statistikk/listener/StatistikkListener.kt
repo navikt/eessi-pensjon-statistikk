@@ -103,7 +103,7 @@ class StatistikkListener(
 
 
     @KafkaListener(
-        containerFactory = "onpremKafkaListenerContainerFactory",
+        containerFactory = "sedKafkaListenerContainerFactory",
         topics = ["\${kafka.statistikk-sed-mottatt.topic}"],
         groupId = "\${kafka.statistikk-sed-mottatt.groupid}",
     )
@@ -140,7 +140,7 @@ class StatistikkListener(
     }
 
     @KafkaListener(
-        containerFactory = "onpremKafkaListenerContainerFactory",
+        containerFactory = "sedKafkaListenerContainerFactory",
         topics = ["\${kafka.statistikk-sed-sendt.topic}"],
         groupId = "\${kafka.statistikk-sed-sendt.groupid}",
     )
