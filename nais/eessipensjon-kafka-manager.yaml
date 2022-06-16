@@ -6,7 +6,7 @@ metadata:
   labels:
     team: eessipensjon
 spec:
-  image: docker.pkg.github.com/navikt/kafka-manager/kafka-manager:<version> # See https://github.com/navikt/kafka-manager/packages
+  image: ghcr.io/navikt/kafka-manager/kafka-manager:<version> # See https://github.com/navikt/kafka-manager/packages
   port: 8080
   webproxy: true
   ingresses:
