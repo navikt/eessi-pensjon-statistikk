@@ -6,6 +6,30 @@ metadata:
   labels:
     team: eessipensjon
 spec:
+  kafka:
+    pool: nav-dev
+  env:
+    - name: GCP_BUCKET_NAME
+      value: eessi-pensjon-statistikk-dev
+    - name: AZURE_APP_EUX_CLIENT_ID
+      value: dev-fss.eessibasis.eux-rina-api-q2
+    - name: SPRING_PROFILES_ACTIVE
+      value: test
+    - name: KAFKA_STATISTIKK_TOPICNAME_INN
+      value: eessipensjon.privat-statistikk-q2
+    - name: KAFKA_STATISTIKK_TOPICNAME_UT
+      value: eessipensjon.public-statistikk-q2
+    - name: KAFKA_SEDSENDT_TOPIC
+      value: eessibasis.sedsendt-v1-q2
+    - name: KAFKA_SEDMOTTATT_TOPIC
+      value: eessibasis.sedmottatt-v1-q2
+    - name: EUX_RINA_API_V1_URL
+      value: https://eux-rina-api-eessibasis.dev-fss-pub.nais.io/cpi
+    - name: GCP_STORAGE_API_URL
+      value: https://storage.googleapis.com
+    - name: ENV
+      value: q2
+
   gcp:
     buckets:
       - name: eessi-pensjon-statistikk-dev
@@ -27,31 +51,6 @@ spec:
       external:
         - host: https://eessi-pensjon-statistikk-q2.dev.intern.nav.no
   webproxy: true
-  kafka:
-    pool: nav-dev
-  env:
-    - name: GCP_BUCKET_NAME
-      value: eessi-pensjon-statistikk-dev
-    - name: AZURE_APP_EUX_CLIENT_ID
-      value: dev-fss.eessibasis.eux-rina-api-q2
-    - name: SPRING_PROFILES_ACTIVE
-      value: test
-    - name: ONPREM_KAFKA_BOOTSTRAP_SERVERS_URL
-      value: SSL://b27apvl00045.preprod.local:8443,SSL://b27apvl00046.preprod.local:8443,SSL://b27apvl00047.preprod.local:8443
-    - name: KAFKA_STATISTIKK_TOPICNAME_INN
-      value: eessipensjon.privat-statistikk-q2
-    - name: KAFKA_STATISTIKK_TOPICNAME_UT
-      value: eessipensjon.public-statistikk-q2
-    - name: KAFKA_SEDSENDT_TOPIC
-      value: eessibasis.sedsendt-v1-q2
-    - name: KAFKA_SEDMOTTATT_TOPIC
-      value: eessibasis.sedmottatt-v1-q2
-    - name: EUX_RINA_API_V1_URL
-      value: https://eux-rina-api-eessibasis.dev-fss-pub.nais.io/cpi
-    - name: ENV
-      value: q2
-    - name: GCP_STORAGE_API_URL
-      value: https://storage.googleapis.com
 
   image: {{ image }}
   ingresses:

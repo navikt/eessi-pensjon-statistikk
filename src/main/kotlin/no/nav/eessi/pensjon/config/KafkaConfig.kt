@@ -31,48 +31,33 @@ class KafkaConfig(
     @param:Value("\${kafka.keystore.path}") private val keystorePath: String,
     @param:Value("\${kafka.credstore.password}") private val credstorePassword: String,
     @param:Value("\${kafka.truststore.path}") private val truststorePath: String,
-    @param:Value("\${kafka.brokers}") private val aivenBootstrapServers: String,
-    @param:Value("\${ONPREM_KAFKA_BOOTSTRAP_SERVERS_URL}") private val onpremBootstrapServers: String,
+    @param:Value("\${kafka.brokers}") private val bootstrapServers: String,
     @param:Value("\${kafka.security.protocol}") private val securityProtocol: String,
-    @param:Value("\${srvusername}") private val srvusername: String,
-    @param:Value("\${srvpassword}") private val srvpassword: String,
     @Autowired private val kafkaErrorHandler: KafkaStoppingErrorHandler?
     ) {
 
     @Bean
-    fun aivenProducerFactory(): ProducerFactory<String, String> {
+    fun producerFactory(): ProducerFactory<String, String> {
         val configMap: MutableMap<String, Any> = HashMap()
-        populerAivenCommonConfig(configMap)
+        populerCommonConfig(configMap)
         configMap[ProducerConfig.CLIENT_ID_CONFIG] = "eessi-pensjon-statistikk"
         configMap[ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG] = StringSerializer::class.java
         configMap[ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG] = StringSerializer::class.java
-        configMap[ProducerConfig.BOOTSTRAP_SERVERS_CONFIG] = aivenBootstrapServers
+        configMap[ProducerConfig.BOOTSTRAP_SERVERS_CONFIG] = bootstrapServers
 
         return DefaultKafkaProducerFactory(configMap)
     }
 
     @Bean
-    fun aivenKafkaTemplate(): KafkaTemplate<String, String> {
-        return KafkaTemplate(aivenProducerFactory())
+    fun kafkaTemplate(): KafkaTemplate<String, String> {
+        return KafkaTemplate(producerFactory())
     }
 
-    fun aivenKafkaConsumerFactory(): ConsumerFactory<String, String> {
+    fun kafkaConsumerFactory(): ConsumerFactory<String, String> {
         val configMap: MutableMap<String, Any> = HashMap()
-        populerAivenCommonConfig(configMap)
+        populerCommonConfig(configMap)
         configMap[ConsumerConfig.CLIENT_ID_CONFIG] = "eessi-pensjon-statistikk"
-        configMap[ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG] = aivenBootstrapServers
-        configMap[ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG] = false
-        configMap[ConsumerConfig.AUTO_OFFSET_RESET_CONFIG] = "earliest"
-        configMap[ConsumerConfig.MAX_POLL_RECORDS_CONFIG] = 1
-
-        return DefaultKafkaConsumerFactory(configMap, StringDeserializer(), StringDeserializer())
-    }
-
-    fun onpremKafkaConsumerFactory(): ConsumerFactory<String, String> {
-        val configMap: MutableMap<String, Any> = HashMap()
-        populerOnpremCommonConfig(configMap)
-        configMap[ConsumerConfig.CLIENT_ID_CONFIG] = "eessi-pensjon-statistikk"
-        configMap[ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG] = onpremBootstrapServers
+        configMap[ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG] = bootstrapServers
         configMap[ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG] = false
         configMap[ConsumerConfig.AUTO_OFFSET_RESET_CONFIG] = "earliest"
         configMap[ConsumerConfig.MAX_POLL_RECORDS_CONFIG] = 1
@@ -81,11 +66,10 @@ class KafkaConfig(
     }
 
     @Bean
-    fun aivenKafkaListenerContainerFactory(): ConcurrentKafkaListenerContainerFactory<String, String>? {
+    fun kafkaListenerContainerFactory(): ConcurrentKafkaListenerContainerFactory<String, String>? {
         val factory = ConcurrentKafkaListenerContainerFactory<String, String>()
-        factory.consumerFactory = aivenKafkaConsumerFactory()
+        factory.consumerFactory = kafkaConsumerFactory()
         factory.containerProperties.ackMode = ContainerProperties.AckMode.MANUAL
-        //factory.containerProperties.authorizationExceptionRetryInterval =  Duration.ofSeconds(4L)
         factory.containerProperties.setAuthExceptionRetryInterval(Duration.ofSeconds(4L))
 
         if (kafkaErrorHandler != null) {
@@ -94,37 +78,7 @@ class KafkaConfig(
         return factory
     }
 
-    @Profile("test")
-    @Bean("sedKafkaListenerContainerFactory")
-    fun aivenSedKafkaListenerContainerFactory(): ConcurrentKafkaListenerContainerFactory<String, String>? {
-        val factory = ConcurrentKafkaListenerContainerFactory<String, String>()
-        factory.consumerFactory = aivenKafkaConsumerFactory()
-        factory.containerProperties.ackMode = ContainerProperties.AckMode.MANUAL
-        //factory.containerProperties.authorizationExceptionRetryInterval =  Duration.ofSeconds(4L)
-        factory.containerProperties.setAuthExceptionRetryInterval(Duration.ofSeconds(4L))
-
-        if (kafkaErrorHandler != null) {
-            factory.setErrorHandler(kafkaErrorHandler)
-        }
-        return factory
-    }
-
-    @Profile("prod")
-    @Bean("sedKafkaListenerContainerFactory")
-    fun onpremSedKafkaListenerContainerFactory(): ConcurrentKafkaListenerContainerFactory<String, String>? {
-        val factory = ConcurrentKafkaListenerContainerFactory<String, String>()
-        factory.consumerFactory = onpremKafkaConsumerFactory()
-        factory.containerProperties.ackMode = ContainerProperties.AckMode.MANUAL
-        //factory.containerProperties.authorizationExceptionRetryInterval =  Duration.ofSeconds(4L)
-        factory.containerProperties.setAuthExceptionRetryInterval(Duration.ofSeconds(4L))
-        if (kafkaErrorHandler != null) {
-            factory.setErrorHandler(kafkaErrorHandler)
-        }
-        return factory
-    }
-
-
-    private fun populerAivenCommonConfig(configMap: MutableMap<String, Any>) {
+    private fun populerCommonConfig(configMap: MutableMap<String, Any>) {
         configMap[SslConfigs.SSL_KEYSTORE_LOCATION_CONFIG] = keystorePath
         configMap[SslConfigs.SSL_TRUSTSTORE_PASSWORD_CONFIG] = credstorePassword
         configMap[SslConfigs.SSL_KEYSTORE_PASSWORD_CONFIG] = credstorePassword
@@ -135,9 +89,4 @@ class KafkaConfig(
         configMap[CommonClientConfigs.SECURITY_PROTOCOL_CONFIG] = securityProtocol
     }
 
-    private fun populerOnpremCommonConfig(configMap: MutableMap<String, Any>) {
-        configMap[CommonClientConfigs.SECURITY_PROTOCOL_CONFIG] = "SASL_SSL"
-        configMap[SaslConfigs.SASL_MECHANISM] = "PLAIN"
-        configMap[SaslConfigs.SASL_JAAS_CONFIG] = "org.apache.kafka.common.security.plain.PlainLoginModule required username=${srvusername} password=${srvpassword};"
-    }
 }

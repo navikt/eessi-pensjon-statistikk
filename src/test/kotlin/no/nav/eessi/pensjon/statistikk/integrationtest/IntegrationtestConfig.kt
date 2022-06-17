@@ -23,7 +23,7 @@ class IntegrationtestConfig(
     @param:Value("\${spring.embedded.kafka.brokers}") private val bootstrapServers: String) {
 
     @Bean
-    fun aivenProducerFactory(): ProducerFactory<String, String> {
+    fun producerFactory(): ProducerFactory<String, String> {
         val configMap: MutableMap<String, Any> = HashMap()
         populerCommonConfig(configMap)
         configMap[ProducerConfig.CLIENT_ID_CONFIG] = "eessi-pensjon-statistikk"
@@ -57,12 +57,12 @@ class IntegrationtestConfig(
     }
 
     @Bean
-    fun aivenKafkaTemplate(): KafkaTemplate<String, String> {
-        return KafkaTemplate(aivenProducerFactory())
+    fun kafkaTemplate(): KafkaTemplate<String, String> {
+        return KafkaTemplate(producerFactory())
     }
 
     @Bean
-    fun aivenKafkaListenerContainerFactory(): ConcurrentKafkaListenerContainerFactory<String, String>? {
+    fun kafkaListenerContainerFactory(): ConcurrentKafkaListenerContainerFactory<String, String>? {
         return ConcurrentKafkaListenerContainerFactory<String, String>().apply {
             consumerFactory = kafkaConsumerFactory()
             containerProperties.ackMode = ContainerProperties.AckMode.MANUAL

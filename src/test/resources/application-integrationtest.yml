@@ -11,7 +11,6 @@ kafka:
   statistikk-sed-sendt:
     topic: eessi-pensjon-statistikk-sed-sendt
     groupid: eessi-pensjon-statistikk-group
-
   statistikk-sed-mottatt:
     topic: eessi-pensjon-statistikk-sed-mottatt
     groupid: eessi-pensjon-statistikk-group
