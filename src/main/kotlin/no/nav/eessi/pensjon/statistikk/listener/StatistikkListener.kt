@@ -51,7 +51,7 @@ class StatistikkListener(
     }
 
     @KafkaListener(
-       containerFactory = "aivenKafkaListenerContainerFactory",
+       containerFactory = "kafkaListenerContainerFactory",
         topics = ["\${kafka.statistikk-inn.topic}"],
         groupId = "\${kafka.statistikk-inn.groupid}",
     )
@@ -65,35 +65,29 @@ class StatistikkListener(
             logger.info("Innkommet statistikk hendelse i partisjon: ${cr.partition()}, med offset: ${cr.offset()}, tid:$timestamp")
 
             opprettMeldingMetric.measure {
-                val offsetToSkip = listOf<Long>(19068)
-                val offset = cr.offset()
                 try {
                     val melding = meldingsMapping(hendelse)
-                    if (offsetToSkip.contains(offset) || MissingBuc.checkForMissingBuc(melding.rinaId)) {
-                        logger.warn("Hopper over offset: $offset")
-                    } else {
-                        logger.info("Oppretter melding av type: $hendelse")
-                        when (melding.opprettelseType) {
-                            OpprettelseType.BUC -> {
-                                val bucHendelse = sedInfoService.aggregateBucData(melding.rinaId)
-                                statistikkPublisher.publiserBucOpprettetStatistikk(bucHendelse)
-                            }
-                            OpprettelseType.SED -> {
-                                val sedHendelse = sedInfoService.aggregateSedOpprettetData(
-                                    melding.rinaId,
-                                    melding.dokumentId!!,
-                                    melding.vedtaksId
-                                )
-                                if (sedHendelse != null) {
-                                    statistikkPublisher.publiserSedHendelse(sedHendelse)
-                                }
+                    logger.info("Oppretter melding av type: $hendelse")
+                    when (melding.opprettelseType) {
+                        OpprettelseType.BUC -> {
+                            val bucHendelse = sedInfoService.aggregateBucData(melding.rinaId)
+                            statistikkPublisher.publiserBucOpprettetStatistikk(bucHendelse)
+                        }
+                        OpprettelseType.SED -> {
+                            val sedHendelse = sedInfoService.aggregateSedOpprettetData(
+                                melding.rinaId,
+                                melding.dokumentId!!,
+                                melding.vedtaksId
+                            )
+                            if (sedHendelse != null) {
+                                statistikkPublisher.publiserSedHendelse(sedHendelse)
                             }
                         }
                     }
                     acknowledgment.acknowledge()
-                    logger.info("Acket opprettelse melding med offset: $offset i partisjon ${cr.partition()}")
+                    logger.info("Acket opprettelse melding med offset: ${cr.offset()} i partisjon ${cr.partition()}")
                 } catch (ex: Exception) {
-                    logger.error("Noe gikk galt med offset:$offset, tid:$timestamp, ved behandling av statistikk-hendelse:\n $hendelse \n", ex)
+                    logger.error("Noe gikk galt med offset:${cr.offset()}, tid:$timestamp, ved behandling av statistikk-hendelse:\n $hendelse \n", ex)
                     throw RuntimeException(ex.message)
                 }
                 latch.countDown()
@@ -103,7 +97,7 @@ class StatistikkListener(
 
 
     @KafkaListener(
-        containerFactory = "sedKafkaListenerContainerFactory",
+        containerFactory = "kafkaListenerContainerFactory",
         topics = ["\${kafka.statistikk-sed-mottatt.topic}"],
         groupId = "\${kafka.statistikk-sed-mottatt.groupid}",
     )
@@ -111,27 +105,21 @@ class StatistikkListener(
         MDC.putCloseable("x_request_id", MDC.get("x_request_id") ?: UUID.randomUUID().toString()).use {
             sedMottattMeldingMetric.measure {
                 val sedHendelseRina = mapJsonToAny(hendelse, typeRefs<SedHendelseRina>())
-                val offsetToSkip = listOf(299742L, 299743L, 299746L)
-                val offset = cr.offset()
                 try {
-                    if (offsetToSkip.contains(offset) || MissingBuc.checkForMissingBuc(sedHendelseRina.rinaSakId)) {
-                        logger.warn("Hopper over offset: $offset")
-                    } else {
-                        if (GyldigeHendelser.mottatt(sedHendelseRina)) {
-                            val sedMeldingUt = sedInfoService.populerSedMeldingUt(
-                                sedHendelseRina.rinaSakId,
-                                sedHendelseRina.rinaDokumentId,
-                                null,
-                                HendelseType.SED_MOTTATT,
-                                sedHendelseRina.avsenderLand
-                            )
-                            statistikkPublisher.publiserSedHendelse(sedMeldingUt)
-                        }
+                    if (GyldigeHendelser.mottatt(sedHendelseRina)) {
+                        val sedMeldingUt = sedInfoService.populerSedMeldingUt(
+                            sedHendelseRina.rinaSakId,
+                            sedHendelseRina.rinaDokumentId,
+                            null,
+                            HendelseType.SED_MOTTATT,
+                            sedHendelseRina.avsenderLand
+                        )
+                        statistikkPublisher.publiserSedHendelse(sedMeldingUt)
                     }
                     acknowledgment.acknowledge()
-                    logger.info("Acket sedMottatt melding med offset: $offset i partisjon ${cr.partition()}")
+                    logger.info("Acket sedMottatt melding med offset: ${cr.offset()} i partisjon ${cr.partition()}")
                 } catch (ex: Exception) {
-                    logger.error("Noe gikk galt med offset : $offset, under behandling av statistikk-sed-hendelse:\n $hendelse \n", ex)
+                    logger.error("Noe gikk galt med offset : ${cr.offset()}, under behandling av statistikk-sed-hendelse:\n $hendelse \n", ex)
                     throw RuntimeException(ex.message)
                 }
                 latchMottatt.countDown()
@@ -140,7 +128,7 @@ class StatistikkListener(
     }
 
     @KafkaListener(
-        containerFactory = "sedKafkaListenerContainerFactory",
+        containerFactory = "kafkaListenerContainerFactory",
         topics = ["\${kafka.statistikk-sed-sendt.topic}"],
         groupId = "\${kafka.statistikk-sed-sendt.groupid}",
     )
