@@ -24,14 +24,8 @@ spring:
   main:
     allow-bean-definition-overriding: true
 
-securitytokenservice:
-  discoveryurl: http://localhost:${mockserverport}/.well-known/openid-configuration
-
 nais_app_name: eessi-pensjon-journalforing
 eux_rina_api_v1_url: http://localhost:${mockserverport}
-securitytokenservice.url: http://someurl
-srvusername: someuser
-srvpassword: somepass
 oppgave.oppgaver.url: http://localhost:${mockserverport}
 journalpost_v1_url: http://localhost:${mockserverport}
 aktoerregister.api.v1.url: http://localhost:${mockserverport}
