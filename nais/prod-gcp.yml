@@ -54,7 +54,7 @@ spec:
 
   image: {{ image }}
   ingresses:
-    - https://eessi-pensjon-statistikk.nais.adeo.no
+    - https://eessi-pensjon-statistikk.intern.nav.no
   liveness:
     path: /internal/isalive
     port: 8080
