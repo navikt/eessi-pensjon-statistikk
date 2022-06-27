@@ -10,7 +10,7 @@ buildscript {
         gcpStorageVersion = "2.4.5"
         epMetricsVersion = "0.4.21"
         epeuxVersion = '1.1.68'
-        epLoggingVersion = '1.0.19'
+        epLoggingVersion = '1.0.22'
     }
 
     repositories {
