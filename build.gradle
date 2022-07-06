@@ -63,7 +63,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-actuator:${springBootVersion}")
     implementation("org.springframework.boot:spring-boot-actuator:${springBootVersion}")
 
-    implementation 'com.fasterxml.jackson.module:jackson-module-kotlin:2.13.2'
+    implementation 'com.fasterxml.jackson.module:jackson-module-kotlin:2.13.3'
 
     implementation(platform("org.jetbrains.kotlin:kotlin-bom:$kotlinVersion"))
     implementation 'org.jetbrains.kotlin:kotlin-reflect'
