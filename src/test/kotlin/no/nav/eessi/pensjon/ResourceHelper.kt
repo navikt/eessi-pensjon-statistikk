@@ -7,13 +7,11 @@ import no.nav.eessi.pensjon.json.typeRefs
 import no.nav.eessi.pensjon.statistikk.listener.SedHendelseRina
 
 class ResourceHelper {
-
     companion object {
         fun getResourceBucMetadata(resourcePath: String): BucMetadata {
             val json = this::class.java.classLoader.getResource(resourcePath)!!.readText()
             return mapJsonToAny(json, typeRefs())
         }
-
 
         fun getResourceSed(resourcePath: String) : Sed {
             val json = this::class.java.classLoader.getResource(resourcePath)!!.readText()

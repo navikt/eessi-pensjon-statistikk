@@ -117,7 +117,6 @@ abstract class IntegrationBase() {
 
         @Bean
         fun gcpStorageService(): GcpStorageService {
-            //return S3StorageHelper.createStoreService().also { it.init() }
             return mockk()
         }
 

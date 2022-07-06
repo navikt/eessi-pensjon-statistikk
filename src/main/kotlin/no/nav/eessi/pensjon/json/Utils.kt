@@ -29,5 +29,4 @@ inline fun <reified T : Any> mapJsonToAny(json: String, objekt: TypeReference<T>
     }
 }
 
-
 fun Any.toJson() =  mapAnyToJson(this)
