@@ -1,6 +1,5 @@
 package no.nav.eessi.pensjon.eux
 
-import io.micrometer.core.instrument.simple.SimpleMeterRegistry
 import no.nav.eessi.pensjon.metrics.MetricsHelper
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
@@ -17,7 +16,7 @@ import javax.annotation.PostConstruct
 @Component
 class EuxKlient(
     private val euxClientCredentialsResourceRestTemplate: RestTemplate,
-    @Autowired(required = false) private val metricsHelper: MetricsHelper = MetricsHelper(SimpleMeterRegistry())) {
+    @Autowired(required = false) private val metricsHelper: MetricsHelper = MetricsHelper.ForTest()) {
 
     private val logger = LoggerFactory.getLogger(EuxKlient::class.java)
 

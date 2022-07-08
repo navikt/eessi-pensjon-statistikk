@@ -1,6 +1,5 @@
 package no.nav.eessi.pensjon.statistikk.listener
 
-import io.micrometer.core.instrument.simple.SimpleMeterRegistry
 import no.nav.eessi.pensjon.eux.model.buc.MissingBuc
 import no.nav.eessi.pensjon.json.mapJsonToAny
 import no.nav.eessi.pensjon.json.toJson
@@ -27,7 +26,7 @@ import javax.annotation.PostConstruct
 class StatistikkListener(
     private val sedInfoService: HendelsesAggregeringsService,
     private val statistikkPublisher: StatistikkPublisher,
-    @Autowired(required = false) private val metricsHelper: MetricsHelper = MetricsHelper(SimpleMeterRegistry())
+    @Autowired(required = false) private val metricsHelper: MetricsHelper = MetricsHelper.ForTest()
 ) {
 
     private val logger = LoggerFactory.getLogger(StatistikkListener::class.java)
