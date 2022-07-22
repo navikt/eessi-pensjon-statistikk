@@ -4,7 +4,6 @@ package no.nav.eessi.pensjon.config
 import org.apache.kafka.clients.CommonClientConfigs
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.clients.producer.ProducerConfig
-import org.apache.kafka.common.config.SaslConfigs
 import org.apache.kafka.common.config.SslConfigs
 import org.apache.kafka.common.serialization.StringDeserializer
 import org.apache.kafka.common.serialization.StringSerializer
@@ -70,10 +69,10 @@ class KafkaConfig(
         val factory = ConcurrentKafkaListenerContainerFactory<String, String>()
         factory.consumerFactory = kafkaConsumerFactory()
         factory.containerProperties.ackMode = ContainerProperties.AckMode.MANUAL
-        factory.containerProperties.setAuthExceptionRetryInterval(Duration.ofSeconds(4L))
+        factory.containerProperties.authExceptionRetryInterval = Duration.ofSeconds(4L)
 
         if (kafkaErrorHandler != null) {
-            factory.setErrorHandler(kafkaErrorHandler)
+            factory.setCommonErrorHandler(kafkaErrorHandler)
         }
         return factory
     }
