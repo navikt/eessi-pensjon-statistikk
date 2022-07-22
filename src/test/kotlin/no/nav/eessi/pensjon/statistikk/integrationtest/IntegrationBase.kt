@@ -70,7 +70,7 @@ abstract class IntegrationBase() {
     fun initAndRunContainer(topic: String): TestResult {
         container = initConsumer(topic)
         container.start()
-        Thread.sleep(10000); // wait a bit for the container to start
+        Thread.sleep(10000) // wait a bit for the container to start
         ContainerTestUtils.waitForAssignment(container, embeddedKafka.partitionsPerTopic)
         val template = KafkaTemplate(producerFactory).apply { defaultTopic = topic }
         return TestResult(template, container).also {

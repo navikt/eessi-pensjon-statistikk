@@ -1,4 +1,4 @@
-package no.nav.eessi.pensjon.config;
+package no.nav.eessi.pensjon.config
 
 import no.nav.security.token.support.client.core.ClientProperties
 import no.nav.security.token.support.client.core.oauth2.OAuth2AccessTokenService
