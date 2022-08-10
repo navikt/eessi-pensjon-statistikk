@@ -139,20 +139,21 @@ class StatistikkListener(
                     val sedHendelseRina = mapJsonToAny(hendelse, typeRefs<SedHendelseRina>())
                     if (MissingBuc.checkForMissingBuc(sedHendelseRina.rinaSakId)) {
                         logger.warn("Hopper over offset: $offset")
+                    } else if (GyldigeHendelser.sendt(sedHendelseRina)) {
+                        logger.debug(sedHendelseRina.toJson())
+                        val vedtaksId =
+                            sedInfoService.hentVedtaksId(sedHendelseRina.rinaSakId, sedHendelseRina.rinaDokumentId)
+                        val sedMeldingUt = sedInfoService.populerSedMeldingUt(
+                            sedHendelseRina.rinaSakId,
+                            sedHendelseRina.rinaDokumentId,
+                            vedtaksId,
+                            HendelseType.SED_SENDT,
+                            sedHendelseRina.avsenderLand
+                        )
+                        logger.info("sedmeldingUt: $sedMeldingUt")
+                        statistikkPublisher.publiserSedHendelse(sedMeldingUt)
                     } else {
-                        if (GyldigeHendelser.sendt(sedHendelseRina)) {
-                            logger.debug(sedHendelseRina.toJson())
-                            val vedtaksId = sedInfoService.hentVedtaksId(sedHendelseRina.rinaSakId, sedHendelseRina.rinaDokumentId)
-                            val sedMeldingUt = sedInfoService.populerSedMeldingUt(
-                                sedHendelseRina.rinaSakId,
-                                sedHendelseRina.rinaDokumentId,
-                                vedtaksId,
-                                HendelseType.SED_SENDT,
-                                sedHendelseRina.avsenderLand
-                            )
-                            logger.info("sedmeldingUt: $sedMeldingUt")
-                            statistikkPublisher.publiserSedHendelse(sedMeldingUt)
-                        }
+                        logger.warn("SED er ikke gyldig eller en av missingBuc: $offset")
                     }
                     acknowledgment.acknowledge()
                     logger.info("Acket sedSendt melding med offset: ${cr.offset()} i partisjon ${cr.partition()}")
