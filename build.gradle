@@ -68,7 +68,7 @@ dependencies {
     implementation "org.springframework.kafka:spring-kafka:$springKafkaVersion"
 
     //GCP
-    implementation(platform("com.google.cloud:libraries-bom:26.0.0"))
+    implementation(platform("com.google.cloud:libraries-bom:26.1.0"))
     implementation("com.google.cloud:google-cloud-storage")
 
     // Logging
