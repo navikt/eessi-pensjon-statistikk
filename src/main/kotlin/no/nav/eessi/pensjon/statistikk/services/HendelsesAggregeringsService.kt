@@ -106,10 +106,6 @@ class HendelsesAggregeringsService(private val euxService: EuxService,
     }
 
     private fun populerMottakerland(bucMetadata: BucMetadata): List<String> {
-        if(bucMetadata.documents == null){
-            return emptyList()
-        }
-
         val list : List<Participant> = bucMetadata.documents
             .flatMap { it.conversations }
             .flatMap { it.participants.orEmpty() }
@@ -153,10 +149,6 @@ class HendelsesAggregeringsService(private val euxService: EuxService,
     }
 
     fun getTimeStampFromSedMetaDataInBuc(bucMetadata: BucMetadata, dokumentId : String ) : String {
-        if(bucMetadata.documents == null){
-            return ""
-        }
-
         val dokument : Document? = bucMetadata.documents.firstOrNull { it.id == dokumentId }
 
         logger.debug("Dokument: ${dokument?.toJson()}")

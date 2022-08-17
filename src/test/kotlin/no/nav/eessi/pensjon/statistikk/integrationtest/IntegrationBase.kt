@@ -122,7 +122,7 @@ abstract class IntegrationBase() {
 
         @Bean
         fun euxClientCredentialsResourceRestTemplate(templateBuilder: RestTemplateBuilder): RestTemplate {
-            val acceptingTrustStrategy = TrustStrategy { chain: Array<X509Certificate?>?, authType: String? -> true }
+            val acceptingTrustStrategy = TrustStrategy { _: Array<X509Certificate?>?, _: String? -> true }
 
             val sslContext: SSLContext = SSLContexts.custom()
                 .loadTrustMaterial(null, acceptingTrustStrategy)

@@ -106,6 +106,7 @@ dependencies {
     testImplementation ("com.tngtech.archunit:archunit:${archunitVersion}")
 
 }
+
 test {
     useJUnitPlatform()
 
@@ -124,13 +125,24 @@ test {
 
 assert JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_17): "Java 17 or newer is required"
 
-tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
+java {
     sourceCompatibility = JavaVersion.VERSION_17
     targetCompatibility = JavaVersion.VERSION_17
+}
 
+compileKotlin {
+    kotlinOptions {
+        freeCompilerArgs = ["-Xjsr305=strict"]
+        jvmTarget = "17"
+        allWarningsAsErrors = true
+    }
+}
+
+compileTestKotlin {
     kotlinOptions {
         freeCompilerArgs = ['-Xjsr305=strict']
         jvmTarget = '17'
+        allWarningsAsErrors = true
     }
 }
 
