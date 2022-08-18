@@ -13,6 +13,7 @@ import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.slf4j.LoggerFactory
 import org.slf4j.MDC
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.kafka.support.Acknowledgment
 import org.springframework.stereotype.Component
@@ -26,6 +27,7 @@ import javax.annotation.PostConstruct
 class StatistikkListener(
     private val sedInfoService: HendelsesAggregeringsService,
     private val statistikkPublisher: StatistikkPublisher,
+    @Value("\${SPRING_PROFILES_ACTIVE:}") private val profile: String,
     @Autowired(required = false) private val metricsHelper: MetricsHelper = MetricsHelper.ForTest()
 ) {
 
@@ -104,6 +106,13 @@ class StatistikkListener(
         MDC.putCloseable("x_request_id", MDC.get("x_request_id") ?: UUID.randomUUID().toString()).use {
             sedMottattMeldingMetric.measure {
                 val sedHendelseRina = mapJsonToAny(hendelse, typeRefs<SedHendelseRina>())
+
+                if (profile == "prod" && sedHendelseRina.avsenderId in listOf("NO:NAVAT05", "NO:NAVAT07")) {
+                    logger.error("Avsender id er ${sedHendelseRina.avsenderId}. Dette er testdata i produksjon!!!\n$sedHendelseRina")
+                    acknowledgment.acknowledge()
+                    return@measure
+                }
+
                 try {
                     if (GyldigeHendelser.mottatt(sedHendelseRina)) {
                         val sedMeldingUt = sedInfoService.populerSedMeldingUt(
