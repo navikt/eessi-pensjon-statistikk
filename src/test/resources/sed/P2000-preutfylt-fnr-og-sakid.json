@@ -12,6 +12,12 @@
         "fornavn": "DØLL",
         "pin": [
           {
+            "land": "SE",
+            "institusjonsid": "SVENSK_INSTITUSJON",
+            "institusjonsnavn": "SVENSK INSTITUSJON MED FIKA",
+            "identifikator": "432987-7433"
+          },
+          {
             "land": "NO",
             "institusjonsid": "NO:NAVAT07",
             "institusjonsnavn": "NAV ACCEPTANCE TEST 07",
@@ -51,6 +57,12 @@
       "type": "ektefelle"
     },
     "eessisak": [
+      {
+        "institusjonsnavn": "SVENSK WHATEVER INSTITUTION",
+        "saksnummer": "6580472639028",
+        "institusjonsid": "SVENSK_WHATEVAH",
+        "land": "SE"
+      },
       {
         "institusjonsnavn": "NAV ACCEPTANCE TEST 07",
         "saksnummer": "22929783",

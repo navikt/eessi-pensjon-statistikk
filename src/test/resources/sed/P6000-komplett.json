@@ -66,6 +66,12 @@
         "fornavn": "LEALAUS",
         "pin": [
           {
+            "land": "SE",
+            "institusjonsid": "SVENSK_INSTITUSJON",
+            "institusjonsnavn": "SVENSK INSTITUSJON MED FIKA",
+            "identifikator": "538957-4343"
+          },
+          {
             "land": "NO",
             "institusjonsid": "NO:NAVAT07",
             "institusjonsnavn": "NAV ACCEPTANCE TEST 07",
@@ -83,6 +89,12 @@
       }
     },
     "eessisak": [
+      {
+        "institusjonsnavn": "SVENSK WHATEVER INSTITUTION",
+        "saksnummer": "6580472639028",
+        "institusjonsid": "SVENSK_WHATEVAH",
+        "land": "SE"
+      },
       {
         "institusjonsnavn": "NAV ACCEPTANCE TEST 07",
         "saksnummer": "22919968",
