@@ -8,12 +8,12 @@ import no.nav.eessi.pensjon.eux.model.buc.BucType
 open class SedMeldingUt (
     open val dokumentId: String,
     open val bucType: BucType,
-    open val rinaid: String,
+    open val rinaid: String, // rinaSakId
     open val mottakerLand: List<String>,
     open val avsenderLand: String? = null,
     open val rinaDokumentVersjon: String,
     open val sedType: SedType,
-    open val pid: String? = null,
+    open val pid: String? = null, // (første) norske pin funnet på bruker
     open val hendelseType: HendelseType,
     open val pesysSakId: String? = null,
     open val opprettetTidspunkt: String,
