@@ -1,8 +1,7 @@
-package no.nav.eessi.pensjon.statistikk.architecture
+package no.nav.eessi.pensjon.architecture
 
 import com.tngtech.archunit.core.importer.ClassFileImporter
 import com.tngtech.archunit.core.importer.ImportOption
-import com.tngtech.archunit.core.importer.ImportOptions
 import com.tngtech.archunit.lang.syntax.ArchRuleDefinition.classes
 import com.tngtech.archunit.lang.syntax.ArchRuleDefinition.fields
 import com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses
@@ -25,18 +24,15 @@ class ArchitectureTest {
         .replace("." + EessiPensjonStatistikkApplication::class.simpleName, "")
 
     private val classesToAnalyze = ClassFileImporter()
-        .importClasspath(
-            ImportOptions()
-                .with(ImportOption.DoNotIncludeJars())
-                .with(ImportOption.DoNotIncludeArchives())
-                .with(ImportOption.DoNotIncludeTests())
-        )
+        .withImportOptions(listOf(
+                ImportOption.DoNotIncludeJars(),
+                ImportOption.DoNotIncludeArchives(),
+                ImportOption.DoNotIncludeTests()
+        )).importPackages(root)
 
     @BeforeAll
     fun beforeAll() {
-        // Validate number of classes to analyze
-        assertTrue(classesToAnalyze.size > 50, "Sanity check on no. of classes to analyze")
-        assertTrue(classesToAnalyze.size < 800, "Sanity check on no. of classes to analyze")
+        assertTrue(classesToAnalyze.size in 50..800, "Sanity check on no. of classes to analyze (is ${classesToAnalyze.size})")
     }
 
     @Test
@@ -83,6 +79,7 @@ class ArchitectureTest {
         val Services = "statistikk.services"
 
         layeredArchitecture()
+            .consideringOnlyDependenciesInAnyPackage(root)
             //Define components
             .layer(ROOT).definedBy(root)
             .layer(Config).definedBy("$root.config")
