@@ -127,8 +127,11 @@ class HendelsesAggregeringsService(private val euxService: EuxService,
         val path = "$rinaSakId/$rinaDokumentId"
         logger.info("Getting SedhendelseID: $rinaSakId from $path")
 
-        val sedHendelseAsJson = gcpStorageService.hent(path)
-        logger.debug("sedHendelseAsJson: $sedHendelseAsJson")
+        val sedHendelseAsJsonPotensieltMedLitenIIRinaId = gcpStorageService.hent(path)
+        logger.debug("sedHendelseAsJson: $sedHendelseAsJsonPotensieltMedLitenIIRinaId")
+
+        // Hack: vi hadde liten 'i' i rinaid - i noen tilfeller - og når konsistent valgte stor I hadde vi fortsatt noen som var lagret med liten i ...
+        val sedHendelseAsJson = sedHendelseAsJsonPotensieltMedLitenIIRinaId?.replace("\"rinaid\"", "\"rinaId\"")
 
         val hendelse = sedHendelseAsJson?.let { mapJsonToAny(it, typeRefs<SedMeldingUt>()) }
         logger.info("sedHendelse etter mapping: dokumentId='${hendelse?.dokumentId}', bucType=${hendelse?.bucType}, rinaId='${hendelse?.rinaId}'}")
