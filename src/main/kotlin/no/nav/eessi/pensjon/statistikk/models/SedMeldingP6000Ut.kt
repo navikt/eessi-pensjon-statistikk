@@ -6,7 +6,7 @@ import no.nav.eessi.pensjon.eux.model.buc.BucType
 data class SedMeldingP6000Ut(
     override val dokumentId: String,
     override val bucType: BucType,
-    override val rinaid: String,
+    override val rinaId: String,
     override val mottakerLand: List<String>,
     override val avsenderLand: String,
     override val rinaDokumentVersjon: String,
@@ -24,7 +24,7 @@ data class SedMeldingP6000Ut(
 ):
     SedMeldingUt(dokumentId,
         bucType,
-        rinaid,
+        rinaId,
         mottakerLand,
         avsenderLand,
         rinaDokumentVersjon,

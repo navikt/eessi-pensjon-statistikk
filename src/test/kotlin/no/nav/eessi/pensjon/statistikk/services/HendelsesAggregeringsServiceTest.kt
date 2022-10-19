@@ -47,7 +47,7 @@ internal class HendelsesAggregeringsServiceTest {
         assertEquals(SedMeldingUt(
             dokumentId = dokumentId,
             bucType = BucType.P_BUC_01,
-            rinaid = rinaSakId,
+            rinaId = rinaSakId,
             mottakerLand = mottakerland,
             avsenderLand = null, // finnes ikke for opprettetmelding (er vel alltid Norge)
             rinaDokumentVersjon = "2",
@@ -80,7 +80,7 @@ internal class HendelsesAggregeringsServiceTest {
         assertEquals(SedMeldingUt(
             dokumentId = dokumentId,
             bucType = BucType.P_BUC_06,
-            rinaid = rinaSakId,
+            rinaId = rinaSakId,
             mottakerLand = mottakerland,
             avsenderLand = null, // finnes ikke for opprettetmelding (er vel alltid Norge)
             rinaDokumentVersjon = "5",
@@ -114,7 +114,7 @@ internal class HendelsesAggregeringsServiceTest {
         assertEquals(SedMeldingP6000Ut(
             dokumentId = dokumentId,
             bucType = BucType.P_BUC_06,
-            rinaid = rinaSakId,
+            rinaId = rinaSakId,
             mottakerLand = mottakerland,
             avsenderLand = "SE",
             rinaDokumentVersjon = "5",

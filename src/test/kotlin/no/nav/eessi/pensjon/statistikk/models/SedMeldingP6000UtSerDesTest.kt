@@ -20,7 +20,7 @@ internal class SedMeldingP6000UtSerDesTest{
         val model = SedMeldingP6000Ut(
             dokumentId = "111",
             bucType = BucType.P_BUC_01,
-            rinaid = "222",
+            rinaId = "222",
             mottakerLand = listOf("NO"),
             avsenderLand = "SE",
             rinaDokumentVersjon = "333",
@@ -48,7 +48,7 @@ internal class SedMeldingP6000UtSerDesTest{
         val p6000Json = """{
               "dokumentId" : "111",
               "bucType" : "P_BUC_01",
-              "rinaid" : "222",
+              "rinaId" : "222",
               "mottakerLand" : [ "NO" ],
               "avsenderLand" : "SE",
               "rinaDokumentVersjon" : "333",

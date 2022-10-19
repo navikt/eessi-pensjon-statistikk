@@ -17,7 +17,7 @@ internal class SedOpprettetMeldingUtSerDesTest {
         val model = SedMeldingUt(
             dokumentId = "111",
             bucType = BucType.P_BUC_01,
-            rinaid = "222",
+            rinaId = "222",
             mottakerLand = listOf("NO"),
             rinaDokumentVersjon = "333",
             sedType = SedType.H001,
@@ -39,7 +39,7 @@ internal class SedOpprettetMeldingUtSerDesTest {
         val json = """{
           "dokumentId" : "111",
           "bucType" : "P_BUC_01",
-          "rinaid" : "222",
+          "rinaId" : "222",
           "mottakerLand" : ["NO"],
           "rinaDokumentVersjon" : "333",
           "sedType" : "H001",

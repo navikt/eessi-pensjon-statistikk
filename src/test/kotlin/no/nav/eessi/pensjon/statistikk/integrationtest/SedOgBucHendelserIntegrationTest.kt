@@ -111,7 +111,7 @@ class SedOgBucHendelserIntegrationTest : IntegrationBase() {
             {
               "dokumentId" : "ae000ec3d718416a934e94e22c844ba6",
               "bucType" : "P_BUC_06",
-              "rinaid" : "147729",
+              "rinaId" : "147729",
               "mottakerLand" : [ "NO" ],
               "avsenderLand" : "NO",
               "rinaDokumentVersjon" : "1",

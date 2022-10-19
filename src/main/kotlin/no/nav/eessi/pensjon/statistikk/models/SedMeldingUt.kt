@@ -9,7 +9,7 @@ open class SedMeldingUt (
     /* Om felt endres - husk å regenerer equals/hashcode/toString */
     open val dokumentId: String,
     open val bucType: BucType,
-    open val rinaid: String, // rinaSakId
+    open val rinaId: String, // rinaSakId
     open val mottakerLand: List<String>,
     open val avsenderLand: String? = null,
     open val rinaDokumentVersjon: String,
@@ -22,7 +22,7 @@ open class SedMeldingUt (
 
     /* Genereres f eks med IDEA. */
     override fun toString(): String {
-        return "SedMeldingUt(dokumentId='$dokumentId', bucType=$bucType, rinaid='$rinaid', mottakerLand=$mottakerLand, rinaDokumentVersjon='$rinaDokumentVersjon', sedType=$sedType, pid=$pid, hendelseType=$hendelseType, pesysSakId=$pesysSakId, opprettetTidspunkt='$opprettetTidspunkt', vedtaksId=$vedtaksId)"
+        return "SedMeldingUt(dokumentId='$dokumentId', bucType=$bucType, rinaId='$rinaId', mottakerLand=$mottakerLand, rinaDokumentVersjon='$rinaDokumentVersjon', sedType=$sedType, pid=$pid, hendelseType=$hendelseType, pesysSakId=$pesysSakId, opprettetTidspunkt='$opprettetTidspunkt', vedtaksId=$vedtaksId)"
     }
 
     /* Genereres f eks med IDEA. */
@@ -34,7 +34,7 @@ open class SedMeldingUt (
 
         if (dokumentId != other.dokumentId) return false
         if (bucType != other.bucType) return false
-        if (rinaid != other.rinaid) return false
+        if (rinaId != other.rinaId) return false
         if (mottakerLand != other.mottakerLand) return false
         if (avsenderLand != other.avsenderLand) return false
         if (rinaDokumentVersjon != other.rinaDokumentVersjon) return false
@@ -52,7 +52,7 @@ open class SedMeldingUt (
     override fun hashCode(): Int {
         var result = dokumentId.hashCode()
         result = 31 * result + bucType.hashCode()
-        result = 31 * result + rinaid.hashCode()
+        result = 31 * result + rinaId.hashCode()
         result = 31 * result + mottakerLand.hashCode()
         result = 31 * result + (avsenderLand?.hashCode() ?: 0)
         result = 31 * result + rinaDokumentVersjon.hashCode()

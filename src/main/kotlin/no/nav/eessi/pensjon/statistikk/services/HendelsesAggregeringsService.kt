@@ -43,15 +43,15 @@ class HendelsesAggregeringsService(private val euxService: EuxService,
     }
 
     fun populerSedMeldingUt(
-        rinaid: String,
+        rinaId: String,
         dokumentId: String,
         vedtaksId: String?,
         hendelseType: HendelseType,
         avsenderLand: String? = null
     ): SedMeldingUt {
 
-        val sed = euxService.getSed(rinaid, dokumentId)
-        val bucMetadata = euxService.getBucMetadata(rinaid)
+        val sed = euxService.getSed(rinaId, dokumentId)
+        val bucMetadata = euxService.getBucMetadata(rinaId)
         val mottakerLand = populerMottakerland(bucMetadata!!)
         val beregning  = hentBeregning(sed?.pensjon?.vedtak)
 
@@ -61,7 +61,7 @@ class HendelsesAggregeringsService(private val euxService: EuxService,
             HendelseType.SED_SENDT, HendelseType.SED_MOTTATT ->  SedMeldingP6000Ut(
                 dokumentId = dokumentId,
                 bucType = bucMetadata.processDefinitionName,
-                rinaid = rinaid,
+                rinaId = rinaId,
                 mottakerLand = mottakerLand,
                 avsenderLand = avsenderLand!!,
                 rinaDokumentVersjon = getDocumentVersion(bucMetadata.documents, dokumentId),
@@ -78,7 +78,7 @@ class HendelsesAggregeringsService(private val euxService: EuxService,
                 valuta = beregning?.valuta
             )
             else -> SedMeldingUt(
-                rinaid = rinaid,
+                rinaId = rinaId,
                 dokumentId = dokumentId,
                 hendelseType = hendelseType,
                 bucType = bucMetadata.processDefinitionName,
@@ -116,7 +116,7 @@ class HendelsesAggregeringsService(private val euxService: EuxService,
     }
 
     private fun lagreSedHendelse(sedhendelse: SedMeldingUt) {
-        val path = "${sedhendelse.rinaid}/${sedhendelse.dokumentId}"
+        val path = "${sedhendelse.rinaId}/${sedhendelse.dokumentId}"
         logger.info("Storing sedhendelse to S3: $path")
 
         gcpStorageService.lagre(path, mapAnyToJson(sedhendelse))
@@ -131,7 +131,7 @@ class HendelsesAggregeringsService(private val euxService: EuxService,
         logger.debug("sedHendelseAsJson: $sedHendelseAsJson")
 
         val hendelse = sedHendelseAsJson?.let { mapJsonToAny(it, typeRefs<SedMeldingUt>()) }
-        logger.info("sedHendelse etter mapping: dokumentId='${hendelse?.dokumentId}', bucType=${hendelse?.bucType}, rinaid='${hendelse?.rinaid}'}")
+        logger.info("sedHendelse etter mapping: dokumentId='${hendelse?.dokumentId}', bucType=${hendelse?.bucType}, rinaId='${hendelse?.rinaId}'}")
 
         return hendelse?.vedtaksId ?: ""
     }
