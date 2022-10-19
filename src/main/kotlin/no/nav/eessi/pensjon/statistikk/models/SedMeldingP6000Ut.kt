@@ -36,7 +36,7 @@ data class SedMeldingP6000Ut(
         vedtaksId)
 
 enum class VedtakStatus(val value: String) {
-    INNVILGENSE("01"),
+    INNVILGELSE("01"),
     AVSLAG("02"),
     NY_BEREGNING_OMREGNING("03"),
     FORELOPIG_UTBETALING("04");
