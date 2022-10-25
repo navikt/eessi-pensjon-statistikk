@@ -20,7 +20,8 @@ data class SedMeldingP6000Ut(
     val pensjonsType: PensjonsType?,
     val vedtakStatus: VedtakStatus?,
     val bruttoBelop: String? = null,
-    val valuta: String? = null
+    val valuta: String? = null,
+    val anmodningOmRevurdering: String? = null
 ):
     SedMeldingUt(dokumentId,
         bucType,
