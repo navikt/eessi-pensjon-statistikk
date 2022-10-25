@@ -128,7 +128,8 @@ internal class HendelsesAggregeringsServiceTest {
             pensjonsType = PensjonsType.GJENLEV,
             vedtakStatus = VedtakStatus.FORELOPIG_UTBETALING,
             bruttoBelop = "12482",
-            valuta = "NOK"
+            valuta = "NOK",
+            anmodningOmRevurdering = "1"
         ), sedOpprettetMeldingUt)
     }
 }

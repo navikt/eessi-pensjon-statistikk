@@ -75,8 +75,10 @@ class HendelsesAggregeringsService(private val euxService: EuxService,
                 pensjonsType = PensjonsType.fra ( sed.pensjon?.vedtak?.firstOrNull().let{ it?.type } ),
                 vedtakStatus = VedtakStatus.fra ( sed.pensjon?.vedtak?.firstOrNull().let { it?.resultat } ),
                 bruttoBelop = beregning?.beloepBrutto?.beloep,
-                valuta = beregning?.valuta
-            )
+                valuta = beregning?.valuta,
+                anmodningOmRevurdering = sed.pensjon?.tilleggsinformasjon?.artikkel48,
+
+                )
             else -> SedMeldingUt(
                 rinaId = rinaId,
                 dokumentId = dokumentId,

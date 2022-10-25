@@ -125,7 +125,8 @@ class SedOgBucHendelserIntegrationTest : IntegrationBase() {
               "pensjonsType" : "GJENLEV",
               "vedtakStatus" : "FORELOPIG_UTBETALING",
               "bruttoBelop" : "12482",
-              "valuta" : "NOK"
+              "valuta" : "NOK", 
+              "anmodningOmRevurdering" : "1"              
             }
         """.trimIndent()
         return mapJsonToAny(meldingUtJson, typeRefs())
