@@ -9,15 +9,15 @@ open class SedMeldingUt (
     /* Om felt endres - husk å regenerer equals/hashcode/toString */
     open val dokumentId: String,
     open val bucType: BucType,
-    open val rinaId: String, // rinaSakId
-    open val mottakerLand: List<String>,
-    open val avsenderLand: String? = null,
-    open val rinaDokumentVersjon: String,
+    open val rinaId: String, // rinaSakId - lokal rina-sakid
+    open val mottakerLand: List<String>, // dette er egentlig deltakere på BUC - øker underveis i behandling
+    open val avsenderLand: String? = null, // finnes på sed'er som sendes og mottas, men ikke ved opprettelse
+    open val rinaDokumentVersjon: String, // *antall* versjoner vi finner i dokumentets buc-metadata
     open val sedType: SedType,
     open val pid: String? = null, // (første) norske pin funnet på bruker
     open val hendelseType: HendelseType,
-    open val pesysSakId: String? = null,
-    open val opprettetTidspunkt: String,
+    open val pesysSakId: String? = null, // dette er lokol sakid funnet - ofte Pesys (men vi vet ikke hva andre fyller inn)
+    open val opprettetTidspunkt: String, // creation date for *første* versjon av dokumentet
     open val vedtaksId: String? = null){
 
     /* Genereres f eks med IDEA. */
