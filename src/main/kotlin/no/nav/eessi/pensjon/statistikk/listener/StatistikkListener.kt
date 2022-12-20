@@ -104,6 +104,7 @@ class StatistikkListener(
     )
     fun consumeSedMottatt(hendelse: String, cr: ConsumerRecord<String, String>, acknowledgment: Acknowledgment) {
         MDC.putCloseable("x_request_id", MDC.get("x_request_id") ?: UUID.randomUUID().toString()).use {
+            logger.info(hendelse)
             sedMottattMeldingMetric.measure {
                 val sedHendelseRina = mapJsonToAny(hendelse, typeRefs<SedHendelseRina>())
 
