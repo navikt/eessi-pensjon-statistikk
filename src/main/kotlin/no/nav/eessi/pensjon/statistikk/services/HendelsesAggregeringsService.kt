@@ -162,9 +162,9 @@ class HendelsesAggregeringsService(private val euxService: EuxService,
 
         logger.debug("Dokument: ${dokument?.toJson()}")
 
-        return toLocalDate(dokument?.creationDate!!)
+        return toDate(dokument?.creationDate!!)
     }
-    fun toLocalDate(dateTime: String): String {
+    fun toDate(dateTime: String): String {
 
         if(dateTime.contains("+")){
             if(dateTime.substringAfter("+").contains(":")){
@@ -172,7 +172,7 @@ class HendelsesAggregeringsService(private val euxService: EuxService,
                     .withZoneSameInstant(ZoneId.of("Europe/Paris")).toLocalDateTime().toString()
             }
             return ZonedDateTime.parse(dateTime, DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZ"))
-                .withZoneSameInstant(ZoneId.of("Europe/Paris"))
+                .withZoneSameInstant(ZoneId.of("Europe/Paris")).toLocalDateTime()
                 .toString()
         }
         if(isValidLocalDate(dateTime)){

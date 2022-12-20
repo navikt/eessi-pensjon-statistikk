@@ -38,7 +38,7 @@ internal class EuxServiceTest {
         val offsetDateTime =
             metaData?.let { HendelsesAggregeringsService(euxService, gcpStorageService).getTimeStampFromSedMetaDataInBuc(it, mockEuxDocumentId) }
 
-        assertEquals("2020-12-08T09:53:36.241Z", offsetDateTime)
+        assertEquals("2020-12-08T10:53:36.241", offsetDateTime)
      }
 
     @Test

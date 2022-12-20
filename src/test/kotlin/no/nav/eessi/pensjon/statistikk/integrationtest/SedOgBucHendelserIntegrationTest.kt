@@ -119,7 +119,7 @@ class SedOgBucHendelserIntegrationTest : IntegrationBase() {
               "pid" : "09028020144",
               "hendelseType" : "SED_MOTTATT",
               "pesysSakId" : "22919968",
-              "opprettetTidspunkt" : "2021-02-11T13:08:03Z",
+              "opprettetTidspunkt" : "2021-02-11T14:08:03",
               "vedtaksId" : null,
               "bostedsland" : "HR",
               "pensjonsType" : "GJENLEV",
