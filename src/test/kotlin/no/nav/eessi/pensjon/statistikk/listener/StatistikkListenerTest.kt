@@ -6,7 +6,9 @@ import no.nav.eessi.pensjon.eux.BucMetadata
 import no.nav.eessi.pensjon.eux.Document
 import no.nav.eessi.pensjon.eux.model.buc.BucType
 import no.nav.eessi.pensjon.statistikk.services.HendelsesAggregeringsService
-import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.CsvSource
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
@@ -25,30 +27,20 @@ internal class StatistikkListenerTest{
     @Autowired
     lateinit var sedListener: StatistikkListener
 
-    @Test
-    fun `en hendelse med dato skal formatere korrekt`() {
+    @ParameterizedTest
+    @CsvSource(
+        "2016-01-01, 2016-01-01",
+        "2016-01-01T00:00:00.000+01:00, 2016-01-01T00:00",
+        "2022-12-20T06:14:38.516+00:00, 2022-12-20T07:14:38.516")
+    fun `dato med tidzone skal formateres`(dato: String, formatertDato: String) {
 
-        val document = Document(id ="11", creationDate = "2022-12-20T06:14:38.516+00:00", conversations = emptyList(), versions = emptyList())
-        val bucMetadata  = BucMetadata (listOf(document), BucType.P_BUC_01, "2020-12-08T09:52:55.345+0000")
-        hendelsesAggregeringsService.getTimeStampFromSedMetaDataInBuc(bucMetadata, "11")
-        //justRun { hendelsesAggregeringsService.populerSedMeldingUt(any(), any(), any(), HendelseType.SED_MOTTATT, any()) }
-        //sedListener.consumeSedMottatt(enSedHendelse().toJson(), mockk(relaxed = true), mockk())
+        val document = Document(id ="11", creationDate = dato, conversations = emptyList(), versions = emptyList())
+        val bucMetadata  = BucMetadata (listOf(document), BucType.P_BUC_01, "not relevant")
+
+        val result = hendelsesAggregeringsService.getTimeStampFromSedMetaDataInBuc(bucMetadata, "11")
+
+        assertEquals(formatertDato, result)
     }
-
-/*    fun enSedHendelse(): SedHendelseRina {
-        return  SedHendelseRina(
-            sektorKode = "P",
-            bucType = BucType.P_BUC_01,
-            sedType = SedType.P2100,
-            rinaSakId = "74389487",
-            rinaDokumentId = "743982",
-            rinaDokumentVersjon = "1",
-            avsenderNavn = "Svensk institusjon",
-            avsenderLand = "SE",
-
-        )
-    }*/
-
     @TestConfiguration
     class StatistikkListenerTestConfig {
         @Bean
