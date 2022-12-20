@@ -9,7 +9,6 @@ import no.nav.eessi.pensjon.eux.Vedtak
 import no.nav.eessi.pensjon.gcp.GcpStorageService
 import no.nav.eessi.pensjon.json.mapAnyToJson
 import no.nav.eessi.pensjon.json.mapJsonToAny
-import no.nav.eessi.pensjon.json.toJson
 import no.nav.eessi.pensjon.json.typeRefs
 import no.nav.eessi.pensjon.statistikk.models.BucOpprettetMeldingUt
 import no.nav.eessi.pensjon.statistikk.models.HendelseType
@@ -152,15 +151,13 @@ class HendelsesAggregeringsService(private val euxService: EuxService,
 
         val bucMetadata = euxService.getBucMetadata(rinaId)!!
         val bucType = bucMetadata.processDefinitionName
-        timeStamp = BucMetadata.offsetTimeStamp(bucMetadata.startDate)
+        timeStamp = toDate(bucMetadata.startDate)
         return BucOpprettetMeldingUt(bucType, HendelseType.BUC_OPPRETTET, rinaId, timeStamp)
 
     }
 
     fun getTimeStampFromSedMetaDataInBuc(bucMetadata: BucMetadata, dokumentId : String ) : String {
         val dokument : Document? = bucMetadata.documents.firstOrNull { it.id == dokumentId }
-
-        logger.debug("Dokument: ${dokument?.toJson()}")
 
         return toDate(dokument?.creationDate!!)
     }
