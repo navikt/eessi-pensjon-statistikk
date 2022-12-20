@@ -69,19 +69,24 @@ class StatistikkListener(
                 try {
                     val melding = meldingsMapping(hendelse)
                     logger.info("Oppretter melding av type: $hendelse")
-                    when (melding.opprettelseType) {
-                        OpprettelseType.BUC -> {
-                            val bucHendelse = sedInfoService.aggregateBucData(melding.rinaId)
-                            statistikkPublisher.publiserBucOpprettetStatistikk(bucHendelse)
-                        }
-                        OpprettelseType.SED -> {
-                            val sedHendelse = sedInfoService.aggregateSedOpprettetData(
-                                melding.rinaId,
-                                melding.dokumentId!!,
-                                melding.vedtaksId
-                            )
-                            if (sedHendelse != null) {
-                                statistikkPublisher.publiserSedHendelse(sedHendelse)
+                    if (MissingBuc.checkForMissingBuc(melding.rinaId)) {
+                        logger.warn("Hopper over offset: ${cr.offset()}")
+                    } else {
+                        when (melding.opprettelseType) {
+                            OpprettelseType.BUC -> {
+                                val bucHendelse = sedInfoService.aggregateBucData(melding.rinaId)
+                                statistikkPublisher.publiserBucOpprettetStatistikk(bucHendelse)
+                            }
+
+                            OpprettelseType.SED -> {
+                                val sedHendelse = sedInfoService.aggregateSedOpprettetData(
+                                    melding.rinaId,
+                                    melding.dokumentId!!,
+                                    melding.vedtaksId
+                                )
+                                if (sedHendelse != null) {
+                                    statistikkPublisher.publiserSedHendelse(sedHendelse)
+                                }
                             }
                         }
                     }
