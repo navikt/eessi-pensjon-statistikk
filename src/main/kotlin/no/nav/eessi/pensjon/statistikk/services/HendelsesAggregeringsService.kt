@@ -18,12 +18,6 @@ import no.nav.eessi.pensjon.statistikk.models.SedMeldingUt
 import no.nav.eessi.pensjon.statistikk.models.VedtakStatus
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.ZoneId
-import java.time.ZonedDateTime
-import java.time.format.DateTimeFormatter
-import java.time.format.DateTimeParseException
 
 @Component
 class HendelsesAggregeringsService(private val euxService: EuxService,
@@ -72,7 +66,7 @@ class HendelsesAggregeringsService(private val euxService: EuxService,
                 pid = sed.nav.bruker?.person?.pin?.firstOrNull { it.land == "NO" }?.identifikator,
                 hendelseType = hendelseType,
                 pesysSakId = sed.nav.eessisak?.firstOrNull { it?.land == "NO" }?.saksnummer,
-                opprettetTidspunkt = getTimeStampFromSedMetaDataInBuc(bucMetadata, dokumentId),
+                opprettetTidspunkt = getCreationDateFromSedMetaData(bucMetadata, dokumentId),
                 vedtaksId = vedtaksId,
                 bostedsland =  sed.nav.bruker?.adresse?.land,
                 pensjonsType = PensjonsType.fra ( sed.pensjon?.vedtak?.firstOrNull().let{ it?.type } ),
@@ -90,7 +84,7 @@ class HendelsesAggregeringsService(private val euxService: EuxService,
                 sedType = sed?.sed!!,
                 pesysSakId = sed.nav.eessisak?.firstOrNull { it?.land == "NO" }?.saksnummer,
                 pid = sed.nav.bruker?.person?.pin?.firstOrNull { it.land == "NO" }?.identifikator,
-                opprettetTidspunkt = getTimeStampFromSedMetaDataInBuc(bucMetadata, dokumentId),
+                opprettetTidspunkt = getCreationDateFromSedMetaData(bucMetadata, dokumentId),
                 vedtaksId = vedtaksId,
                 avsenderLand = avsenderLand,
                 mottakerLand = mottakerLand,
@@ -147,43 +141,15 @@ class HendelsesAggregeringsService(private val euxService: EuxService,
     fun aggregateBucData(rinaId: String): BucOpprettetMeldingUt {
 
         logger.info("Aggregering for BUC $rinaId")
-        val timeStamp : String?
 
         val bucMetadata = euxService.getBucMetadata(rinaId)!!
         val bucType = bucMetadata.processDefinitionName
-        timeStamp = toDate(bucMetadata.startDate)
-        return BucOpprettetMeldingUt(bucType, HendelseType.BUC_OPPRETTET, rinaId, timeStamp)
+        return BucOpprettetMeldingUt(bucType, HendelseType.BUC_OPPRETTET, rinaId, bucMetadata.startDate)
 
     }
 
-    fun getTimeStampFromSedMetaDataInBuc(bucMetadata: BucMetadata, dokumentId : String ) : String {
+    fun getCreationDateFromSedMetaData(bucMetadata: BucMetadata, dokumentId : String ) : String {
         val dokument : Document? = bucMetadata.documents.firstOrNull { it.id == dokumentId }
-
-        return toDate(dokument?.creationDate!!)
+        return dokument?.creationDate ?: ""
     }
-    fun toDate(dateTime: String): String {
-
-        if(dateTime.contains("+")){
-            if(dateTime.substringAfter("+").contains(":")){
-                return ZonedDateTime.parse(dateTime, DateTimeFormatter.ISO_OFFSET_DATE_TIME)
-                    .withZoneSameInstant(ZoneId.of("Europe/Paris")).toLocalDateTime().toString()
-            }
-            return ZonedDateTime.parse(dateTime, DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZ"))
-                .withZoneSameInstant(ZoneId.of("Europe/Paris")).toLocalDateTime()
-                .toString()
-        }
-        if(isValidLocalDate(dateTime)){
-            return LocalDate.parse(dateTime, DateTimeFormatter.ofPattern("yyyy-MM-dd")).toString()
-        }
-        return LocalDateTime.parse(dateTime, DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")).toString()
-    }
-    private fun isValidLocalDate(dateStr: String?): Boolean {
-        try {
-            LocalDate.parse(dateStr,  DateTimeFormatter.ofPattern("yyyy-MM-dd"))
-        } catch (e: DateTimeParseException) {
-            return false
-        }
-        return true
-    }
-
 }
