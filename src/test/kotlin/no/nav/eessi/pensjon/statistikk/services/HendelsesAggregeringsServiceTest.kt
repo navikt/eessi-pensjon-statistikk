@@ -55,7 +55,7 @@ internal class HendelsesAggregeringsServiceTest {
             pid = "08035325493",
             hendelseType = HendelseType.SED_OPPRETTET,
             pesysSakId = pesysSaksID,
-            opprettetTidspunkt = "2020-12-08T10:53:36.241",
+            opprettetTidspunkt = "2020-12-08T09:53:36.241+0000",
             vedtaksId = vedtaksId), sedOpprettetMeldingUt)
     }
 
@@ -88,7 +88,7 @@ internal class HendelsesAggregeringsServiceTest {
             pid = "09028020144",
             hendelseType = HendelseType.SED_OPPRETTET,
             pesysSakId = "22919968",
-            opprettetTidspunkt = "2021-02-11T14:08:29.914",
+            opprettetTidspunkt = "2021-02-11T13:08:29.914+0000",
             vedtaksId = null
         ), sedOpprettetMeldingUt)
     }
@@ -122,7 +122,7 @@ internal class HendelsesAggregeringsServiceTest {
             pid = "09028020144",
             hendelseType = HendelseType.SED_SENDT,
             pesysSakId = "22919968",
-            opprettetTidspunkt = "2021-02-11T14:08:29.914",
+            opprettetTidspunkt = "2021-02-11T13:08:29.914+0000",
             vedtaksId = null,
             bostedsland = "HR",
             pensjonsType = PensjonsType.GJENLEV,
