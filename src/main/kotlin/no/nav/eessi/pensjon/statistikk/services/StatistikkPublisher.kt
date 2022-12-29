@@ -1,8 +1,8 @@
 package no.nav.eessi.pensjon.statistikk.services
 
-import no.nav.eessi.pensjon.json.toJson
 import no.nav.eessi.pensjon.statistikk.models.BucOpprettetMeldingUt
 import no.nav.eessi.pensjon.statistikk.models.SedMeldingUt
+import no.nav.eessi.pensjon.utils.toJson
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.kafka.core.KafkaTemplate

@@ -75,7 +75,6 @@ class ArchitectureTest {
         val Config = "statistikk.Config"
         val Health = "statistikk.Health"
         val Listeners = "statistikk.listener"
-        val JSON = "statistikk.json"
         val Services = "statistikk.services"
 
         layeredArchitecture()
@@ -84,7 +83,6 @@ class ArchitectureTest {
             .layer(ROOT).definedBy(root)
             .layer(Config).definedBy("$root.config")
             .layer(Health).definedBy("$root.health")
-            .layer(JSON).definedBy("$root.json")
             .layer(Listeners).definedBy("$root.statistikk.listener")
             .layer(Services).definedBy("$root.statistikk.services")
 

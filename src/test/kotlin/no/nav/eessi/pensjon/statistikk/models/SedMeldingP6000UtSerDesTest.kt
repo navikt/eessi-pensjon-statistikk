@@ -4,10 +4,9 @@ import no.nav.eessi.pensjon.ResourceHelper
 import no.nav.eessi.pensjon.eux.Sed
 import no.nav.eessi.pensjon.eux.model.SedType
 import no.nav.eessi.pensjon.eux.model.buc.BucType
-import no.nav.eessi.pensjon.json.mapAnyToJson
-import no.nav.eessi.pensjon.json.mapJsonToAny
-import no.nav.eessi.pensjon.json.toJson
-import no.nav.eessi.pensjon.json.typeRefs
+import no.nav.eessi.pensjon.utils.mapAnyToJson
+import no.nav.eessi.pensjon.utils.mapJsonToAny
+import no.nav.eessi.pensjon.utils.toJson
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.skyscreamer.jsonassert.JSONAssert
@@ -39,7 +38,7 @@ internal class SedMeldingP6000UtSerDesTest{
         )
 
         val p6000Json = model.toJson()
-        val result =  mapJsonToAny(p6000Json, typeRefs<SedMeldingP6000Ut>())
+        val result =  mapJsonToAny<SedMeldingP6000Ut>(p6000Json)
 
         JSONAssert.assertEquals(p6000Json, result.toJson(), JSONCompareMode.STRICT)
     }
@@ -67,7 +66,7 @@ internal class SedMeldingP6000UtSerDesTest{
               "anmodningOmRevurdering": "ja"
               }""".trimMargin()
 
-        val model = mapJsonToAny(p6000Json, typeRefs<SedMeldingP6000Ut>())
+        val model = mapJsonToAny<SedMeldingP6000Ut>(p6000Json)
         assertEquals(model.vedtakStatus, VedtakStatus.AVSLAG)
         assertEquals(model.pensjonsType, PensjonsType.GJENLEV)
         val result = mapAnyToJson(model)

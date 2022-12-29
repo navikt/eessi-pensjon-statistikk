@@ -1,14 +1,13 @@
 package no.nav.eessi.pensjon.statistikk.listener
 
 import no.nav.eessi.pensjon.eux.model.buc.MissingBuc
-import no.nav.eessi.pensjon.json.mapJsonToAny
-import no.nav.eessi.pensjon.json.toJson
-import no.nav.eessi.pensjon.json.typeRefs
 import no.nav.eessi.pensjon.metrics.MetricsHelper
 import no.nav.eessi.pensjon.statistikk.models.HendelseType
 import no.nav.eessi.pensjon.statistikk.models.OpprettelseType
 import no.nav.eessi.pensjon.statistikk.services.HendelsesAggregeringsService
 import no.nav.eessi.pensjon.statistikk.services.StatistikkPublisher
+import no.nav.eessi.pensjon.utils.mapJsonToAny
+import no.nav.eessi.pensjon.utils.toJson
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.slf4j.LoggerFactory
 import org.slf4j.MDC
@@ -111,7 +110,7 @@ class StatistikkListener(
         MDC.putCloseable("x_request_id", MDC.get("x_request_id") ?: UUID.randomUUID().toString()).use {
             logger.info(hendelse)
             sedMottattMeldingMetric.measure {
-                val sedHendelseRina = mapJsonToAny(hendelse, typeRefs<SedHendelseRina>())
+                val sedHendelseRina = mapJsonToAny<SedHendelseRina>(hendelse)
 
                 if (profile == "prod" && sedHendelseRina.avsenderId in listOf("NO:NAVAT05", "NO:NAVAT07")) {
                     logger.error("Avsender id er ${sedHendelseRina.avsenderId}. Dette er testdata i produksjon!!!\n$sedHendelseRina")
@@ -152,7 +151,7 @@ class StatistikkListener(
             sedSedSendMeldingtMetric.measure {
                 val offset = cr.offset()
                 try {
-                    val sedHendelseRina = mapJsonToAny(hendelse, typeRefs<SedHendelseRina>())
+                    val sedHendelseRina = mapJsonToAny<SedHendelseRina>(hendelse)
                     if (MissingBuc.checkForMissingBuc(sedHendelseRina.rinaSakId)) {
                         logger.warn("Hopper over offset: $offset")
                     } else if (GyldigeHendelser.sendt(sedHendelseRina)) {
@@ -185,13 +184,13 @@ class StatistikkListener(
     fun meldingsMapping(hendelse: String): OpprettelseMelding {
         return try {
             logger.debug("Opprinnelig mapping av hendelse")
-            mapJsonToAny(hendelse, typeRefs<OpprettelseMelding>())
+            mapJsonToAny(hendelse)
         } catch (ex: Exception) {
             try {
             logger.debug("Trimming og mapping av hendelse")
                 val json = hendelse.replace("\\n", "").replace("\\", "")
                 logger.debug("Trimmet json: $json")
-                mapJsonToAny(json, typeRefs<OpprettelseMelding>())
+                mapJsonToAny(json)
             } catch (ex2: Exception) {
                 logger.error("Could not compute")
                 throw RuntimeException()

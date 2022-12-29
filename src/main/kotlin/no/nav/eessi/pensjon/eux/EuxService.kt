@@ -1,6 +1,6 @@
 package no.nav.eessi.pensjon.eux
 
-import no.nav.eessi.pensjon.json.toJson
+import no.nav.eessi.pensjon.utils.toJson
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 

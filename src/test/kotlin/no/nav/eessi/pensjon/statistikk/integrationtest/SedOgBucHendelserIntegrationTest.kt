@@ -9,13 +9,12 @@ import no.nav.eessi.pensjon.eux.BucMetadata
 import no.nav.eessi.pensjon.eux.EuxKlient
 import no.nav.eessi.pensjon.eux.EuxService
 import no.nav.eessi.pensjon.eux.model.buc.BucType
-import no.nav.eessi.pensjon.json.mapJsonToAny
-import no.nav.eessi.pensjon.json.toJson
-import no.nav.eessi.pensjon.json.typeRefs
 import no.nav.eessi.pensjon.statistikk.listener.OpprettelseMelding
 import no.nav.eessi.pensjon.statistikk.listener.SedHendelseRina
 import no.nav.eessi.pensjon.statistikk.models.OpprettelseType
 import no.nav.eessi.pensjon.statistikk.models.SedMeldingP6000Ut
+import no.nav.eessi.pensjon.utils.mapJsonToAny
+import no.nav.eessi.pensjon.utils.toJson
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -95,7 +94,7 @@ class SedOgBucHendelserIntegrationTest : IntegrationBase() {
         every{ euxService.getBucMetadata(any()) } returns bucMetadata
 
         val sedHendelse = ResourceHelper.getResourceSedHendelseRina("eux/P_BUC_01_P2000.json").toJson()
-        val model = mapJsonToAny(sedHendelse, typeRefs<SedHendelseRina>())
+        val model = mapJsonToAny<SedHendelseRina>(sedHendelse)
 
         initAndRunContainer(STATISTIKK_TOPIC_MOTATT).also {
             it.sendMsgOnDefaultTopic(model.toJson())
@@ -129,7 +128,7 @@ class SedOgBucHendelserIntegrationTest : IntegrationBase() {
               "anmodningOmRevurdering" : "1"              
             }
         """.trimIndent()
-        return mapJsonToAny(meldingUtJson, typeRefs())
+        return mapJsonToAny(meldingUtJson)
     }
 
 }

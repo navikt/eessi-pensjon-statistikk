@@ -7,15 +7,14 @@ import no.nav.eessi.pensjon.eux.EuxService
 import no.nav.eessi.pensjon.eux.Participant
 import no.nav.eessi.pensjon.eux.Vedtak
 import no.nav.eessi.pensjon.gcp.GcpStorageService
-import no.nav.eessi.pensjon.json.mapAnyToJson
-import no.nav.eessi.pensjon.json.mapJsonToAny
-import no.nav.eessi.pensjon.json.typeRefs
 import no.nav.eessi.pensjon.statistikk.models.BucOpprettetMeldingUt
 import no.nav.eessi.pensjon.statistikk.models.HendelseType
 import no.nav.eessi.pensjon.statistikk.models.PensjonsType
 import no.nav.eessi.pensjon.statistikk.models.SedMeldingP6000Ut
 import no.nav.eessi.pensjon.statistikk.models.SedMeldingUt
 import no.nav.eessi.pensjon.statistikk.models.VedtakStatus
+import no.nav.eessi.pensjon.utils.mapAnyToJson
+import no.nav.eessi.pensjon.utils.mapJsonToAny
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 
@@ -132,7 +131,7 @@ class HendelsesAggregeringsService(private val euxService: EuxService,
         // Hack: vi hadde liten 'i' i rinaid - i noen tilfeller - og når konsistent valgte stor I hadde vi fortsatt noen som var lagret med liten i ...
         val sedHendelseAsJson = sedHendelseAsJsonPotensieltMedLitenIIRinaId?.replace("\"rinaid\"", "\"rinaId\"")
 
-        val hendelse = sedHendelseAsJson?.let { mapJsonToAny(it, typeRefs<SedMeldingUt>()) }
+        val hendelse = sedHendelseAsJson?.let { mapJsonToAny<SedMeldingUt>(it) }
         logger.info("sedHendelse etter mapping: dokumentId='${hendelse?.dokumentId}', bucType=${hendelse?.bucType}, rinaId='${hendelse?.rinaId}'}")
 
         return hendelse?.vedtaksId ?: ""

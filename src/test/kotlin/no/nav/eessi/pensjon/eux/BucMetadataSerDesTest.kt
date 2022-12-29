@@ -2,8 +2,8 @@ package no.nav.eessi.pensjon.eux
 
 import no.nav.eessi.pensjon.ResourceHelper
 import no.nav.eessi.pensjon.eux.model.buc.BucType
-import no.nav.eessi.pensjon.json.mapAnyToJson
-import no.nav.eessi.pensjon.json.toJson
+import no.nav.eessi.pensjon.utils.mapAnyToJson
+import no.nav.eessi.pensjon.utils.toJson
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.skyscreamer.jsonassert.JSONAssert
