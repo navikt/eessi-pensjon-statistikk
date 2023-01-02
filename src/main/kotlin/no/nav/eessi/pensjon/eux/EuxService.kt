@@ -1,20 +1,22 @@
 package no.nav.eessi.pensjon.eux
 
-import no.nav.eessi.pensjon.utils.toJson
+import no.nav.eessi.pensjon.eux.klient.EuxKlientLib
+import no.nav.eessi.pensjon.utils.mapJsonToAny
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 
 
 @Service
-class EuxService(private val euxKlient: EuxKlient){
+class EuxService(private val euxKlient: EuxKlientLib){
 
 
     private val logger = LoggerFactory.getLogger(EuxService::class.java)
 
     fun getBucMetadata(rinaSakId: String) : BucMetadata? {
-         val metaData = euxKlient.getBucMetadata(rinaSakId = rinaSakId)
-        logger.debug("BucMetaData: ${metaData?.toJson()}")
-        return metaData
+        val metaData = euxKlient.hentBucJson(rinaSakId = rinaSakId)
+        logger.debug("bucmetadata: ${metaData}")
+
+        return metaData?.let { mapJsonToAny(it) }
     }
 
 
@@ -28,9 +30,9 @@ class EuxService(private val euxKlient: EuxKlient){
      *
      */
     fun getSed(rinaSakId: String, dokumentId : String) : Sed? {
-        val sed : Sed = euxKlient.getSed(rinaSakId, dokumentId)
+        val sedAsJson = euxKlient.hentSedJson(rinaSakId, dokumentId)
 
-        logger.debug("Dokument: ${sed.toJson()}")
-        return sed
+        logger.debug("Dokument: ${sedAsJson}")
+        return sedAsJson?.let { mapJsonToAny(sedAsJson)}
     }
 }

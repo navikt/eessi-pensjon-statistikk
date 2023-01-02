@@ -93,7 +93,7 @@ class HendelsesAggregeringsService(private val euxService: EuxService,
     }
 
     private fun getDocumentVersion(documents: List<Document>?, dokumentId: String): String {
-        if(documents == null){
+        if(documents.isNullOrEmpty()){
             return ""
         }
         return documents.filter { it.id == dokumentId }[0].versions.size.toString()
