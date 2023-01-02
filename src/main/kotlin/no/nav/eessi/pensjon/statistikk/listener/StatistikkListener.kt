@@ -108,7 +108,6 @@ class StatistikkListener(
     )
     fun consumeSedMottatt(hendelse: String, cr: ConsumerRecord<String, String>, acknowledgment: Acknowledgment) {
         MDC.putCloseable("x_request_id", MDC.get("x_request_id") ?: UUID.randomUUID().toString()).use {
-            logger.info(hendelse)
             sedMottattMeldingMetric.measure {
                 val sedHendelseRina = mapJsonToAny<SedHendelseRina>(hendelse)
 
@@ -146,7 +145,6 @@ class StatistikkListener(
         groupId = "\${kafka.statistikk-sed-sendt.groupid}",
     )
     fun consumeSedSendt(hendelse: String, cr: ConsumerRecord<String, String>, acknowledgment: Acknowledgment) {
-        logger.info(hendelse)
         MDC.putCloseable("x_request_id", MDC.get("x_request_id") ?: UUID.randomUUID().toString()).use {
             sedSedSendMeldingtMetric.measure {
                 val offset = cr.offset()
