@@ -21,7 +21,7 @@ class EuxService(private val euxKlient: EuxKlientLib){
 
     @Retryable(
         backoff = Backoff(delayExpression = "@euxKlientRetryConfig.initialRetryMillis", maxDelay = 200000L, multiplier = 3.0),
-        listeners  = ["euxKlientBucRetryLogger"]
+        listeners  = ["euxKlientRetryLogger"]
     )
     fun getBucMetadata(rinaSakId: String) : BucMetadata? {
         val metaData = euxKlient.hentBucJson(rinaSakId = rinaSakId)
