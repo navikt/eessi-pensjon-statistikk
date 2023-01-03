@@ -87,8 +87,8 @@ abstract class IntegrationBase() {
             kafkaTemplate.sendDefault(kafkaMsgFromPath)
         }
 
-        fun waitForlatch(sendtListner: StatistikkListener) = sendtListner.getLatch().await(10, TimeUnit.SECONDS)
-        fun waitForlatchMottatt(sendtListner: StatistikkListener) = sendtListner.getLatchMottatt().await(10, TimeUnit.SECONDS)
+        fun waitForlatch(sendtListner: StatistikkListener) = sendtListner.getLatch().await(20, TimeUnit.SECONDS)
+        fun waitForlatchMottatt(sendtListner: StatistikkListener) = sendtListner.getLatchMottatt().await(20, TimeUnit.SECONDS)
     }
 
     private fun initConsumer(topicName: String): KafkaMessageListenerContainer<String, String> {
