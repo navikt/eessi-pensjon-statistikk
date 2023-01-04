@@ -6,7 +6,7 @@ buildscript {
         archunitVersion = '1.0.1'
         tokenSupportVersion = '2.1.8'
         epMetricsVersion = "1.0.8"
-        epLoggingVersion = '1.1.11'
+        epLoggingVersion = '1.1.12'
     }
 
     repositories {
