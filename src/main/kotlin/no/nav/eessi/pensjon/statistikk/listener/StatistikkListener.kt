@@ -148,6 +148,11 @@ class StatistikkListener(
         MDC.putCloseable("x_request_id", MDC.get("x_request_id") ?: UUID.randomUUID().toString()).use {
             sedSedSendMeldingtMetric.measure {
                 val offset = cr.offset()
+                val offsetToSkip = listOf(70196L, 70197L)
+                if (offset in offsetToSkip) {
+                    logger.warn("Hopper over offset: $offset grunnet feil.")
+                    return@measure
+                }
                 try {
                     val sedHendelseRina = mapJsonToAny<SedHendelseRina>(hendelse)
                     if (MissingBuc.checkForMissingBuc(sedHendelseRina.rinaSakId)) {
