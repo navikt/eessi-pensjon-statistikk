@@ -1,4 +1,4 @@
-package no.nav.eessi.pensjon.personoppslag
+package no.nav.eessi.pensjon.shared.person
 
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonValue
