@@ -9,7 +9,7 @@ import no.nav.eessi.pensjon.StatistikkApplicationIntegration
 import no.nav.eessi.pensjon.eux.BucMetadata
 import no.nav.eessi.pensjon.eux.EuxService
 import no.nav.eessi.pensjon.eux.klient.EuxKlientLib
-import no.nav.eessi.pensjon.eux.model.buc.BucType
+import no.nav.eessi.pensjon.eux.model.BucType
 import no.nav.eessi.pensjon.statistikk.listener.OpprettelseMelding
 import no.nav.eessi.pensjon.statistikk.listener.SedHendelseRina
 import no.nav.eessi.pensjon.statistikk.models.OpprettelseType

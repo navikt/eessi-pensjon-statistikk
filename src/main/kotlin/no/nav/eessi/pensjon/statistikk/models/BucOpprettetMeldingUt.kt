@@ -1,6 +1,6 @@
 package no.nav.eessi.pensjon.statistikk.models
 
-import no.nav.eessi.pensjon.eux.model.buc.BucType
+import no.nav.eessi.pensjon.eux.model.BucType
 
 data class BucOpprettetMeldingUt(
     val bucType: BucType,

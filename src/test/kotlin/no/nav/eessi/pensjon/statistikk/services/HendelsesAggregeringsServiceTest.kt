@@ -6,8 +6,8 @@ import no.nav.eessi.pensjon.ResourceHelper
 import no.nav.eessi.pensjon.eux.BucMetadata
 import no.nav.eessi.pensjon.eux.EuxService
 import no.nav.eessi.pensjon.eux.Sed
+import no.nav.eessi.pensjon.eux.model.BucType
 import no.nav.eessi.pensjon.eux.model.SedType
-import no.nav.eessi.pensjon.eux.model.buc.BucType
 import no.nav.eessi.pensjon.gcp.GcpStorageService
 import no.nav.eessi.pensjon.statistikk.models.HendelseType
 import no.nav.eessi.pensjon.statistikk.models.PensjonsType

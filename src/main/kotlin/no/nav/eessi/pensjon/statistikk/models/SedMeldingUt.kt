@@ -1,8 +1,8 @@
 package no.nav.eessi.pensjon.statistikk.models
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+import no.nav.eessi.pensjon.eux.model.BucType
 import no.nav.eessi.pensjon.eux.model.SedType
-import no.nav.eessi.pensjon.eux.model.buc.BucType
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 open class SedMeldingUt (
