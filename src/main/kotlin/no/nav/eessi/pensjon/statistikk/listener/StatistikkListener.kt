@@ -171,7 +171,7 @@ class StatistikkListener(
                         logger.info("sedmeldingUt: $sedMeldingUt")
                         statistikkPublisher.publiserSedHendelse(sedMeldingUt)
                     } else {
-                        logger.warn("SED er ikke gyldig eller en av missingBuc: $offset")
+                        logger.warn("SED er ikke gyldig eller en av missingBuc: $offset, fra SED: ${sedHendelseRina.sedId}")
                     }
                     acknowledgment.acknowledge()
                     logger.info("Acket sedSendt melding med offset: ${cr.offset()} i partisjon ${cr.partition()}")
