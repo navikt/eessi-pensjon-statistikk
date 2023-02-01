@@ -5,7 +5,7 @@ buildscript {
         logstashLogbackVersion = '7.2'
         archunitVersion = '1.0.1'
         tokenSupportVersion = '2.1.8'
-        epMetricsVersion = "1.0.10"
+        epMetricsVersion = "1.0.11"
         epLoggingVersion = '1.1.16'
     }
 
