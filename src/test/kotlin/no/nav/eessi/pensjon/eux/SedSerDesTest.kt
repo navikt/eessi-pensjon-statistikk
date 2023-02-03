@@ -29,6 +29,24 @@ class SedSerDesTest {
     }
 
     @Test
+    fun `Sjekker at serialisering virker for m_sed`() {
+        val model = Sed(
+            Nav(null, listOf(Sak("", ""))),
+            sed = SedType.M051,
+            pensjon = Pensjon(
+                vedtak = listOf(Vedtak(type = "02", resultat = "04", beregning = listOf(Beregning(
+                    beloepBrutto = BeloepBrutto("10000"),
+                    valuta = "NOK"
+                )))),
+                tilleggsinformasjon = Tilleggsinformasjon("")
+            )
+        )
+
+        val serialized = model.toJson()
+        val result = Sed.fromJson(serialized)
+        JSONAssert.assertEquals(serialized, result.toJson(),  JSONCompareMode.LENIENT)
+    }
+    @Test
     fun `Sjekker at deserialisering gir riktig verdi`() {
         val sed = getResourceSed("sed/P2000-preutfylt-fnr-og-sakid.json").toJson()
         val model = Sed.fromJson(sed)
