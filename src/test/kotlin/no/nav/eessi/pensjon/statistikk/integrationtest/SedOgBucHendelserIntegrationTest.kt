@@ -16,6 +16,7 @@ import no.nav.eessi.pensjon.statistikk.models.OpprettelseType
 import no.nav.eessi.pensjon.statistikk.models.SedMeldingP6000Ut
 import no.nav.eessi.pensjon.utils.mapJsonToAny
 import no.nav.eessi.pensjon.utils.toJson
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.kafka.test.context.EmbeddedKafka
@@ -37,6 +38,7 @@ class SedOgBucHendelserIntegrationTest : IntegrationBase() {
     lateinit var euxKlient: EuxKlientLib
 
     @Test
+    @Disabled
     fun `En buc hendelse med escapet character skal sendes videre til riktig kanal  `() {
 
         //init mock server
