@@ -91,7 +91,8 @@ class SedOgBucHendelserIntegrationTest : IntegrationBase() {
         val bucMetadata  = BucMetadata (listOf(), BucType.P_BUC_01, "2020-12-08T09:52:55.345+0000")
 
         every { euxService.getSed(any(), any()) } returns mapJsonToAny(getResourceSed("sed/P6000-komplett.json").toJson())
-        every{ euxService.getBucMetadata(any()) } returns bucMetadata
+        every { euxService.getBucMetadata(eq("123")) } returns bucMetadata
+        every { euxService.getBucMetadata(eq("147729")) } returns bucMetadata
 
         val sedHendelse = getResourceSedHendelseRina("eux/P_BUC_01_P2000.json").toJson()
         val model = mapJsonToAny<SedHendelseRina>(sedHendelse)
