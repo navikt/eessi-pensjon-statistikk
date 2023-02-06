@@ -68,7 +68,7 @@ class StatistikkListener(
                 try {
                     val melding = meldingsMapping(hendelse)
                     logger.info("Oppretter melding av type: $hendelse")
-                    val hopperOverOffset = listOf(43313L, 43318L, 43461L, 43631L, 43499L, 43632L)
+                    val hopperOverOffset = listOf(43313L, 43318L, 43461L, 43631L, 43499L)
                     if (MissingBuc.checkForMissingBuc(melding.rinaId) || cr.offset() in hopperOverOffset) {
                         logger.warn("Hopper over offset: ${cr.offset()}")
                     } else {
@@ -93,9 +93,8 @@ class StatistikkListener(
                     acknowledgment.acknowledge()
                     logger.info("Acket opprettelse melding med offset: ${cr.offset()} i partisjon ${cr.partition()}")
                 } catch (ex: Exception) {
-                    acknowledgment.acknowledge()
                     logger.error("Noe gikk galt med offset:${cr.offset()}, tid:$timestamp, ved behandling av statistikk-hendelse:\n $hendelse \n", ex)
-                    //throw RuntimeException(ex.message)
+                    throw RuntimeException(ex.message)
                 }
                 latch.countDown()
             }
