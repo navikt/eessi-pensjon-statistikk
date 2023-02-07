@@ -149,19 +149,15 @@ class StatistikkListener(
         MDC.putCloseable("x_request_id", MDC.get("x_request_id") ?: UUID.randomUUID().toString()).use {
             sedSedSendMeldingtMetric.measure {
                 val offset = cr.offset()
-                val offsetToSkip = listOf(70196L, 70197L)
-                if (offset in offsetToSkip) {
-                    logger.warn("Hopper over offset: $offset grunnet feil.")
-                    return@measure
-                }
                 try {
                     val sedHendelseRina = mapJsonToAny<SedHendelseRina>(hendelse)
-                    if (MissingBuc.checkForMissingBuc(sedHendelseRina.rinaSakId)) {
+                    val offsetToSkip = listOf(70196L, 70197L)
+
+                    if (MissingBuc.checkForMissingBuc(sedHendelseRina.rinaSakId) || offset in offsetToSkip) {
                         logger.warn("Hopper over offset: $offset")
                     } else if (GyldigeHendelser.sendt(sedHendelseRina)) {
                         logger.debug(sedHendelseRina.toJson())
-                        val vedtaksId =
-                            sedInfoService.hentVedtaksId(sedHendelseRina.rinaSakId, sedHendelseRina.rinaDokumentId)
+                        val vedtaksId = sedInfoService.hentVedtaksId(sedHendelseRina.rinaSakId, sedHendelseRina.rinaDokumentId)
                         val sedMeldingUt = sedInfoService.populerSedMeldingUt(
                             sedHendelseRina.rinaSakId,
                             sedHendelseRina.rinaDokumentId,
@@ -169,13 +165,14 @@ class StatistikkListener(
                             HendelseType.SED_SENDT,
                             sedHendelseRina.avsenderLand
                         )
+
                         logger.info("sedmeldingUt: $sedMeldingUt")
                         statistikkPublisher.publiserSedHendelse(sedMeldingUt)
                     } else {
                         logger.warn("SED er ikke gyldig eller en av missingBuc: $offset, fra SED: ${sedHendelseRina.sedId}")
                     }
                     acknowledgment.acknowledge()
-                    logger.info("Acket sedSendt melding med offset: ${cr.offset()} i partisjon ${cr.partition()}")
+                    logger.info("Acket sedSendt melding med offset: $offset i partisjon ${cr.partition()}")
                 } catch (ex: Exception) {
                     logger.error("Noe gikk galt med offset : $offset, under behandling av statistikk-sed-hendelse:\n $hendelse \n", ex)
                     throw RuntimeException(ex.message)
