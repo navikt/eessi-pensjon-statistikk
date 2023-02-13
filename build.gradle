@@ -5,8 +5,6 @@ buildscript {
         logstashLogbackVersion = '7.2'
         archunitVersion = '1.0.1'
         tokenSupportVersion = '3.0.3'
-        epMetricsVersion = "1.0.11"
-        epLoggingVersion = '1.1.16'
     }
 
     repositories {
@@ -31,11 +29,11 @@ group = 'no.nav.eessi.pensjon'
 
 dependencies {
     //eessi pensjon libs
-    implementation("no.nav.eessi.pensjon:ep-logging:${epLoggingVersion}")
-    implementation("no.nav.eessi.pensjon:ep-eux:1.4.22") {
+    implementation("no.nav.eessi.pensjon:ep-logging:1.1.17")
+    implementation("no.nav.eessi.pensjon:ep-eux:1.4.23") {
         exclude module: 'ep-security-sts'
     }
-    implementation("no.nav.eessi.pensjon:ep-metrics:$epMetricsVersion")
+    implementation("no.nav.eessi.pensjon:ep-metrics:1.0.12")
 
     // Spring-boot BOM-fil spesifiserer versjoner for Spring Boot-avhengigheter
     implementation(platform("org.springframework.boot:spring-boot-dependencies:${springBootVersion}"))

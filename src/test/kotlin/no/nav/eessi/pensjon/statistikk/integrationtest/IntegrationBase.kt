@@ -145,11 +145,6 @@ abstract class IntegrationBase() {
                 .setConnectionManager(connectionManager)
                 .build()
 
-//            val httpClient: CloseableHttpClient = HttpClients.custom()
-//                .setSSLContext(sslContext)
-//                .setSSLHostnameVerifier(NoopHostnameVerifier.INSTANCE)
-//                .build()
-
             val customRequestFactory = HttpComponentsClientHttpRequestFactory()
             customRequestFactory.httpClient = httpClient
 
