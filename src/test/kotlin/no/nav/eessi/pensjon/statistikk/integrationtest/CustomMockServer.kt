@@ -16,7 +16,7 @@ class CustomMockServer() {
     fun medBuc(bucPath: String, bucLocation: String) = apply {
         MockServerClient("localhost", serverPort).`when`(
             HttpRequest.request()
-                .withMethod(HttpMethod.GET.name)
+                .withMethod(HttpMethod.GET.name())
                 .withPath(bucPath)
         )
             .respond(
