@@ -5,11 +5,16 @@ import io.mockk.spyk
 import no.nav.eessi.pensjon.gcp.GcpStorageService
 import no.nav.eessi.pensjon.statistikk.listener.StatistikkListener
 import no.nav.eessi.pensjon.statistikk.services.StatistikkPublisher
-import org.apache.http.conn.ssl.NoopHostnameVerifier
-import org.apache.http.impl.client.CloseableHttpClient
-import org.apache.http.impl.client.HttpClients
-import org.apache.http.ssl.SSLContexts
-import org.apache.http.ssl.TrustStrategy
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient
+import org.apache.hc.client5.http.impl.classic.HttpClients
+import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManagerBuilder
+import org.apache.hc.client5.http.io.HttpClientConnectionManager
+import org.apache.hc.client5.http.ssl.NoopHostnameVerifier
+import org.apache.hc.client5.http.ssl.SSLConnectionSocketFactory
+import org.apache.hc.client5.http.ssl.SSLConnectionSocketFactoryBuilder
+import org.apache.hc.client5.http.ssl.TrustAllStrategy
+import org.apache.hc.core5.ssl.SSLContexts
+import org.apache.hc.core5.ssl.TrustStrategy
 import org.junit.jupiter.api.AfterEach
 import org.mockserver.integration.ClientAndServer
 import org.mockserver.socket.PortFactory
@@ -31,6 +36,7 @@ import org.springframework.web.client.RestTemplate
 import java.security.cert.X509Certificate
 import java.util.concurrent.TimeUnit
 import javax.net.ssl.SSLContext
+
 
 const val STATISTIKK_TOPIC = "eessi-pensjon-statistikk-inn"
 const val STATISTIKK_TOPIC_MOTATT = "eessi-pensjon-statistikk-sed-mottatt"
@@ -125,13 +131,18 @@ abstract class IntegrationBase() {
         fun euxClientCredentialsResourceRestTemplate(templateBuilder: RestTemplateBuilder): RestTemplate {
             val acceptingTrustStrategy = TrustStrategy { _: Array<X509Certificate?>?, _: String? -> true }
 
-            val sslContext: SSLContext = SSLContexts.custom()
+            val sslcontext: SSLContext = SSLContexts.custom()
                 .loadTrustMaterial(null, acceptingTrustStrategy)
                 .build()
-
-            val httpClient: CloseableHttpClient = HttpClients.custom()
-                .setSSLContext(sslContext)
-                .setSSLHostnameVerifier(NoopHostnameVerifier.INSTANCE)
+            val sslSocketFactory: SSLConnectionSocketFactory = SSLConnectionSocketFactoryBuilder.create()
+                .setSslContext(sslcontext)
+                .setHostnameVerifier(NoopHostnameVerifier.INSTANCE)
+                .build()
+            val connectionManager: HttpClientConnectionManager = PoolingHttpClientConnectionManagerBuilder.create()
+                .setSSLSocketFactory(sslSocketFactory)
+                .build()
+            val httpClient = HttpClients.custom()
+                .setConnectionManager(connectionManager)
                 .build()
 
             val customRequestFactory = HttpComponentsClientHttpRequestFactory()
