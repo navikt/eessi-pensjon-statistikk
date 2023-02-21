@@ -10,8 +10,8 @@ import no.nav.eessi.pensjon.eux.BucMetadata
 import no.nav.eessi.pensjon.eux.EuxService
 import no.nav.eessi.pensjon.eux.klient.EuxKlientLib
 import no.nav.eessi.pensjon.eux.model.BucType
+import no.nav.eessi.pensjon.eux.model.SedHendelse
 import no.nav.eessi.pensjon.statistikk.listener.OpprettelseMelding
-import no.nav.eessi.pensjon.statistikk.listener.SedHendelseRina
 import no.nav.eessi.pensjon.statistikk.models.OpprettelseType
 import no.nav.eessi.pensjon.statistikk.models.SedMeldingP6000Ut
 import no.nav.eessi.pensjon.utils.mapJsonToAny
@@ -38,7 +38,6 @@ class SedOgBucHendelserIntegrationTest : IntegrationBase() {
     lateinit var euxKlient: EuxKlientLib
 
     @Test
-    @Disabled
     fun `En buc hendelse med escapet character skal sendes videre til riktig kanal  `() {
 
         //init mock server
@@ -97,7 +96,7 @@ class SedOgBucHendelserIntegrationTest : IntegrationBase() {
         every { euxService.getBucMetadata(eq("147729")) } returns bucMetadata
 
         val sedHendelse = getResourceSedHendelseRina("eux/P_BUC_01_P2000.json").toJson()
-        val model = mapJsonToAny<SedHendelseRina>(sedHendelse)
+        val model = mapJsonToAny<SedHendelse>(sedHendelse)
 
         initAndRunContainer(STATISTIKK_TOPIC_MOTATT).also {
             it.sendMsgOnDefaultTopic(model.toJson())

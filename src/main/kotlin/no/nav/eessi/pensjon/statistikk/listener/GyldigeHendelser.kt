@@ -1,6 +1,7 @@
 package no.nav.eessi.pensjon.statistikk.listener
 
 import no.nav.eessi.pensjon.eux.model.BucType
+import no.nav.eessi.pensjon.eux.model.SedHendelse
 import no.nav.eessi.pensjon.eux.model.SedType
 import no.nav.eessi.pensjon.eux.model.SedType.*
 
@@ -19,14 +20,14 @@ class GyldigeHendelser {
             X011, X012, X013, X050, X100, H001, H002, H020, H021, H120, H121, R004, R006
         )
 
-        fun mottatt(hendelse: SedHendelseRina) =
+        fun mottatt(hendelse: SedHendelse) =
                 when {
                     (hendelse.bucType in gyldigeInnkommendeBucTyper || gyldigSektorKode == hendelse.sektorKode)
                             && hendelse.sedType !in ugyldigeTyper -> true
                     else -> false
                 }
 
-        fun sendt(hendelse: SedHendelseRina) =
+        fun sendt(hendelse: SedHendelse) =
                 when {
                     (gyldigUtgaaendeBucType == hendelse.bucType || gyldigSektorKode == hendelse.sektorKode)
                             && hendelse.sedType !in ugyldigeTyper -> true

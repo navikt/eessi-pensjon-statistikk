@@ -1,5 +1,6 @@
 package no.nav.eessi.pensjon.statistikk.listener
 
+import no.nav.eessi.pensjon.eux.model.SedHendelse
 import no.nav.eessi.pensjon.eux.model.buc.MissingBuc
 import no.nav.eessi.pensjon.metrics.MetricsHelper
 import no.nav.eessi.pensjon.statistikk.models.HendelseType
@@ -110,13 +111,9 @@ class StatistikkListener(
     fun consumeSedMottatt(hendelse: String, cr: ConsumerRecord<String, String>, acknowledgment: Acknowledgment) {
         MDC.putCloseable("x_request_id", MDC.get("x_request_id") ?: UUID.randomUUID().toString()).use {
             sedMottattMeldingMetric.measure {
-                val sedHendelseRina = mapJsonToAny<SedHendelseRina>(hendelse)
+                val sedHendelseRina = mapJsonToAny<SedHendelse>(hendelse)
 
-                if (profile == "prod" && sedHendelseRina.avsenderId in listOf("NO:NAVAT05", "NO:NAVAT07")) {
-                    logger.error("Avsender id er ${sedHendelseRina.avsenderId}. Dette er testdata i produksjon!!!\n$sedHendelseRina")
-                    acknowledgment.acknowledge()
-                    return@measure
-                }
+                if (testMeldingIProdLogError(sedHendelseRina, acknowledgment)) return@measure
 
                 try {
                     if (GyldigeHendelser.mottatt(sedHendelseRina)) {
@@ -140,6 +137,18 @@ class StatistikkListener(
         }
     }
 
+    private fun testMeldingIProdLogError(
+        sedHendelseRina: SedHendelse,
+        acknowledgment: Acknowledgment
+    ): Boolean {
+        if (profile == "prod" && sedHendelseRina.avsenderId in listOf("NO:NAVAT05", "NO:NAVAT07")) {
+            logger.error("Avsender id er ${sedHendelseRina.avsenderId}. Dette er testdata i produksjon!!!\n$sedHendelseRina")
+            acknowledgment.acknowledge()
+            return true
+        }
+        return false
+    }
+
     @KafkaListener(
         containerFactory = "kafkaListenerContainerFactory",
         topics = ["\${kafka.statistikk-sed-sendt.topic}"],
@@ -150,7 +159,7 @@ class StatistikkListener(
             sedSedSendMeldingtMetric.measure {
                 val offset = cr.offset()
                 try {
-                    val sedHendelseRina = mapJsonToAny<SedHendelseRina>(hendelse)
+                    val sedHendelseRina = mapJsonToAny<SedHendelse>(hendelse)
                     val offsetToSkip = listOf(70196L, 70197L)
 
                     if (MissingBuc.checkForMissingBuc(sedHendelseRina.rinaSakId) || offset in offsetToSkip) {
