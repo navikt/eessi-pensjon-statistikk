@@ -9,7 +9,6 @@ import no.nav.eessi.pensjon.statistikk.services.HendelsesAggregeringsService
 import no.nav.eessi.pensjon.statistikk.services.StatistikkPublisher
 import no.nav.eessi.pensjon.utils.mapJsonToAny
 import no.nav.eessi.pensjon.utils.toJson
-import no.nav.eessi.pensjon.utils.toJsonSkipEmpty
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.slf4j.LoggerFactory
 import org.slf4j.MDC
@@ -175,8 +174,7 @@ class StatistikkListener(
                             HendelseType.SED_SENDT,
                             sedHendelseRina.avsenderLand
                         )
-                        val meldingTilDvh = sedMeldingUt.toJsonSkipEmpty()
-                        logger.info("sedmeldingUt: ${meldingTilDvh.replaceAfter("pid", "*")}")
+                        logger.info("sedmeldingUt: ${sedMeldingUt.toStringUtenPid()}")
                         statistikkPublisher.publiserSedHendelse(sedMeldingUt)
                     } else {
                         logger.warn("SED er ikke gyldig eller en av missingBuc: $offset, fra SED: ${sedHendelseRina.sedId}")

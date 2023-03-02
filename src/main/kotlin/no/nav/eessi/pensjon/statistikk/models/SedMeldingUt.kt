@@ -25,6 +25,10 @@ open class SedMeldingUt (
         return "SedMeldingUt(dokumentId='$dokumentId', bucType=$bucType, rinaId='$rinaId', mottakerLand=$mottakerLand, rinaDokumentVersjon='$rinaDokumentVersjon', sedType=$sedType, pid=$pid, hendelseType=$hendelseType, pesysSakId=$pesysSakId, opprettetTidspunkt='$opprettetTidspunkt', vedtaksId=$vedtaksId)"
     }
 
+    fun toStringUtenPid(): String {
+        return "SedMeldingUt(dokumentId='$dokumentId', bucType=$bucType, rinaId='$rinaId', mottakerLand=$mottakerLand, rinaDokumentVersjon='$rinaDokumentVersjon', sedType=$sedType, pid=*******, hendelseType=$hendelseType, pesysSakId=$pesysSakId, opprettetTidspunkt='$opprettetTidspunkt', vedtaksId=$vedtaksId)"
+    }
+
     /* Genereres f eks med IDEA. */
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
