@@ -32,6 +32,7 @@ class StatistikkListener(
 ) {
 
     private val logger = LoggerFactory.getLogger(StatistikkListener::class.java)
+    private val secureLogger = LoggerFactory.getLogger("secureLog")
 
     private val latch = CountDownLatch(1)
     private val latchMottatt = CountDownLatch(1)
@@ -94,7 +95,8 @@ class StatistikkListener(
                     acknowledgment.acknowledge()
                     logger.info("Acket opprettelse melding med offset: ${cr.offset()} i partisjon ${cr.partition()}")
                 } catch (ex: Exception) {
-                    logger.error("Noe gikk galt med offset:${cr.offset()}, tid:$timestamp, ved behandling av statistikk-hendelse:\n $hendelse \n", ex)
+                    logger.error("Noe gikk galt med offset:${cr.offset()}, tid:$timestamp, ved behandling av statistikk-hendelse", ex)
+                    secureLogger.info("Noe gikk galt med offset:\n$hendelse")
                     throw RuntimeException(ex.message)
                 }
                 latch.countDown()
@@ -129,7 +131,8 @@ class StatistikkListener(
                     acknowledgment.acknowledge()
                     logger.info("Acket sedMottatt melding med offset: ${cr.offset()} i partisjon ${cr.partition()}")
                 } catch (ex: Exception) {
-                    logger.error("Noe gikk galt med offset : ${cr.offset()}, under behandling av statistikk-sed-hendelse:\n $hendelse \n", ex)
+                    logger.error("Noe gikk galt med offset : ${cr.offset()}, under behandling av statistikk-sed-hendelse", ex)
+
                     throw RuntimeException(ex.message)
                 }
                 latchMottatt.countDown()
@@ -182,7 +185,9 @@ class StatistikkListener(
                     acknowledgment.acknowledge()
                     logger.info("Acket sedSendt melding med offset: $offset i partisjon ${cr.partition()}")
                 } catch (ex: Exception) {
-                    logger.error("Noe gikk galt med offset : $offset, under behandling av statistikk-sed-hendelse:\n $hendelse \n", ex)
+                    logger.error("Noe gikk galt med offset : $offset, under behandling av statistikk-sed-hendelse", ex)
+                    secureLogger.info("Noe gikk galt med offset:\n$hendelse")
+
                     throw RuntimeException(ex.message)
                 }
                 latch.countDown()
