@@ -49,7 +49,7 @@ spec:
   accessPolicy:
     outbound:
       external:
-        - host: https://eessi-pensjon-statistikk.intern.nav.no
+        - host: eux-rina-api.prod-fss-pub.nais.io
   webproxy: true
 
   image: {{ image }}
