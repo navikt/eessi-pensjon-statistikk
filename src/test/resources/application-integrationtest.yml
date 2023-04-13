@@ -32,7 +32,6 @@ aktoerregister.api.v1.url: http://localhost:${mockserverport}
 virksomhet.person.v3:
   endpointurl: http://localhost:${mockserverport}
 eessi_pensjon_fagmodul_url: http://localhost:${mockserverport}
-norg2_url: http://localhost:${mockserverport}
 bestemsak_url: http://localhost:${mockserverport}
 pensjonsinformasjon:
   url: 'http://example.com:8099'
