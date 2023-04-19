@@ -54,7 +54,7 @@ spec:
 
   image: {{ image }}
   ingresses:
-    - https://eessi-pensjon-statistikk-q2.dev.intern.nav.no
+    - https://eessi-pensjon-statistikk-q2.intern.dev.nav.no
   liveness:
     path: /internal/isalive
     port: 8080
