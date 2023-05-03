@@ -33,13 +33,13 @@ spec:
   gcp:
     buckets:
       - name: eessi-pensjon-statistikk-prod
+        cascadingDelete:  true
         retentionPeriodDays: 30
         lifecycleCondition:
-          age: 7
-          createdBefore: 2020-01-01
-          numNewerVersions: 2
+          age: 60
           withState: ANY
         uniformBucketLevelAccess: true
+
 
   envFrom:
     - secret: statistikk # value is the secret name in Google Secret Manager
