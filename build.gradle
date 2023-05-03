@@ -28,7 +28,7 @@ group = 'no.nav.eessi.pensjon'
 
 dependencies {
     //eessi pensjon libs
-    implementation("no.nav.eessi.pensjon:ep-logging:2.1.10")
+    implementation("no.nav.eessi.pensjon:ep-logging:2.1.12")
     implementation("no.nav.eessi.pensjon:ep-eux:2.1.24") {
         exclude module: 'ep-security-sts'
     }
