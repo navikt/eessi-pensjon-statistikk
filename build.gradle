@@ -54,7 +54,7 @@ dependencies {
     implementation("org.apache.httpcomponents.client5:httpclient5:5.2.1")
 
     //GCP
-    implementation(platform("com.google.cloud:libraries-bom:26.13.0"))
+    implementation(platform("com.google.cloud:libraries-bom:26.14.0"))
     implementation("com.google.cloud:google-cloud-storage:2.22.1")
 
     // Logging
