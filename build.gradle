@@ -54,8 +54,9 @@ dependencies {
     implementation("org.apache.httpcomponents.client5:httpclient5:5.2.1")
 
     //GCP
-    implementation(platform("com.google.cloud:libraries-bom:26.18.0"))
-    implementation("com.google.cloud:google-cloud-storage:2.23.0")
+    implementation(platform("com.google.cloud:libraries-bom:26.19.0"))
+    implementation("com.google.cloud:google-cloud-storage")
+    implementation 'com.google.guava:guava:31.1-jre' // "-jre" for Java 8 or higher,https://github.com/google/guava/issues/6612
 
     // Logging
     implementation("net.logstash.logback:logstash-logback-encoder:7.4")
