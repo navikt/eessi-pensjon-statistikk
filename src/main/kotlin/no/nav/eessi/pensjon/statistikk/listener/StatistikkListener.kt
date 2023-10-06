@@ -163,7 +163,7 @@ class StatistikkListener(
                 val offset = cr.offset()
                 try {
                     val sedHendelseRina = mapJsonToAny<SedHendelse>(hendelse)
-                    val offsetToSkip = listOf(70196L, 70197L)
+                    val offsetToSkip = listOf(70196L, 70197L, 176379L)
 
                     if (MissingBuc.checkForMissingBuc(sedHendelseRina.rinaSakId) || offset in offsetToSkip) {
                         logger.warn("Hopper over offset: $offset")
