@@ -140,18 +140,6 @@ class StatistikkListener(
         }
     }
 
-    private fun testMeldingIProdLogError(
-        sedHendelseRina: SedHendelse,
-        acknowledgment: Acknowledgment
-    ): Boolean {
-        if (profile == "prod" && sedHendelseRina.avsenderId in listOf("NO:NAVAT05", "NO:NAVAT07")) {
-            logger.error("Avsender id er ${sedHendelseRina.avsenderId}. Dette er testdata i produksjon!!!\n$sedHendelseRina")
-            acknowledgment.acknowledge()
-            return true
-        }
-        return false
-    }
-
     @KafkaListener(
         containerFactory = "kafkaListenerContainerFactory",
         topics = ["\${kafka.statistikk-sed-sendt.topic}"],
@@ -163,6 +151,7 @@ class StatistikkListener(
                 val offset = cr.offset()
                 try {
                     val sedHendelseRina = mapJsonToAny<SedHendelse>(hendelse)
+                    if (testMeldingIProdLogError(sedHendelseRina, acknowledgment)) return@measure
                     val offsetToSkip = listOf(70196L, 70197L, 176379L)
 
                     if (MissingBuc.checkForMissingBuc(sedHendelseRina.rinaSakId) || offset in offsetToSkip) {
@@ -221,5 +210,17 @@ class StatistikkListener(
             logger.warn("Noe gikk galt med formatering av tid", ex)
         }
         return ""
+    }
+
+    private fun testMeldingIProdLogError(
+        sedHendelseRina: SedHendelse,
+        acknowledgment: Acknowledgment
+    ): Boolean {
+        if (profile == "prod" && sedHendelseRina.avsenderId in listOf("NO:NAVAT05", "NO:NAVAT07")) {
+            logger.error("Avsender id er ${sedHendelseRina.avsenderId}. Dette er testdata i produksjon!!!\n$sedHendelseRina")
+            acknowledgment.acknowledge()
+            return true
+        }
+        return false
     }
 }
