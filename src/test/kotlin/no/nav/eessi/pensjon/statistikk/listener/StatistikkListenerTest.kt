@@ -48,7 +48,7 @@ internal class StatistikkListenerTest{
         }
         @Bean
         fun statistikkListener(): StatistikkListener {
-            return StatistikkListener(hendelsesAggregeringsService(), mockk(relaxed = true), "SPRING_PROFILES_ACTIVE").apply { initMetrics() }
+            return StatistikkListener(hendelsesAggregeringsService(), mockk(relaxed = true), "SPRING_PROFILES_ACTIVE")
         }
     }
 }

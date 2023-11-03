@@ -20,9 +20,6 @@ import org.springframework.stereotype.Component
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.CountDownLatch
-import javax.annotation.PostConstruct
-
-
 @Component("statistikkListener")
 class StatistikkListener(
     private val sedInfoService: HendelsesAggregeringsService,
@@ -43,15 +40,11 @@ class StatistikkListener(
 
     fun getLatch() = latch
     fun getLatchMottatt() = latchMottatt
-
-
-    @PostConstruct
-    fun initMetrics() {
+    init {
         opprettMeldingMetric = metricsHelper.init("consumeOpprettMelding")
         sedMottattMeldingMetric = metricsHelper.init("consumeSedMottatt")
         sedSedSendMeldingtMetric = metricsHelper.init("consumeSedSendtMelding")
     }
-
     @KafkaListener(
        containerFactory = "kafkaListenerContainerFactory",
         topics = ["\${kafka.statistikk-inn.topic}"],
