@@ -82,7 +82,7 @@ class HendelsesAggregeringsService(private val euxService: EuxService,
                 bucType = bucMetadata.processDefinitionName,
                 sedType = sed?.sed!!,
                 pesysSakId = sed.nav.eessisak?.firstOrNull { it?.land == "NO" }?.saksnummer,
-                pid = sed.nav.bruker?.person?.pin?.firstOrNull { it.land == "NO" }?.identifikator,
+                pid = null, // ikke obligatorisk for andre enn P6000
                 opprettetTidspunkt = getCreationDateFromSedMetaData(bucMetadata, dokumentId),
                 vedtaksId = vedtaksId,
                 avsenderLand = avsenderLand,

@@ -52,7 +52,7 @@ internal class HendelsesAggregeringsServiceTest {
             avsenderLand = null, // finnes ikke for opprettetmelding (er vel alltid Norge)
             rinaDokumentVersjon = "2",
             sedType = SedType.P2000,
-            pid = "08035325493",
+            pid = null,
             hendelseType = HendelseType.SED_OPPRETTET,
             pesysSakId = pesysSaksID,
             opprettetTidspunkt = "2020-12-08T09:53:36.241+0000",
@@ -85,7 +85,7 @@ internal class HendelsesAggregeringsServiceTest {
             avsenderLand = null, // finnes ikke for opprettetmelding (er vel alltid Norge)
             rinaDokumentVersjon = "5",
             sedType = SedType.P6000,
-            pid = "09028020144",
+            pid = null, // ikke lenger tilgjengelig for vanlig  melding, kun for P6000
             hendelseType = HendelseType.SED_OPPRETTET,
             pesysSakId = "22919968",
             opprettetTidspunkt = "2021-02-11T13:08:29.914+0000",
