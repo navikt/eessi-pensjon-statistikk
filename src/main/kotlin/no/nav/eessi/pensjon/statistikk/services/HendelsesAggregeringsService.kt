@@ -6,6 +6,7 @@ import no.nav.eessi.pensjon.eux.Document
 import no.nav.eessi.pensjon.eux.EuxService
 import no.nav.eessi.pensjon.eux.Participant
 import no.nav.eessi.pensjon.eux.Vedtak
+import no.nav.eessi.pensjon.eux.model.SedType
 import no.nav.eessi.pensjon.gcp.GcpStorageService
 import no.nav.eessi.pensjon.statistikk.models.BucOpprettetMeldingUt
 import no.nav.eessi.pensjon.statistikk.models.HendelseType
@@ -62,16 +63,19 @@ class HendelsesAggregeringsService(private val euxService: EuxService,
                 avsenderLand = avsenderLand!!,
                 rinaDokumentVersjon = getDocumentVersion(bucMetadata.documents, dokumentId),
                 sedType = sed!!.sed,
-                pid = sed.nav.bruker?.person?.pin?.firstOrNull { it.land == "NO" }?.identifikator,
+                // pin sendes kun for P6000
+                pid = sed.nav.bruker?.person?.pin?.firstOrNull { it.land == "NO" }?.identifikator.takeIf { sed.sed == SedType.P6000 },
                 hendelseType = hendelseType,
                 pesysSakId = sed.nav.eessisak?.firstOrNull { it?.land == "NO" }?.saksnummer,
                 opprettetTidspunkt = getCreationDateFromSedMetaData(bucMetadata, dokumentId),
                 vedtaksId = vedtaksId,
-                bostedsland =  sed.nav.bruker?.adresse?.land,
-                pensjonsType = PensjonsType.fra ( sed.pensjon?.vedtak?.firstOrNull().let{ it?.type } ),
-                vedtakStatus = VedtakStatus.fra ( sed.pensjon?.vedtak?.firstOrNull().let { it?.resultat } ),
-                bruttoBelop = beregning?.beloepBrutto?.beloep,
-                valuta = beregning?.valuta,
+                bostedsland = sed.nav.bruker?.adresse?.land,
+                pensjonsType = PensjonsType.fra(sed.pensjon?.vedtak?.firstOrNull().let { it?.type }),
+                vedtakStatus = VedtakStatus.fra(sed.pensjon?.vedtak?.firstOrNull().let { it?.resultat }),
+                // brutto sendes kun for utgående
+                bruttoBelop = beregning?.beloepBrutto?.beloep.takeIf { hendelseType == HendelseType.SED_SENDT },
+                // valuta sendes kun for utgående
+                valuta = beregning?.valuta.takeIf { hendelseType == HendelseType.SED_SENDT },
                 anmodningOmRevurdering = sed.pensjon?.tilleggsinformasjon?.artikkel48,
 
                 )

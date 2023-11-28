@@ -125,8 +125,8 @@ class SedOgBucHendelserIntegrationTest : IntegrationBase() {
               "bostedsland" : "HR",
               "pensjonsType" : "GJENLEV",
               "vedtakStatus" : "FORELOPIG_UTBETALING",
-              "bruttoBelop" : "12482",
-              "valuta" : "NOK", 
+              "bruttoBelop" : null,
+              "valuta" : null, 
               "anmodningOmRevurdering" : "1"       
             }
         """.trimIndent()
