@@ -1,6 +1,7 @@
 package no.nav.eessi.pensjon.statistikk.listener
 
 import no.nav.eessi.pensjon.eux.model.SedHendelse
+import no.nav.eessi.pensjon.eux.model.SedType
 import no.nav.eessi.pensjon.eux.model.buc.MissingBuc
 import no.nav.eessi.pensjon.metrics.MetricsHelper
 import no.nav.eessi.pensjon.statistikk.models.HendelseType
@@ -111,7 +112,7 @@ class StatistikkListener(
                 if (testMeldingIProdLogError(sedHendelseRina, acknowledgment)) return@measure
 
                 try {
-                    if (GyldigeHendelser.mottatt(sedHendelseRina)) {
+                    if (sedHendelseRina.sedType == SedType.P6000) {
                         val sedMeldingUt = sedInfoService.populerSedMeldingUt(
                             sedHendelseRina.rinaSakId,
                             sedHendelseRina.rinaDokumentId,
@@ -149,7 +150,7 @@ class StatistikkListener(
 
                     if (MissingBuc.checkForMissingBuc(sedHendelseRina.rinaSakId) || offset in offsetToSkip) {
                         logger.warn("Hopper over offset: $offset")
-                    } else if (GyldigeHendelser.sendt(sedHendelseRina)) {
+                    } else if (sedHendelseRina.sedType == SedType.P6000) {
                         logger.debug(sedHendelseRina.toJson())
                         val vedtaksId = sedInfoService.hentVedtaksId(sedHendelseRina.rinaSakId, sedHendelseRina.rinaDokumentId)
                         val sedMeldingUt = sedInfoService.populerSedMeldingUt(
