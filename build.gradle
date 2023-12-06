@@ -51,7 +51,7 @@ dependencies {
 
     implementation 'org.jetbrains.kotlin:kotlin-reflect'
 
-    implementation("org.apache.httpcomponents.client5:httpclient5:5.2.1")
+    implementation("org.apache.httpcomponents.client5:httpclient5:5.2.3")
 
     //GCP
     implementation("com.google.cloud:google-cloud-storage:2.30.0")
