@@ -20,6 +20,8 @@ buildscript {
 plugins {
     id "org.springframework.boot" version "$springBootVersion"
     id "io.spring.dependency-management" version "1.1.4"
+    id "org.jetbrains.kotlin.plugin.allopen" version "1.9.21"
+    id "org.jetbrains.kotlin.jvm" version "1.9.21"
 }
 
 apply from: "buildSrc/ep-module.gradle"
@@ -87,18 +89,4 @@ dependencies {
     // Architecture tests
     testImplementation ("com.tngtech.archunit:archunit:${archunitVersion}")
 
-}
-
-test {
-    // set heap size for the test JVM(s)
-    minHeapSize = "128m"
-    maxHeapSize = "512m"
-
-    // set JVM arguments for the test JVM(s)
-    failFast = true
-    testLogging {
-        exceptionFormat "full"
-        events "started", "skipped", "passed", "failed"
-        showStandardStreams true
-    }
 }

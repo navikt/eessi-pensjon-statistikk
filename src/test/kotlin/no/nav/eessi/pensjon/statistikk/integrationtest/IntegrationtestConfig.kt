@@ -19,7 +19,7 @@ import java.time.Duration
 @EnableKafka
 @Profile("integrationtest")
 @Configuration
-class IntegrationtestConfig(
+open class IntegrationtestConfig(
     @param:Value("\${spring.embedded.kafka.brokers}") private val bootstrapServers: String) {
 
     @Bean

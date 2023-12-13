@@ -29,7 +29,7 @@ import org.springframework.test.context.ActiveProfiles
 @EmbeddedKafka(
     topics = [STATISTIKK_TOPIC]
 )
-class SedOgBucHendelserIntegrationTest : IntegrationBase() {
+open class SedOgBucHendelserIntegrationTest : IntegrationBase() {
 
     @MockkBean
     lateinit var euxService: EuxService
