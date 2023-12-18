@@ -1,5 +1,6 @@
 package no.nav.eessi.pensjon.statistikk.integrationtest
 
+import com.ninjasquad.springmockk.MockkBean
 import io.mockk.impl.annotations.MockK
 import io.mockk.mockk
 import io.mockk.spyk
@@ -43,13 +44,9 @@ const val STATISTIKK_TOPIC_MOTATT = "eessi-pensjon-statistikk-sed-mottatt"
 private var mockServerPort = PortFactory.findFreePort()
 private lateinit var mockServer: ClientAndServer
 
-abstract class IntegrationBase() {
+abstract class IntegrationBase {
 
-//    @Bean
-//    open fun gcpStorageService(): GcpStorageService {
-//        return mockk()
-//    }
-    @MockK
+    @MockkBean
     lateinit var gcpStorageService: GcpStorageService
 
     @Autowired

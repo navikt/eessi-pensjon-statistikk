@@ -23,7 +23,7 @@ open class IntegrationtestConfig(
     @param:Value("\${spring.embedded.kafka.brokers}") private val bootstrapServers: String) {
 
     @Bean
-    fun producerFactory(): ProducerFactory<String, String> {
+    open fun producerFactory(): ProducerFactory<String, String> {
         val configMap: MutableMap<String, Any> = HashMap()
         populerCommonConfig(configMap)
         configMap[ProducerConfig.CLIENT_ID_CONFIG] = "eessi-pensjon-statistikk"
@@ -35,7 +35,7 @@ open class IntegrationtestConfig(
     }
 
     @Bean
-    fun kafkaConsumerFactory(): ConsumerFactory<String, String> {
+    open fun kafkaConsumerFactory(): ConsumerFactory<String, String> {
         val configMap: MutableMap<String, Any> = HashMap()
         populerCommonConfig(configMap)
         configMap[ConsumerConfig.CLIENT_ID_CONFIG] = "eessi-pensjon-statistikk"
@@ -48,7 +48,7 @@ open class IntegrationtestConfig(
     }
 
     @Bean
-    fun sedKafkaListenerContainerFactory(): ConcurrentKafkaListenerContainerFactory<String, String>? {
+    open fun sedKafkaListenerContainerFactory(): ConcurrentKafkaListenerContainerFactory<String, String>? {
         return ConcurrentKafkaListenerContainerFactory<String, String>().apply {
             consumerFactory = kafkaConsumerFactory()
             containerProperties.ackMode = ContainerProperties.AckMode.MANUAL
@@ -57,12 +57,12 @@ open class IntegrationtestConfig(
     }
 
     @Bean
-    fun kafkaTemplate(): KafkaTemplate<String, String> {
+    open fun kafkaTemplate(): KafkaTemplate<String, String> {
         return KafkaTemplate(producerFactory())
     }
 
     @Bean
-    fun kafkaListenerContainerFactory(): ConcurrentKafkaListenerContainerFactory<String, String>? {
+    open fun kafkaListenerContainerFactory(): ConcurrentKafkaListenerContainerFactory<String, String>? {
         return ConcurrentKafkaListenerContainerFactory<String, String>().apply {
             consumerFactory = kafkaConsumerFactory()
             containerProperties.ackMode = ContainerProperties.AckMode.MANUAL
