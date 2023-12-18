@@ -8,7 +8,7 @@ import org.springframework.retry.annotation.EnableRetry
 @Profile("integrationtest")
 @SpringBootApplication
 @EnableRetry
-open class StatistikkApplicationIntegration
+class StatistikkApplicationIntegration
 
 fun main(args: Array<String>) {
 	runApplication<StatistikkApplicationIntegration>(*args)

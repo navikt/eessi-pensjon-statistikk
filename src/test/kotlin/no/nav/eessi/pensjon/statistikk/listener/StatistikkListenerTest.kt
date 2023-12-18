@@ -19,7 +19,7 @@ import org.springframework.test.context.ContextConfiguration
 @WebMvcTest(StatistikkListener::class)
 @ContextConfiguration(classes = [StatistikkListenerTest.StatistikkListenerTestConfig::class, StatistikkApplicationIntegration::class])
 @AutoConfigureMockMvc
-open class StatistikkListenerTest{
+internal class StatistikkListenerTest{
 
     @Autowired
     lateinit var hendelsesAggregeringsService: HendelsesAggregeringsService
@@ -41,13 +41,13 @@ open class StatistikkListenerTest{
         assertEquals(formatertDato, result)
     }
     @TestConfiguration
-    open class StatistikkListenerTestConfig {
+    class StatistikkListenerTestConfig {
         @Bean
-        open fun hendelsesAggregeringsService(): HendelsesAggregeringsService {
+        fun hendelsesAggregeringsService(): HendelsesAggregeringsService {
             return HendelsesAggregeringsService(mockk(), mockk())
         }
         @Bean
-        open fun statistikkListener(): StatistikkListener {
+        fun statistikkListener(): StatistikkListener {
             return StatistikkListener(hendelsesAggregeringsService(), mockk(relaxed = true), "SPRING_PROFILES_ACTIVE")
         }
     }

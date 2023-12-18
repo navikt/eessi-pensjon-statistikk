@@ -35,13 +35,17 @@ class StatistikkListener(
     private val latch = CountDownLatch(1)
     private val latchMottatt = CountDownLatch(1)
 
-    private var opprettMeldingMetric: MetricsHelper.Metric = metricsHelper.init("consumeOpprettMelding")
-    private var sedMottattMeldingMetric: MetricsHelper.Metric = metricsHelper.init("consumeSedMottatt")
-    private var sedSedSendMeldingtMetric: MetricsHelper.Metric = metricsHelper.init("consumeSedSendtMelding")
+    private lateinit var opprettMeldingMetric: MetricsHelper.Metric
+    private lateinit var sedMottattMeldingMetric: MetricsHelper.Metric
+    private lateinit var sedSedSendMeldingtMetric: MetricsHelper.Metric
 
     fun getLatch() = latch
     fun getLatchMottatt() = latchMottatt
-
+    init {
+        opprettMeldingMetric = metricsHelper.init("consumeOpprettMelding")
+        sedMottattMeldingMetric = metricsHelper.init("consumeSedMottatt")
+        sedSedSendMeldingtMetric = metricsHelper.init("consumeSedSendtMelding")
+    }
     @KafkaListener(
        containerFactory = "kafkaListenerContainerFactory",
         topics = ["\${kafka.statistikk-inn.topic}"],
