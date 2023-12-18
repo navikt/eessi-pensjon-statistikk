@@ -1,18 +1,18 @@
 package no.nav.eessi.pensjon.statistikk.integrationtest
 
+import com.ninjasquad.springmockk.MockkBean
+import io.mockk.impl.annotations.MockK
 import io.mockk.mockk
 import io.mockk.spyk
 import no.nav.eessi.pensjon.gcp.GcpStorageService
 import no.nav.eessi.pensjon.statistikk.listener.StatistikkListener
 import no.nav.eessi.pensjon.statistikk.services.StatistikkPublisher
-import org.apache.hc.client5.http.impl.classic.CloseableHttpClient
 import org.apache.hc.client5.http.impl.classic.HttpClients
 import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManagerBuilder
 import org.apache.hc.client5.http.io.HttpClientConnectionManager
 import org.apache.hc.client5.http.ssl.NoopHostnameVerifier
 import org.apache.hc.client5.http.ssl.SSLConnectionSocketFactory
 import org.apache.hc.client5.http.ssl.SSLConnectionSocketFactoryBuilder
-import org.apache.hc.client5.http.ssl.TrustAllStrategy
 import org.apache.hc.core5.ssl.SSLContexts
 import org.apache.hc.core5.ssl.TrustStrategy
 import org.junit.jupiter.api.AfterEach
@@ -44,7 +44,10 @@ const val STATISTIKK_TOPIC_MOTATT = "eessi-pensjon-statistikk-sed-mottatt"
 private var mockServerPort = PortFactory.findFreePort()
 private lateinit var mockServer: ClientAndServer
 
-abstract class IntegrationBase() {
+abstract class IntegrationBase {
+
+    @MockkBean
+    lateinit var gcpStorageService: GcpStorageService
 
     @Autowired
     lateinit var statistikkListener: StatistikkListener
@@ -115,20 +118,15 @@ abstract class IntegrationBase() {
     }
 
     @TestConfiguration
-    class TestConfig {
+    open class TestConfig {
 
         @Bean
-        fun statistikkPublisher(): StatistikkPublisher {
+        open fun statistikkPublisher(): StatistikkPublisher {
             return spyk(StatistikkPublisher(mockk(relaxed = true), "bogusTopic"))
         }
 
         @Bean
-        fun gcpStorageService(): GcpStorageService {
-            return mockk()
-        }
-
-        @Bean
-        fun euxClientCredentialsResourceRestTemplate(templateBuilder: RestTemplateBuilder): RestTemplate {
+        open fun euxClientCredentialsResourceRestTemplate(): RestTemplate {
             val acceptingTrustStrategy = TrustStrategy { _: Array<X509Certificate?>?, _: String? -> true }
 
             val sslcontext: SSLContext = SSLContexts.custom()
