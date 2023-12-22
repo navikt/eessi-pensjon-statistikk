@@ -32,11 +32,11 @@ group = 'no.nav.eessi.pensjon'
 
 dependencies {
     //eessi pensjon libs
-    implementation("no.nav.eessi.pensjon:ep-logging:2.1.41")
-    implementation("no.nav.eessi.pensjon:ep-eux:2.1.88") {
+    implementation("no.nav.eessi.pensjon:ep-logging:2.1.42")
+    implementation("no.nav.eessi.pensjon:ep-eux:2.1.89") {
         exclude module: 'ep-security-sts'
     }
-    implementation("no.nav.eessi.pensjon:ep-metrics:2.0.46")
+    implementation("no.nav.eessi.pensjon:ep-metrics:2.0.47")
 
     // Spring-boot BOM-fil spesifiserer versjoner for Spring Boot-avhengigheter
     implementation(platform("org.springframework.boot:spring-boot-dependencies:${springBootVersion}"))
