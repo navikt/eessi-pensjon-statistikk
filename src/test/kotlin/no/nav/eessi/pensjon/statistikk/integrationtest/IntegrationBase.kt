@@ -78,7 +78,7 @@ abstract class IntegrationBase() {
         container = initConsumer(topic)
         container.start()
         Thread.sleep(5000) // wait a bit for the container to start
-        ContainerTestUtils.waitForAssignment(container, embeddedKafka.partitionsPerTopic)
+        //ContainerTestUtils.waitForAssignment(container, embeddedKafka.partitionsPerTopic)
         val template = KafkaTemplate(producerFactory).apply { defaultTopic = topic }
         return TestResult(template, container).also {
             println("*************************  INIT DONE *****************************")
