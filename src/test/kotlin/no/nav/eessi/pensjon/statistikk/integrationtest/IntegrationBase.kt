@@ -44,7 +44,7 @@ const val STATISTIKK_TOPIC_MOTATT = "eessi-pensjon-statistikk-sed-mottatt"
 private var mockServerPort = PortFactory.findFreePort()
 private lateinit var mockServer: ClientAndServer
 
-abstract class IntegrationBase() {
+abstract class IntegrationBase {
 
     @Autowired
     lateinit var statistikkListener: StatistikkListener

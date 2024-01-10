@@ -10,7 +10,7 @@ import java.nio.file.Files
 import java.nio.file.Paths
 import java.util.concurrent.CompletableFuture
 
-class CustomMockServer() {
+class CustomMockServer {
     private val serverPort = System.getProperty("mockserverport").toInt()
 
     fun medBuc(bucPath: String, bucLocation: String) = apply {
