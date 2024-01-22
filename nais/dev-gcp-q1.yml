@@ -1,0 +1,80 @@
+kind: Application
+apiVersion: nais.io/v1alpha1
+metadata:
+  name: eessi-pensjon-statistikk-q2
+  namespace: eessipensjon
+  labels:
+    team: eessipensjon
+spec:
+  kafka:
+    pool: nav-dev
+  env:
+    - name: GCP_BUCKET_NAME
+      value: eessi-pensjon-statistikk-dev
+    - name: AZURE_APP_EUX_CLIENT_ID
+      value: dev-fss.eessibasis.eux-rina-api-q2
+    - name: SPRING_PROFILES_ACTIVE
+      value: test
+    - name: KAFKA_STATISTIKK_TOPICNAME_INN
+      value: eessipensjon.privat-statistikk-q2
+    - name: KAFKA_STATISTIKK_TOPICNAME_UT
+      value: eessipensjon.public-statistikk-q2
+    - name: KAFKA_SEDSENDT_TOPIC
+      value: eessibasis.sedsendt-v1-q2
+    - name: KAFKA_SEDMOTTATT_TOPIC
+      value: eessibasis.sedmottatt-v1-q2
+    - name: EUX_RINA_API_V1_URL
+      value: https://eux-rina-api-eessibasis.dev-fss-pub.nais.io/cpi
+    - name: GCP_STORAGE_API_URL
+      value: https://storage.googleapis.com
+    - name: ENV
+      value: q2
+
+  gcp:
+    buckets:
+      - name: eessi-pensjon-statistikk-dev
+        cascadingDelete:  true
+        retentionPeriodDays: 30
+        lifecycleCondition:
+          age: 60
+          withState: ANY
+        uniformBucketLevelAccess: true
+
+  envFrom:
+    - secret: statistikk # value is the secret name in GCP Secret Manager
+  azure:
+    application:
+      enabled: true
+  accessPolicy:
+    outbound:
+      external:
+        - host: eux-rina-api-q2.dev-fss-pub.nais.io
+        - host: pdl-api.dev-fss-pub.nais.io
+  webproxy: true
+
+  image: {{ image }}
+  ingresses:
+    - https://eessi-pensjon-statistikk-q2.intern.dev.nav.no
+  liveness:
+    path: /internal/isalive
+    port: 8080
+    initialDelay: 20
+  port: 8080
+  prometheus:
+    enabled: true
+    path: /actuator/prometheus
+  readiness:
+    path: /internal/isready
+    port: 8080
+    initialDelay: 20
+  replicas:
+    min: 1
+    max: 1
+    cpuThresholdPercentage: 50
+  resources:
+    limits:
+      cpu: 4000m
+      memory: 512Mi
+    requests:
+      cpu: 200m
+      memory: 512Mi
