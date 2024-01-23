@@ -1,7 +1,7 @@
 kind: Application
 apiVersion: nais.io/v1alpha1
 metadata:
-  name: eessi-pensjon-statistikk-q2
+  name: eessi-pensjon-statistikk-q1
   namespace: eessipensjon
   labels:
     team: eessipensjon
@@ -12,23 +12,23 @@ spec:
     - name: GCP_BUCKET_NAME
       value: eessi-pensjon-statistikk-dev
     - name: AZURE_APP_EUX_CLIENT_ID
-      value: dev-fss.eessibasis.eux-rina-api-q2
+      value: dev-fss.eessibasis.eux-rina-api-q1
     - name: SPRING_PROFILES_ACTIVE
       value: test
     - name: KAFKA_STATISTIKK_TOPICNAME_INN
-      value: eessipensjon.privat-statistikk-q2
+      value: eessipensjon.privat-statistikk-q1
     - name: KAFKA_STATISTIKK_TOPICNAME_UT
-      value: eessipensjon.public-statistikk-q2
+      value: eessipensjon.public-statistikk-q1
     - name: KAFKA_SEDSENDT_TOPIC
-      value: eessibasis.sedsendt-v1-q2
+      value: eessibasis.sedsendt-v1-q1
     - name: KAFKA_SEDMOTTATT_TOPIC
-      value: eessibasis.sedmottatt-v1-q2
+      value: eessibasis.sedmottatt-v1-q1
     - name: EUX_RINA_API_V1_URL
       value: https://eux-rina-api-eessibasis.dev-fss-pub.nais.io/cpi
     - name: GCP_STORAGE_API_URL
       value: https://storage.googleapis.com
     - name: ENV
-      value: q2
+      value: q1
 
   gcp:
     buckets:
@@ -48,13 +48,13 @@ spec:
   accessPolicy:
     outbound:
       external:
-        - host: eux-rina-api-q2.dev-fss-pub.nais.io
+        - host: eux-rina-api-q1.dev-fss-pub.nais.io
         - host: pdl-api.dev-fss-pub.nais.io
   webproxy: true
 
   image: {{ image }}
   ingresses:
-    - https://eessi-pensjon-statistikk-q2.intern.dev.nav.no
+    - https://eessi-pensjon-statistikk-q1.intern.dev.nav.no
   liveness:
     path: /internal/isalive
     port: 8080
