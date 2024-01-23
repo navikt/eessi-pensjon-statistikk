@@ -133,4 +133,5 @@ class SedOgBucHendelserIntegrationTest : IntegrationBase() {
         return mapJsonToAny(meldingUtJson)
     }
 
+
 }
