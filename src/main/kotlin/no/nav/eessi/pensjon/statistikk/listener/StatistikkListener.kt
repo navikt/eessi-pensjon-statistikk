@@ -99,7 +99,6 @@ class StatistikkListener(
         }
     }
 
-
     @KafkaListener(
         containerFactory = "kafkaListenerContainerFactory",
         topics = ["\${kafka.statistikk-sed-mottatt.topic}"],
@@ -127,7 +126,6 @@ class StatistikkListener(
                     logger.info("Acket sedMottatt melding med offset: ${cr.offset()} i partisjon ${cr.partition()}")
                 } catch (ex: Exception) {
                     logger.error("Noe gikk galt med offset : ${cr.offset()}, under behandling av statistikk-sed-hendelse", ex)
-
                     throw RuntimeException(ex.message)
                 }
                 latchMottatt.countDown()
@@ -151,7 +149,9 @@ class StatistikkListener(
 
                     if (MissingBuc.checkForMissingBuc(sedHendelseRina.rinaSakId) || offset in offsetToSkip) {
                         logger.warn("Hopper over offset: $offset")
-                    } else if (sedHendelseRina.sedType == SedType.P6000) {
+                    }
+                    // vi er kun interessert i P6000
+                    else if (sedHendelseRina.sedType == SedType.P6000) {
                         logger.debug(sedHendelseRina.toJson())
                         val vedtaksId = sedInfoService.hentVedtaksId(sedHendelseRina.rinaSakId, sedHendelseRina.rinaDokumentId)
                         val sedMeldingUt = sedInfoService.populerSedMeldingUt(
@@ -164,7 +164,7 @@ class StatistikkListener(
                         logger.info("sedmeldingUt: ${sedMeldingUt.toStringUtenPid()}")
                         statistikkPublisher.publiserSedHendelse(sedMeldingUt)
                     } else {
-                        logger.warn("SED er ikke gyldig eller en av missingBuc: $offset, fra SED: ${sedHendelseRina.sedId}")
+                        logger.info("SED er ikke gyldig eller en av missingBuc: $offset, fra SED: ${sedHendelseRina.sedId}")
                     }
                     acknowledgment.acknowledge()
                     logger.info("Acket sedSendt melding med offset: $offset i partisjon ${cr.partition()}")
