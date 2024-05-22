@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import java.nio.ByteBuffer
 
-private const val SCRAMBLE_KEY = "_scr"
+private const val GCP_SCRAMBLE_KEY = "_SRCAMBLE"
 
 @Component
 class GcpStorageService( @param:Value("\${GCP_BUCKET_NAME}") var bucketname: String,  private val gcpStorage: Storage) {
@@ -38,7 +38,7 @@ class GcpStorageService( @param:Value("\${GCP_BUCKET_NAME}") var bucketname: Str
     }
 
     fun lagre(storageKey: String, storageValue: String) {
-        val blobInfo =  BlobInfo.newBuilder(BlobId.of(bucketname, storageKey + SCRAMBLE_KEY)).setContentType("application/json").build()
+        val blobInfo =  BlobInfo.newBuilder(BlobId.of(bucketname, storageKey + GCP_SCRAMBLE_KEY)).setContentType("application/json").build()
 
         // legger til en enkel obfuskering av data
         val scrambledString  = scramble(storageValue)
@@ -57,7 +57,7 @@ class GcpStorageService( @param:Value("\${GCP_BUCKET_NAME}") var bucketname: Str
     fun hent(storageKey: String): String? {
         try {
             // søker etter keys med og uten scramble
-            for (key in listOf(storageKey, storageKey + SCRAMBLE_KEY)) {
+            for (key in listOf(storageKey, storageKey + GCP_SCRAMBLE_KEY)) {
                 val blob = gcpStorage.get(BlobId.of(bucketname, key))
                 if (blob.exists()) {
                     val content = blob.getContent().decodeToString()
