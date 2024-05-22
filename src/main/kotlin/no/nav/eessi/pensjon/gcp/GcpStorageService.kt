@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import java.nio.ByteBuffer
 
+
+//TODO: Slettes når vi er sikre på at gamle verdier ikke vil bli hentet
 private const val GCP_SCRAMBLE_KEY = "_SRCAMBLE"
 
 @Component
