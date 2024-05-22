@@ -38,7 +38,7 @@ class GcpStorageService( @param:Value("\${GCP_BUCKET_NAME}") var bucketname: Str
     }
 
     fun lagre(storageKey: String, storageValue: String) {
-        val blobInfo =  BlobInfo.newBuilder(BlobId.of(bucketname, storageKey + SCRAMBLE_KEY)).setContentType("application/octet-stream").build()
+        val blobInfo =  BlobInfo.newBuilder(BlobId.of(bucketname, storageKey + SCRAMBLE_KEY)).setContentType("application/json").build()
 
         // legger til en enkel obfuskering av data
         val scrambledString  = scramble(storageValue)
