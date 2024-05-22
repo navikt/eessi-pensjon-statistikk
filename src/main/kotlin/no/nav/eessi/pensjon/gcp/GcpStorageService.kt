@@ -57,24 +57,24 @@ class GcpStorageService( @param:Value("\${GCP_BUCKET_NAME}") var bucketname: Str
     }
 
     fun hent(storageKey: String): String? {
-        try {
             // søker etter keys med og uten scramble
             for (key in listOf(storageKey, storageKey + GCP_SCRAMBLE_KEY)) {
-                val blob = gcpStorage.get(BlobId.of(bucketname, key))
-                if (blob.exists()) {
-                    val content = blob.getContent().decodeToString()
-                    return if (key == storageKey) {
-                        logger.info("Blob med key:$storageKey funnet")
-                        content
-                    } else {
-                        logger.info("Blob med key fra obfuskert mapping :$storageKey funnet")
-                        unscramble(content)
+                try {
+                    val blob = gcpStorage.get(BlobId.of(bucketname, key))
+                    if (blob.exists()) {
+                        val content = blob.getContent().decodeToString()
+                        return if (key == storageKey) {
+                            logger.info("Blob med key:$storageKey funnet")
+                            content
+                        } else {
+                            logger.info("Blob med key fra obfuskert mapping :$storageKey funnet")
+                            unscramble(content)
+                        }
                     }
+                } catch (ex: Exception) {
+                    logger.warn("En feil oppstod under henting av objekt: $storageKey i bucket", ex)
                 }
             }
-        } catch (ex: Exception) {
-            logger.warn("En feil oppstod under henting av objekt: $storageKey i bucket", ex)
-        }
         return null
     }
 
