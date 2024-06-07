@@ -12,7 +12,7 @@ spec:
     - name: GCP_BUCKET_NAME
       value: eessi-pensjon-statistikk-dev
     - name: AZURE_APP_EUX_CLIENT_ID
-      value: dev-fss.eessibasis.eux-rina-api-q1
+      value: dev-fss.eessibasis.eux-rina-api-q2
     - name: SPRING_PROFILES_ACTIVE
       value: test
     - name: KAFKA_STATISTIKK_TOPICNAME_INN
@@ -20,9 +20,9 @@ spec:
     - name: KAFKA_STATISTIKK_TOPICNAME_UT
       value: eessipensjon.public-statistikk-q2
     - name: KAFKA_SEDSENDT_TOPIC
-      value: eessibasis.sedsendt-v1-q1
+      value: eessibasis.sedsendt-v1-q2
     - name: KAFKA_SEDMOTTATT_TOPIC
-      value: eessibasis.sedmottatt-v1-q1
+      value: eessibasis.sedmottatt-v1-q2
     - name: EUX_RINA_API_V1_URL
       value: https://eux-rina-api-eessibasis.dev-fss-pub.nais.io/cpi
     - name: GCP_STORAGE_API_URL
@@ -48,7 +48,7 @@ spec:
   accessPolicy:
     outbound:
       external:
-        - host: eux-rina-api-q1.dev-fss-pub.nais.io
+        - host: eux-rina-api-q2.dev-fss-pub.nais.io
         - host: pdl-api.dev-fss-pub.nais.io
   webproxy: true
 
