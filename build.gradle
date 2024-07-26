@@ -36,7 +36,7 @@ dependencies {
     implementation("no.nav.eessi.pensjon:ep-eux:2.2.55") {
         exclude module: 'ep-security-sts'
     }
-    implementation("no.nav.eessi.pensjon:ep-metrics:2.0.70")
+    implementation("no.nav.eessi.pensjon:ep-metrics:2.0.73")
 
     // Spring-boot BOM-fil spesifiserer versjoner for Spring Boot-avhengigheter
     implementation(platform("org.springframework.boot:spring-boot-dependencies:${springBootVersion}"))
