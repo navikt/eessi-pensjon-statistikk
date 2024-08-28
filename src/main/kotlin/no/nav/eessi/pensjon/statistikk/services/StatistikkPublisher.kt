@@ -14,6 +14,7 @@ class StatistikkPublisher(private val kafkaTemplate: KafkaTemplate<String, Strin
 ) {
 
     private val logger = LoggerFactory.getLogger(StatistikkPublisher::class.java)
+    private val secureLogger = LoggerFactory.getLogger("secureLog")
 
     fun publiserBucOpprettetStatistikk(bucOpprettet: BucOpprettetMeldingUt) {
         logger.info("Produserer melding på kafka: $statistikkUtTopic  melding: $bucOpprettet")
@@ -22,10 +23,8 @@ class StatistikkPublisher(private val kafkaTemplate: KafkaTemplate<String, Strin
     }
 
     fun publiserSedHendelse(sedMeldingUt: SedMeldingUt) {
-        logger.debug("Produserer sed hendelse melding på kafka: $statistikkUtTopic  melding: $sedMeldingUt")
-
+        secureLogger.info("Produserer sed hendelse melding på kafka: $statistikkUtTopic  melding: ${sedMeldingUt.toJson()}")
         kafkaTemplate.send(statistikkUtTopic, sedMeldingUt.toJson()).get()
-
     }
 
 }
