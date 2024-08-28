@@ -23,8 +23,15 @@ class StatistikkPublisher(private val kafkaTemplate: KafkaTemplate<String, Strin
     }
 
     fun publiserSedHendelse(sedMeldingUt: SedMeldingUt) {
-        secureLogger.info("Produserer sed hendelse melding på kafka: $statistikkUtTopic  melding: ${sedMeldingUt.toJson()}")
-        kafkaTemplate.send(statistikkUtTopic, sedMeldingUt.toJson()).get()
-    }
+        secureLogger.info("Produserer sed hendelse melding på kafka: $statistikkUtTopic melding: ${sedMeldingUt.toJson()}")
 
+        val future = kafkaTemplate.send(statistikkUtTopic, sedMeldingUt.toJson())
+
+        try {
+            val result = future.get()
+            logger.info("Melding produsert til kafka topic ${result?.recordMetadata?.topic()} med offset ${result?.recordMetadata?.offset()}")
+        } catch (ex: Exception) {
+            secureLogger.error("Feil ved sending av melding til kafka topic $statistikkUtTopic", ex)
+        }
+    }
 }
