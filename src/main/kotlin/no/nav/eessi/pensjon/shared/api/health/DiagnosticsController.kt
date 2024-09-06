@@ -1,4 +1,4 @@
-package no.nav.eessi.pensjon.health
+package no.nav.eessi.pensjon.shared.api.health
 
 import no.nav.security.token.support.core.api.Unprotected
 import org.slf4j.Logger
@@ -8,12 +8,11 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RestController
 import java.time.Instant
 
-
-private val logger: Logger by lazy { LoggerFactory.getLogger(DiagnosticsController::class.java) }
-
-@RestController
 @Unprotected
+@RestController
 class DiagnosticsController {
+
+    private val logger: Logger by lazy { LoggerFactory.getLogger(DiagnosticsController::class.java) }
 
     @GetMapping("/ping")
     fun ping(): ResponseEntity<Unit> {
