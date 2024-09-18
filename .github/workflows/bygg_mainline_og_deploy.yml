@@ -33,6 +33,7 @@ jobs:
       - name: 'Sjekker at bygget kjører'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
         run: |
           export TZ=CET
           ./gradlew build --stacktrace
@@ -57,6 +58,7 @@ jobs:
           CLUSTER: dev-gcp
           RESOURCE: nais/dev-gcp.yml
           IMAGE: ${{ steps.docker-push.outputs.image }}
+          TELEMETRY: ${{ steps.docker-build-push.outputs.telemetry }}
 
       - name: 'Opprett git tag'
         run: |
