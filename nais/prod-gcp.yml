@@ -77,5 +77,5 @@ spec:
       cpu: 4000m
       memory: 1Gi
     requests:
-      cpu: 200m
-      memory: 512Mi
+      cpu: 600m
+      memory: 1Gi
