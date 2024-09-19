@@ -53,6 +53,7 @@ jobs:
 
       - name: 'Deploy to DEV'
         uses: nais/deploy/actions/deploy@v1
+        id: docker-build-push  # make sure this ID matches the step id below
         env:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           CLUSTER: dev-gcp
