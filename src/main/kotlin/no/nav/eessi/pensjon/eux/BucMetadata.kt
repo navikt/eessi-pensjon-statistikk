@@ -32,8 +32,8 @@ data class Document (
 
 data class Version(val id: String)
 
-data class Conversation (val participants: List<Participant>?)
+data class Conversation (val participants: List<Participant>?, val id: String? = null)
 
 data class Participant (val role: String, val organisation: Organisation)
 
-data class Organisation (val countryCode: String)
+data class Organisation (val countryCode: String, val id: String? = null)
