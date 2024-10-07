@@ -50,6 +50,7 @@ class HendelsesAggregeringsService(private val euxService: EuxService,
         val sed = euxService.getSed(rinaId, dokumentId)
         val bucMetadata = euxService.getBucMetadata(rinaId)
         val mottakerLand = populerMottakerland(bucMetadata!!)
+        val avsenderLandFraMeta = avsenderLand ?: populerSenderland(bucMetadata, dokumentId)
         val beregning  = hentBeregning(sed?.pensjon?.vedtak)
 
         logger.info("Oppretter melding med bucmetadata med size: ${bucMetadata.documents.size}")
@@ -60,7 +61,7 @@ class HendelsesAggregeringsService(private val euxService: EuxService,
                 bucType = bucMetadata.processDefinitionName,
                 rinaId = rinaId,
                 mottakerLand = mottakerLand,
-                avsenderLand = avsenderLand!!,
+                avsenderLand = avsenderLandFraMeta!!,
                 rinaDokumentVersjon = getDocumentVersion(bucMetadata.documents, dokumentId),
                 sedType = sed!!.sed,
                 // pin sendes kun for P6000
@@ -112,9 +113,18 @@ class HendelsesAggregeringsService(private val euxService: EuxService,
             .flatMap { it.conversations }
             .flatMap { it.participants.orEmpty() }
             .filter { it.role == "Receiver" }
-            .toList()
 
         return list.map { it.organisation.countryCode }.distinct()
+    }
+
+    private fun populerSenderland(bucMetadata: BucMetadata, dokumentId: String): String? {
+        val participant : Participant? = bucMetadata.documents
+            .filter { it.id == dokumentId }
+            .flatMap { it.conversations }
+            .flatMap { it.participants.orEmpty() }
+            .filter { it.role == "Sender" }
+            .firstOrNull()
+        return participant?.organisation?.countryCode.also { logger.info("Henter avsenderland: $it fra metadata") }
     }
 
     private fun lagreSedHendelse(sedhendelse: SedMeldingUt) {

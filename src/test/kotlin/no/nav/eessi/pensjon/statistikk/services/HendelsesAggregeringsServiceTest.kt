@@ -62,18 +62,7 @@ internal class HendelsesAggregeringsServiceTest {
     @Test
     fun `gitt en sedOpprettet for P6000 melding så populer SedMeldingUt`() {
         //Mocker BUC
-        val bucJson = ResourceHelper.getResourceBucMetadata("buc/bucMedP6000.json").toJson()
-        val buc = BucMetadata.fromJson(bucJson)
-        every { euxService.getBucMetadata(any())} returns buc
-
-        // Mocker SED
-        val p6000Json = ResourceHelper.getResourceSed("sed/P6000-komplett.json").toJson()
-        val p6000 = Sed.fromJson(p6000Json)
-        every { euxService.getSed(any(), any()) } returns p6000
-
-        val dokumentId = "08e5310500a94640abfb309e481ca319"
-        val rinaSakId = "1271728"
-        val mottakerland = listOf("NO")
+        val (dokumentId, rinaSakId, mottakerland) = P6000Mock()
 
         val sedOpprettetMeldingUt = infoService.aggregateSedOpprettetData(rinaSakId, dokumentId, null)
 
@@ -96,19 +85,7 @@ internal class HendelsesAggregeringsServiceTest {
     @Test
     fun `gitt en sed sendt for P6000 melding så populer SedMeldingP6000Ut `() {
         //Mocker BUC
-        val bucJson = ResourceHelper.getResourceBucMetadata("buc/bucMedP6000.json").toJson()
-        val buc = BucMetadata.fromJson(bucJson)
-        every { euxService.getBucMetadata(any())} returns buc
-
-        // Mocker SED
-        val p6000Json = ResourceHelper.getResourceSed("sed/P6000-komplett.json").toJson()
-        val p6000 = Sed.fromJson(p6000Json)
-        every { euxService.getSed(any(), any()) } returns p6000
-
-        val dokumentId = "08e5310500a94640abfb309e481ca319"
-        val rinaSakId = "1271728"
-        val mottakerland = listOf("NO")
-
+        val (dokumentId, rinaSakId, mottakerland) = P6000Mock()
         val sedOpprettetMeldingUt = infoService.populerSedMeldingUt(rinaSakId, dokumentId, null, HendelseType.SED_SENDT, "SE") as SedMeldingP6000Ut
 
         assertEquals(SedMeldingP6000Ut(
@@ -131,5 +108,31 @@ internal class HendelsesAggregeringsServiceTest {
             valuta = "NOK",
             anmodningOmRevurdering = "1"
         ), sedOpprettetMeldingUt)
+    }
+
+    @Test
+    fun `ved manglende avsenderland fra sed skal denne hentes fra metadata`() {
+        // mocker BUC, med P6000
+        val (dokumentId, rinaSakId, _) = P6000Mock()
+
+        // sender uten avsenderland
+        val sedOpprettetMeldingUt = infoService.populerSedMeldingUt(rinaSakId, dokumentId, null, HendelseType.SED_SENDT, null) as SedMeldingP6000Ut
+        assertEquals("NO", sedOpprettetMeldingUt.avsenderLand)
+    }
+
+    private fun P6000Mock(): Triple<String, String, List<String>> {
+        val bucJson = ResourceHelper.getResourceBucMetadata("buc/bucMedP6000.json").toJson()
+        val buc = BucMetadata.fromJson(bucJson)
+        every { euxService.getBucMetadata(any()) } returns buc
+
+        // Mocker SED
+        val p6000Json = ResourceHelper.getResourceSed("sed/P6000-komplett.json").toJson()
+        val p6000 = Sed.fromJson(p6000Json)
+        every { euxService.getSed(any(), any()) } returns p6000
+
+        val dokumentId = "08e5310500a94640abfb309e481ca319"
+        val rinaSakId = "1271728"
+        val mottakerland = listOf("NO")
+        return Triple(dokumentId, rinaSakId, mottakerland)
     }
 }
