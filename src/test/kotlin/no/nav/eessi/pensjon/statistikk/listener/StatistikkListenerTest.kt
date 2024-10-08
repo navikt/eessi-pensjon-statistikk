@@ -2,9 +2,9 @@ package no.nav.eessi.pensjon.statistikk.listener
 
 import io.mockk.mockk
 import no.nav.eessi.pensjon.StatistikkApplicationIntegration
-import no.nav.eessi.pensjon.eux.BucMetadata
-import no.nav.eessi.pensjon.eux.Document
 import no.nav.eessi.pensjon.eux.model.BucType
+import no.nav.eessi.pensjon.eux.model.buc.BucMetadata
+import no.nav.eessi.pensjon.eux.model.buc.Document
 import no.nav.eessi.pensjon.statistikk.services.HendelsesAggregeringsService
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.params.ParameterizedTest

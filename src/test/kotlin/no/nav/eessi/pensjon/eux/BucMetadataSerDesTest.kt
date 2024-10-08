@@ -2,6 +2,7 @@ package no.nav.eessi.pensjon.eux
 
 import no.nav.eessi.pensjon.ResourceHelper
 import no.nav.eessi.pensjon.eux.model.BucType
+import no.nav.eessi.pensjon.eux.model.buc.*
 import no.nav.eessi.pensjon.utils.mapAnyToJson
 import no.nav.eessi.pensjon.utils.toJson
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -15,8 +16,9 @@ internal class BucMetadataSerDesTest{
         val model = BucMetadata(
             listOf(Document("", "2020-12-08T09:52:55.345+0000",
                 listOf(Conversation(
-                    listOf(Participant("Receiver", Organisation("SE")
-                    )))), listOf(Version("1")))
+                    listOf(Participant("Receiver", Organisation(id ="SE")))))
+                    ,listOf(Version("1"))
+                )
             ),
             BucType.P_BUC_01,
             "2020-11-08T09:52:55.345+0000")

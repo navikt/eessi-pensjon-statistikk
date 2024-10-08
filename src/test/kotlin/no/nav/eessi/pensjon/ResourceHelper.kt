@@ -1,8 +1,8 @@
 package no.nav.eessi.pensjon
 
-import no.nav.eessi.pensjon.eux.BucMetadata
 import no.nav.eessi.pensjon.eux.Sed
 import no.nav.eessi.pensjon.eux.model.SedHendelse
+import no.nav.eessi.pensjon.eux.model.buc.BucMetadata
 import no.nav.eessi.pensjon.utils.mapJsonToAny
 
 class ResourceHelper {
