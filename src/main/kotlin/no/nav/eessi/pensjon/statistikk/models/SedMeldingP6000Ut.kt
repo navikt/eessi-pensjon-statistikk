@@ -7,7 +7,7 @@ data class SedMeldingP6000Ut(
     override val dokumentId: String,
     override val bucType: BucType,
     override val rinaId: String,
-    override val mottakerLand: List<String>,
+    override val mottakerLand: List<String?>,
     override val avsenderLand: String,
     override val rinaDokumentVersjon: String,
     override val sedType: SedType,

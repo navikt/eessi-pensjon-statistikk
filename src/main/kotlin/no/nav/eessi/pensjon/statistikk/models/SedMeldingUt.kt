@@ -5,12 +5,12 @@ import no.nav.eessi.pensjon.eux.model.BucType
 import no.nav.eessi.pensjon.eux.model.SedType
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-open class SedMeldingUt (
+open class SedMeldingUt(
     /* Om felt endres - husk å regenerer equals/hashcode/toString */
     open val dokumentId: String,
     open val bucType: BucType,
     open val rinaId: String, // rinaSakId - lokal rina-sakid
-    open val mottakerLand: List<String>, // dette er egentlig deltakere på BUC - øker underveis i behandling
+    open val mottakerLand: List<String?>, // dette er egentlig deltakere på BUC - øker underveis i behandling
     open val avsenderLand: String? = null, // finnes på sed'er som sendes og mottas, men ikke ved opprettelse
     open val rinaDokumentVersjon: String, // *antall* versjoner vi finner i dokumentets buc-metadata
     open val sedType: SedType,

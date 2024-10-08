@@ -1,6 +1,7 @@
 package no.nav.eessi.pensjon.eux
 
 import no.nav.eessi.pensjon.eux.klient.EuxKlientLib
+import no.nav.eessi.pensjon.eux.model.buc.BucMetadata
 import no.nav.eessi.pensjon.utils.mapJsonToAny
 import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.Profile
