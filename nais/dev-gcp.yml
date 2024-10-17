@@ -29,7 +29,10 @@ spec:
       value: https://storage.googleapis.com
     - name: ENV
       value: q2
-
+  observability:
+    autoInstrumentation:
+      enabled: true
+      runtime: java
   gcp:
     buckets:
       - name: eessi-pensjon-statistikk-dev
