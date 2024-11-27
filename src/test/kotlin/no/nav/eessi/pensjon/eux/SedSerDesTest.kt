@@ -13,7 +13,7 @@ class SedSerDesTest {
     fun `Sjekker at serialisering virker`() {
         val model = Sed(
             Nav(null, listOf(Sak("", ""))),
-            sed = SedType.P2100,
+            sed = SedType.SEDTYPE_P2100,
             pensjon = Pensjon(
                 vedtak = listOf(Vedtak(type = "02", resultat = "04", beregning = listOf(Beregning(
                     beloepBrutto = BeloepBrutto("10000"),
@@ -32,7 +32,7 @@ class SedSerDesTest {
     fun `Sjekker at serialisering virker for m_sed`() {
         val model = Sed(
             Nav(null, listOf(Sak("", ""))),
-            sed = SedType.M051,
+            sed = SedType.SEDTYPE_M051,
             pensjon = Pensjon(
                 vedtak = listOf(Vedtak(type = "02", resultat = "04", beregning = listOf(Beregning(
                     beloepBrutto = BeloepBrutto("10000"),

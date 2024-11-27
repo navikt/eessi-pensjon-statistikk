@@ -23,7 +23,7 @@ internal class SedMeldingP6000UtSerDesTest{
             mottakerLand = listOf("NO"),
             avsenderLand = "SE",
             rinaDokumentVersjon = "333",
-            sedType = SedType.P6000,
+            sedType = SedType.SEDTYPE_P6000,
             pid = "444",
             hendelseType = HendelseType.SED_OPPRETTET,
             pesysSakId = "555",

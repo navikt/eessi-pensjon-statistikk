@@ -60,7 +60,7 @@ class HendelsesAggregeringsService(private val euxService: EuxService,
                 rinaDokumentVersjon = getDocumentVersion(bucMetadata.documents, dokumentId),
                 sedType = sed!!.sed,
                 // pin sendes kun for P6000
-                pid = sed.nav.bruker?.person?.pin?.firstOrNull { it.land == "NO" }?.identifikator.takeIf { sed.sed == SedType.P6000 },
+                pid = sed.nav.bruker?.person?.pin?.firstOrNull { it.land == "NO" }?.identifikator.takeIf { sed.sed == SedType.SEDTYPE_P6000 },
                 hendelseType = hendelseType,
                 pesysSakId = sed.nav.eessisak?.firstOrNull { it?.land == "NO" }?.saksnummer,
                 opprettetTidspunkt = getCreationDateFromSedMetaData(bucMetadata, dokumentId),

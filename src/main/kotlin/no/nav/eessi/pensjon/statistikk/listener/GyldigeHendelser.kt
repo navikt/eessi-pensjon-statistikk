@@ -16,8 +16,8 @@ class GyldigeHendelser {
          * SED-typer vi IKKE behandler i Journalføring.
          */
         val ugyldigeTyper: Set<SedType> = setOf(
-            P13000, X001, X002, X003, X004, X006, X007, X009,
-            X011, X012, X013, X050, X100, H001, H002, H020, H021, H120, H121, R004, R006
+            SEDTYPE_P13000, SEDTYPE_X001, SEDTYPE_X002, SEDTYPE_X003, SEDTYPE_X004, SEDTYPE_X006, SEDTYPE_X007, SEDTYPE_X009,
+            SEDTYPE_X011, SEDTYPE_X012, SEDTYPE_X013, SEDTYPE_X050, SEDTYPE_X100, SEDTYPE_H001, SEDTYPE_H002, SEDTYPE_H020, SEDTYPE_H021, SEDTYPE_H120, SEDTYPE_H121, SEDTYPE_R004, SEDTYPE_R006
         )
 
         fun mottatt(hendelse: SedHendelse) =

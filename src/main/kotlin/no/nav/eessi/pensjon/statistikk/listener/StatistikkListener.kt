@@ -112,7 +112,7 @@ class StatistikkListener(
                 if (testMeldingIProdLogError(sedHendelseRina, acknowledgment)) return@measure
 
                 try {
-                    if (sedHendelseRina.sedType == SedType.P6000) {
+                    if (sedHendelseRina.sedType == SedType.SEDTYPE_P6000) {
                         val sedMeldingUt = sedInfoService.populerSedMeldingUt(
                             sedHendelseRina.rinaSakId,
                             sedHendelseRina.rinaDokumentId,
@@ -151,7 +151,7 @@ class StatistikkListener(
                         logger.warn("Hopper over offset: $offset")
                     }
                     // vi er kun interessert i P6000
-                    else if (sedHendelseRina.sedType == SedType.P6000) {
+                    else if (sedHendelseRina.sedType == SedType.SEDTYPE_P6000) {
                         logger.debug(sedHendelseRina.toJson())
                         val vedtaksId = sedInfoService.hentVedtaksId(sedHendelseRina.rinaSakId, sedHendelseRina.rinaDokumentId)
                         val sedMeldingUt = sedInfoService.populerSedMeldingUt(

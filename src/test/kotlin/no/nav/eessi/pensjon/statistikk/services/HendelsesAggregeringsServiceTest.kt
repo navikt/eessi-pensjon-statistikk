@@ -47,7 +47,7 @@ internal class HendelsesAggregeringsServiceTest {
             mottakerLand = mottakerland,
             avsenderLand = null, // finnes ikke for opprettetmelding (er vel alltid Norge)
             rinaDokumentVersjon = "2",
-            sedType = SedType.P2000,
+            sedType = SedType.SEDTYPE_P2000,
             pid = null,
             hendelseType = HendelseType.SED_OPPRETTET,
             pesysSakId = pesysSaksID,
@@ -69,7 +69,7 @@ internal class HendelsesAggregeringsServiceTest {
             mottakerLand = mottakerland,
             avsenderLand = null, // finnes ikke for opprettetmelding (er vel alltid Norge)
             rinaDokumentVersjon = "5",
-            sedType = SedType.P6000,
+            sedType = SedType.SEDTYPE_P6000,
             pid = null, // ikke lenger tilgjengelig for vanlig  melding, kun for P6000
             hendelseType = HendelseType.SED_OPPRETTET,
             pesysSakId = "22919968",
@@ -91,7 +91,7 @@ internal class HendelsesAggregeringsServiceTest {
             mottakerLand = mottakerland,
             avsenderLand = "SE",
             rinaDokumentVersjon = "5",
-            sedType = SedType.P6000,
+            sedType = SedType.SEDTYPE_P6000,
             pid = "09028020144",
             hendelseType = HendelseType.SED_SENDT,
             pesysSakId = "22919968",

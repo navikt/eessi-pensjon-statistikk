@@ -19,7 +19,7 @@ internal class SedOpprettetMeldingUtSerDesTest {
             rinaId = "222",
             mottakerLand = listOf("NO"),
             rinaDokumentVersjon = "333",
-            sedType = SedType.H001,
+            sedType = SedType.SEDTYPE_H001,
             pid = "444",
             hendelseType = HendelseType.SED_OPPRETTET,
             pesysSakId = "555",
