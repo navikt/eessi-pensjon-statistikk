@@ -51,7 +51,7 @@ spec:
   accessPolicy:
     outbound:
       external:
-        - host: eux-rina-api-q2.dev-fss-pub.nais.io
+        - host: eux-rina-api-gcp-q2.intern.dev.nav.no
         - host: pdl-api.dev-fss-pub.nais.io
   webproxy: true
 
