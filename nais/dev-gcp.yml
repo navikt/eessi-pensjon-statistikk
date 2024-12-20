@@ -36,7 +36,6 @@ spec:
   gcp:
     buckets:
       - name: eessi-pensjon-statistikk-dev
-        cascadingDelete:  true
         retentionPeriodDays: 30
         lifecycleCondition:
           age: 60
