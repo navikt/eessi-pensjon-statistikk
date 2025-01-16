@@ -33,7 +33,6 @@ jobs:
       - name: 'Sjekker at bygget kjører'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
         run: |
           export TZ=CET
           ./gradlew build --stacktrace
@@ -53,13 +52,11 @@ jobs:
 
       - name: 'Deploy to DEV'
         uses: nais/deploy/actions/deploy@v1
-        id: docker-build-push  # make sure this ID matches the step id below
         env:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           CLUSTER: dev-gcp
           RESOURCE: nais/dev-gcp.yml
           IMAGE: ${{ steps.docker-push.outputs.image }}
-          TELEMETRY: ${{ steps.docker-build-push.outputs.telemetry }}
 
       - name: 'Opprett git tag'
         run: |
