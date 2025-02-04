@@ -59,7 +59,7 @@ dependencies {
     implementation("org.apache.httpcomponents.client5:httpclient5:5.4.1")
 
     //GCP
-    implementation("com.google.cloud:google-cloud-storage:2.48.0")
+    implementation("com.google.cloud:google-cloud-storage:2.48.1")
 
     // Logging
     implementation("net.logstash.logback:logstash-logback-encoder:8.0")
