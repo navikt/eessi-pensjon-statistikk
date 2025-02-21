@@ -70,7 +70,6 @@ dependencies {
     implementation("no.nav.security:token-client-spring:${tokenSupportVersion}")
     implementation("no.nav.security:token-validation-spring:${tokenSupportVersion}")
     implementation("no.nav.security:token-validation-jaxrs:${tokenSupportVersion}")
-    implementation("no.nav.security:token-validation-test-support:2.0.5")
 
     //test
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
