@@ -71,7 +71,7 @@ dependencies {
     implementation("no.nav.security:token-validation-spring:${tokenSupportVersion}")
     implementation("no.nav.security:token-validation-jaxrs:${tokenSupportVersion}")
 
-    //legger til token for MultiIssuerProperties
+    //nødvendig for validering av jwt og EnableJwtTokenValidationConfiguration
     implementation("org.hibernate.validator:hibernate-validator")
     //test
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
