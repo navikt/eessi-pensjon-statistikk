@@ -71,6 +71,8 @@ dependencies {
     implementation("no.nav.security:token-validation-spring:${tokenSupportVersion}")
     implementation("no.nav.security:token-validation-jaxrs:${tokenSupportVersion}")
 
+    //legger til token for MultiIssuerProperties
+    implementation("org.hibernate.validator:hibernate-validator")
     //test
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude module: 'junit'
