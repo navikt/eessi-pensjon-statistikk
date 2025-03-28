@@ -10,6 +10,9 @@ jobs:
   deploy_topics:
     name: 'Deploy topics'
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
     steps:
       - name: 'Pull repo'
         uses: actions/checkout@v3
@@ -17,14 +20,12 @@ jobs:
       - name: 'Deploy privat-statistikk-q2 to eessipensjon namespace'
         uses: nais/deploy/actions/deploy@v1
         env:
-          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           CLUSTER: dev-gcp
           RESOURCE: nais/topics/topic-privat-statistikk-q2.yaml
 
       - name: 'Deploy privat-statistikk-q1 to eessipensjon namespace'
         uses: nais/deploy/actions/deploy@v1
         env:
-          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           CLUSTER: dev-gcp
           RESOURCE: nais/topics/topic-privat-statistikk-q1.yaml
 
