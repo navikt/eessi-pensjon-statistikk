@@ -15,40 +15,40 @@ jobs:
       id-token: write
     steps:
       - name: 'Pull repo'
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: 'Deploy privat-statistikk-q2 to eessipensjon namespace'
-        uses: nais/deploy/actions/deploy@v1
+        uses: nais/deploy/actions/deploy@v2
         env:
           CLUSTER: dev-gcp
           RESOURCE: nais/topics/topic-privat-statistikk-q2.yaml
 
       - name: 'Deploy privat-statistikk-q1 to eessipensjon namespace'
-        uses: nais/deploy/actions/deploy@v1
+        uses: nais/deploy/actions/deploy@v2
         env:
           CLUSTER: dev-gcp
           RESOURCE: nais/topics/topic-privat-statistikk-q1.yaml
 
       - name: 'Deploy privat-statistikk to eessipensjon namespace'
-        uses: nais/deploy/actions/deploy@v1
+        uses: nais/deploy/actions/deploy@v2
         env:
           CLUSTER: prod-gcp
           RESOURCE: nais/topics/topic-privat-statistikk.yaml
 
       - name: 'Deploy public-statistikk-q2 to eessipensjon namespace'
-        uses: nais/deploy/actions/deploy@v1
+        uses: nais/deploy/actions/deploy@v2
         env:
           CLUSTER: dev-gcp
           RESOURCE: nais/topics/topic-public-statistikk-q2.yaml
 
       - name: 'Deploy public-statistikk-q1 to eessipensjon namespace'
-        uses: nais/deploy/actions/deploy@v1
+        uses: nais/deploy/actions/deploy@v2
         env:
           CLUSTER: dev-gcp
           RESOURCE: nais/topics/topic-public-statistikk-q1.yaml
 
       - name: 'Deploy public-statistikk to eessipensjon namespace'
-        uses: nais/deploy/actions/deploy@v1
+        uses: nais/deploy/actions/deploy@v2
         env:
           CLUSTER: prod-gcp
           RESOURCE: nais/topics/topic-public-statistikk.yaml
