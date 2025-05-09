@@ -6,6 +6,13 @@ metadata:
   labels:
     team: eessipensjon
 spec:
+  observability:
+    autoInstrumentation:
+      enabled: true
+      runtime: java
+    logging:
+      destinations:
+        - id: elastic
   kafka:
     pool: nav-dev
   env:
@@ -29,10 +36,6 @@ spec:
       value: https://storage.googleapis.com
     - name: ENV
       value: q2
-  observability:
-    autoInstrumentation:
-      enabled: true
-      runtime: java
   gcp:
     buckets:
       - name: eessi-pensjon-statistikk-dev
