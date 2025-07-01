@@ -36,7 +36,7 @@ dependencies {
     implementation("no.nav.eessi.pensjon:ep-logging:2.2.34")
     implementation("no.nav.eessi.pensjon:ep-eux:2.4.83")
 
-    implementation("no.nav.eessi.pensjon:ep-metrics:2.0.126")
+    implementation("no.nav.eessi.pensjon:ep-metrics:2.0.131")
 
     // Spring-boot BOM-fil spesifiserer versjoner for Spring Boot-avhengigheter
     implementation(platform("org.springframework.boot:spring-boot-dependencies:${springBootVersion}"))
