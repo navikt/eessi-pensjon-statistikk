@@ -13,13 +13,19 @@ spec:
         - id: loki
   kafka:
     pool: nav-prod
+
   env:
-    - name: GCP_BUCKET_NAME
-      value: eessi-pensjon-statistikk-prod
-    - name: AZURE_APP_EUX_CLIENT_ID
-      value: prod-gcp.eessibasis.eux-rina-api
     - name: SPRING_PROFILES_ACTIVE
       value: prod
+
+    - name: GCP_BUCKET_NAME
+      value: eessi-pensjon-statistikk-prod
+
+    - name: EUX_RINA_API_V1_URL
+      value: https://eux-rina-api.intern.nav.no/cpi
+    - name: GCP_STORAGE_API_URL
+      value: https://storage.googleapis.com
+
     - name: KAFKA_STATISTIKK_TOPICNAME_INN
       value: eessipensjon.privat-statistikk
     - name: KAFKA_STATISTIKK_TOPICNAME_UT
@@ -28,10 +34,10 @@ spec:
       value: eessibasis.sedsendt-v1
     - name: KAFKA_SEDMOTTATT_TOPIC
       value: eessibasis.sedmottatt-v1
-    - name: EUX_RINA_API_V1_URL
-      value: https://eux-rina-api.intern.nav.no/cpi
-    - name: GCP_STORAGE_API_URL
-      value: https://storage.googleapis.com
+
+    - name: AZURE_APP_EUX_CLIENT_ID
+      value: prod-gcp.eessibasis.eux-rina-api
+
     - name: ENV
       value: p
 
