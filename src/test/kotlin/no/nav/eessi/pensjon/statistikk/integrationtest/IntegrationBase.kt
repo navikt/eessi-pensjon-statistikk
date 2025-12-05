@@ -16,7 +16,7 @@ import org.mockserver.integration.ClientAndServer
 import org.mockserver.socket.PortFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.TestConfiguration
-import org.springframework.boot.web.client.RestTemplateBuilder
+import org.springframework.boot.restclient.RestTemplateBuilder
 import org.springframework.context.annotation.Bean
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory
@@ -72,7 +72,7 @@ abstract class IntegrationBase {
         container.start()
         Thread.sleep(5000) // wait a bit for the container to start
         //ContainerTestUtils.waitForAssignment(container, embeddedKafka.partitionsPerTopic)
-        val template = KafkaTemplate(producerFactory).apply { defaultTopic = topic }
+        val template = KafkaTemplate(producerFactory).apply { setDefaultTopic(topic) }
         return TestResult(template, container).also {
             println("*************************  INIT DONE *****************************")
         }
@@ -93,9 +93,9 @@ abstract class IntegrationBase {
 
     private fun initConsumer(topicName: String): KafkaMessageListenerContainer<String, String> {
         val consumerProperties = KafkaTestUtils.consumerProps(
+            embeddedKafka,
             "eessi-pensjon-group2",
-            "false",
-            embeddedKafka
+            false
         )
         consumerProperties["auto.offset.reset"] = "earliest"
         val consumerFactory = DefaultKafkaConsumerFactory<String, String>(consumerProperties)
