@@ -65,7 +65,7 @@ class StatistikkListener(
                     val melding = meldingsMapping(hendelse)
                     logger.info("Oppretter melding av type: $hendelse")
 
-                    val hopperOverOffset = listOf<Long>(157817, 157529, 157838)
+                    val hopperOverOffset = listOf<Long>(157817, 157529, 157838, 157561)
                     if (MissingBuc.checkForMissingBuc(melding.rinaId) || cr.offset() in hopperOverOffset) {
                         logger.warn("Hopper over offset: ${cr.offset()}")
                     } else {
