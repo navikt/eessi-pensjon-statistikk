@@ -50,7 +50,7 @@ class IntegrationtestConfig(
     @Bean
     fun sedKafkaListenerContainerFactory(): ConcurrentKafkaListenerContainerFactory<String, String>? {
         return ConcurrentKafkaListenerContainerFactory<String, String>().apply {
-            consumerFactory = kafkaConsumerFactory()
+            setConsumerFactory(kafkaConsumerFactory())
             containerProperties.ackMode = ContainerProperties.AckMode.MANUAL
             containerProperties.setAuthExceptionRetryInterval(Duration.ofSeconds(4L))
         }
@@ -64,7 +64,7 @@ class IntegrationtestConfig(
     @Bean
     fun kafkaListenerContainerFactory(): ConcurrentKafkaListenerContainerFactory<String, String>? {
         return ConcurrentKafkaListenerContainerFactory<String, String>().apply {
-            consumerFactory = kafkaConsumerFactory()
+            setConsumerFactory(kafkaConsumerFactory())
             containerProperties.ackMode = ContainerProperties.AckMode.MANUAL
             containerProperties.setAuthExceptionRetryInterval(Duration.ofSeconds(4L))
         }
