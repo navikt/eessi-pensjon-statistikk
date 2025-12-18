@@ -35,9 +35,9 @@ class StatistikkListener(
     private val latch = CountDownLatch(1)
     private val latchMottatt = CountDownLatch(1)
 
-    private lateinit var opprettMeldingMetric: MetricsHelper.Metric
-    private lateinit var sedMottattMeldingMetric: MetricsHelper.Metric
-    private lateinit var sedSedSendMeldingtMetric: MetricsHelper.Metric
+    private var opprettMeldingMetric: MetricsHelper.Metric
+    private var sedMottattMeldingMetric: MetricsHelper.Metric
+    private var sedSedSendMeldingtMetric: MetricsHelper.Metric
 
     fun getLatch() = latch
     fun getLatchMottatt() = latchMottatt

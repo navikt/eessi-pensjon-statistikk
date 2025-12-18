@@ -90,7 +90,7 @@ internal class SedMeldingP6000UtSerDesTest{
         assertEquals("12482", beregning.beloepBrutto?.beloep)
         assertEquals("NOK", beregning.valuta)
 
-        assertEquals("1", model.pensjon?.tilleggsinformasjon?.artikkel48)
+        assertEquals("1", model.pensjon.tilleggsinformasjon?.artikkel48)
         assertEquals("HR", model.nav.bruker?.adresse?.land)
     }
 }
