@@ -54,8 +54,6 @@ spec:
 
   envFrom:
     - secret: statistikk # value is the secret name in GCP Secret Manager
-  secureLogs:
-    enabled: true
   azure:
     application:
       enabled: true
