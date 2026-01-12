@@ -62,13 +62,12 @@ class GcpStorageService( @param:Value("\${GCP_BUCKET_NAME}") var bucketname: Str
                 try {
                     val blob = gcpStorage.get(BlobId.of(bucketname, key))
                     if (blob.exists()) {
-                        val content = blob.getContent().decodeToString()
                         return if (key == storageKey) {
                             logger.info("Blob med key:$storageKey funnet")
-                            content
+                            blob.getContent().decodeToString()
                         } else {
                             logger.info("Blob med key fra obfuskert mapping :$storageKey funnet")
-                            unscramble(content)
+                            unscramble(blob.getContent().decodeToString())
                         }
                     }
                 } catch (ex: Exception) {
