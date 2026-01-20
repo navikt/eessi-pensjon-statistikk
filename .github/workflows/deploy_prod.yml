@@ -20,7 +20,7 @@ jobs:
       id-token: write
     steps:
       - name: 'Pull repo'
-        uses: actions/checkout@v5
+        uses: actions/checkout@v4
 
       - name: 'Vise image'
         run: |
