@@ -76,13 +76,15 @@ class StatistikkListener(
                             }
 
                             OpprettelseType.SED -> {
-                                val sedHendelse = sedInfoService.aggregateSedOpprettetData(
-                                    melding.rinaId,
-                                    melding.dokumentId!!,
-                                    melding.vedtaksId
-                                )
-                                if (sedHendelse != null) {
-                                    statistikkPublisher.publiserSedHendelse(sedHendelse)
+                                if (melding.sedtype == SedType.P6000) {
+                                    val sedHendelse = sedInfoService.aggregateSedOpprettetData(
+                                        melding.rinaId, melding.dokumentId!!, melding.vedtaksId
+                                    )
+                                    if (sedHendelse != null) {
+                                        statistikkPublisher.publiserSedHendelse(sedHendelse)
+                                    }
+                                } else {
+                                    logger.info("SED er ikke P6000, hoppet over offset: ${cr.offset()}, fra SED: ${melding.dokumentId}")
                                 }
                             }
                         }
