@@ -36,7 +36,7 @@ group = 'no.nav.eessi.pensjon'
 dependencies {
     //eessi pensjon libs
     implementation("no.nav.eessi.pensjon:ep-logging:3.0.27")
-    implementation("no.nav.eessi.pensjon:ep-eux:3.0.43")
+    implementation("no.nav.eessi.pensjon:ep-eux:3.0.44")
     implementation("no.nav.eessi.pensjon:ep-metrics:3.0.20")
 
     // Spring-boot BOM-fil spesifiserer versjoner for Spring Boot-avhengigheter
