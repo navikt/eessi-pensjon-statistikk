@@ -1,5 +1,4 @@
 {
-  "sedGVer": "4",
   "nav": {
     "bruker": {
       "adresse": {
@@ -74,6 +73,5 @@
       "dato": "2020-05-11"
     }
   },
-  "sedVer": "2",
   "sed": "P2000"
 }
