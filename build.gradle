@@ -63,7 +63,7 @@ dependencies {
     implementation("org.apache.httpcomponents.client5:httpclient5:5.6.1")
 
     //GCP
-    implementation("com.google.cloud:google-cloud-storage:2.67.0")
+    implementation("com.google.cloud:google-cloud-storage:2.68.0")
 
     // Logging
     implementation("tools.jackson.core:jackson-core:3.1.3")
