@@ -142,7 +142,7 @@ abstract class IntegrationBase {
             val customRequestFactory = HttpComponentsClientHttpRequestFactory(httpClient)
 
             return RestTemplateBuilder()
-                .rootUri("https://localhost:${mockServerPort}")
+                .baseUri("https://localhost:${mockServerPort}")
                 .build().apply {
                     requestFactory = customRequestFactory
                 }
