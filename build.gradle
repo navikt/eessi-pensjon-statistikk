@@ -71,7 +71,9 @@ dependencies {
     implementation("net.logstash.logback:logstash-logback-encoder:9.0")
     constraints {
         // CVE fix: logstash-logback-encoder:9.0 declares vulnerable jackson-databind:3.0.1
-        implementation("tools.jackson.core:jackson-databind:3.1.4")
+        implementation("tools.jackson.core:jackson-databind:3.2.1") {
+            because("CVE-2026-54512 and CVE-2026-54513")
+        }
     }
     configurations { all*.exclude group: 'commons-logging', module: 'commons-logging' }
     implementation("org.slf4j:jcl-over-slf4j:2.0.18")
