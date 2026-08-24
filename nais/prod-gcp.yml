@@ -51,8 +51,6 @@ spec:
         lifecycleCondition:
           age: 60
           withState: ANY
-        uniformBucketLevelAccess: true
-
 
   envFrom:
     - secret: statistikk # value is the secret name in Google Secret Manager
