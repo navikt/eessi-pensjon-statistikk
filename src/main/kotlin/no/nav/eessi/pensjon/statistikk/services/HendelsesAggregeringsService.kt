@@ -85,7 +85,7 @@ class HendelsesAggregeringsService(private val euxService: EuxService,
                 pid = null, // ikke obligatorisk for andre enn P6000
                 opprettetTidspunkt = getCreationDateFromSedMetaData(bucMetadata, dokumentId),
                 vedtaksId = vedtaksId,
-                avsenderLand = avsenderLand,
+                avsenderLand = avsenderLandFraMeta,
                 mottakerLand = mottakerLand,
                 rinaDokumentVersjon = getDocumentVersion(bucMetadata.documents, dokumentId)
             )

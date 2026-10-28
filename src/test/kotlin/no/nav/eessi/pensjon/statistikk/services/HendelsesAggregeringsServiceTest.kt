@@ -45,7 +45,7 @@ internal class HendelsesAggregeringsServiceTest {
             bucType = BucType.P_BUC_01,
             rinaId = rinaSakId,
             mottakerLand = mottakerland,
-            avsenderLand = null, // finnes ikke for opprettetmelding (er vel alltid Norge)
+            avsenderLand = "NO",
             rinaDokumentVersjon = "2",
             sedType = SedType.P2000,
             pid = null,
@@ -67,7 +67,7 @@ internal class HendelsesAggregeringsServiceTest {
             bucType = BucType.P_BUC_06,
             rinaId = rinaSakId,
             mottakerLand = mottakerland,
-            avsenderLand = null, // finnes ikke for opprettetmelding (er vel alltid Norge)
+            avsenderLand = "NO",
             rinaDokumentVersjon = "5",
             sedType = SedType.P6000,
             pid = null, // ikke lenger tilgjengelig for vanlig  melding, kun for P6000
