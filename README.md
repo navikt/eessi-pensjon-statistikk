@@ -6,7 +6,7 @@ Opprette statistikk
 
 # Utvikling
 
-Kjør med java 1.8
+Kjør med Java 25.
 
 ## Komme i gang
 
