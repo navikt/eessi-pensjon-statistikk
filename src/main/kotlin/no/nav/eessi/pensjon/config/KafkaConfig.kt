@@ -9,6 +9,7 @@ import org.apache.kafka.common.serialization.StringDeserializer
 import org.apache.kafka.common.serialization.StringSerializer
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Profile
@@ -20,6 +21,8 @@ import org.springframework.kafka.core.DefaultKafkaProducerFactory
 import org.springframework.kafka.core.KafkaTemplate
 import org.springframework.kafka.core.ProducerFactory
 import org.springframework.kafka.listener.ContainerProperties
+import org.springframework.kafka.listener.DefaultErrorHandler
+import org.springframework.util.backoff.FixedBackOff
 import java.time.Duration
 
 
@@ -74,6 +77,19 @@ class KafkaConfig(
         if (kafkaErrorHandler != null) {
             factory.setCommonErrorHandler(kafkaErrorHandler)
         }
+        return factory
+    }
+
+    @Bean
+    @ConditionalOnProperty(name = ["sed-created.enabled"], havingValue = "true")
+    fun sedCreatedKafkaListenerContainerFactory(): ConcurrentKafkaListenerContainerFactory<String, String> {
+        val factory = ConcurrentKafkaListenerContainerFactory<String, String>()
+        factory.setConsumerFactory(kafkaConsumerFactory())
+        factory.containerProperties.ackMode = ContainerProperties.AckMode.MANUAL_IMMEDIATE
+        factory.containerProperties.setAuthExceptionRetryInterval(Duration.ofSeconds(4L))
+        val errorHandler = DefaultErrorHandler(FixedBackOff(5_000L, FixedBackOff.UNLIMITED_ATTEMPTS))
+        errorHandler.setClassifications(emptyMap(), true)
+        factory.setCommonErrorHandler(errorHandler)
         return factory
     }
 

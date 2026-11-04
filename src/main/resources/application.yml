@@ -12,6 +12,10 @@ no.nav.security.jwt:
 
 METRICS_REQUESTFILTER_ENABLE: true
 
+sed-created:
+  enabled: ${SED_CREATED_TRACKING_ENABLED:false}
+  bucket: ${GCP_BUCKET_SED_CREATED:}
+
 kafka:
   topic: ${KAFKA_STATISTIKK_TOPICNAME}
   brokers: ${KAFKA_BROKERS:localhost:9092}
@@ -19,6 +23,9 @@ kafka:
   statistikk-inn:
     topic: ${KAFKA_STATISTIKK_TOPICNAME_INN}
     groupid: eessi-pensjon-statistikk-group
+
+  sed-created:
+    groupid: eessi-pensjon-sed-created-storage-v1
 
   statistikk-ut:
     topic: ${KAFKA_STATISTIKK_TOPICNAME_UT}
