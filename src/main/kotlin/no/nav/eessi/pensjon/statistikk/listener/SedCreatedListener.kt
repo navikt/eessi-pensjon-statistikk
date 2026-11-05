@@ -1,11 +1,13 @@
 package no.nav.eessi.pensjon.statistikk.listener
 
+import no.nav.eessi.pensjon.eux.EuxService
 import no.nav.eessi.pensjon.gcp.SedCreatedRecord
 import no.nav.eessi.pensjon.gcp.SedCreatedStorage
 import no.nav.eessi.pensjon.metrics.MetricsHelper
 import no.nav.eessi.pensjon.statistikk.models.OpprettelseType
 import no.nav.eessi.pensjon.utils.JsonException
 import no.nav.eessi.pensjon.utils.mapJsonToAny
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.kafka.annotation.KafkaListener
@@ -19,6 +21,7 @@ class SedCreatedListener(
     @Autowired(required = false) private val metricsHelper: MetricsHelper = MetricsHelper.ForTest()
 ) {
     private val storeMetric = metricsHelper.init("StoreSedCreated")
+    private val logger = LoggerFactory.getLogger(EuxService::class.java)
 
     @KafkaListener(
         containerFactory = "sedCreatedKafkaListenerContainerFactory",
@@ -37,8 +40,8 @@ class SedCreatedListener(
 
             }
             if (melding.opprettelseType == OpprettelseType.SED) {
+                logger.info("SED opprettet: $melding")
                 if (melding.buctype == null) {
-                    // Events published before tracking was introduced cannot supply all five fields.
                     metricsHelper.registry.counter("sed.created.tracking", "result", "legacy_skipped").increment()
                 } else {
                     storage.store(
@@ -52,6 +55,9 @@ class SedCreatedListener(
                     )
                     metricsHelper.registry.counter("sed.created.tracking", "result", "stored").increment()
                 }
+            }
+            else if(melding.opprettelseType == OpprettelseType.BUC) {
+                logger.info("BUC opprettet, men ikke lagret: $melding")
             }
             acknowledgment.acknowledge()
         }

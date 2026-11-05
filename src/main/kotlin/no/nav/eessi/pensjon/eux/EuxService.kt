@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service
 @Service
 class EuxService(private val euxKlient: EuxKlientLib){
 
-
     private val logger = LoggerFactory.getLogger(EuxService::class.java)
 
     @Retryable(
