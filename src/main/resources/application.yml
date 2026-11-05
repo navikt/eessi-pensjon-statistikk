@@ -14,7 +14,7 @@ METRICS_REQUESTFILTER_ENABLE: true
 
 sed-created:
   enabled: ${SED_CREATED_TRACKING_ENABLED:false}
-  bucket: ${GCP_BUCKET_SED_CREATED:}
+  bucket: ${GCP_BUCKET_SED_OPPRETTET:}
 
 kafka:
   topic: ${KAFKA_STATISTIKK_TOPICNAME}
