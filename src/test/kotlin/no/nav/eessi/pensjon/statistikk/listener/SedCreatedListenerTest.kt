@@ -61,7 +61,7 @@ class SedCreatedListenerTest {
     }
 
     @Test
-    fun `escaped historical events do not block the new consumer group`() {
+    fun `json format skal ikke stoppe prosessering`() {
         val legacyEvent = """{\n \"opprettelseType\": \"SED\", \"rinaId\": \"case-id\", \"dokumentId\": \"document-id\", \"sedtype\": \"P2000\"\n}"""
 
         listener.consume(legacyEvent, acknowledgment)
@@ -70,8 +70,48 @@ class SedCreatedListenerTest {
         verify(exactly = 1) { acknowledgment.acknowledge() }
     }
 
+    @ParameterizedTest
+    @ValueSource(booleans = [false, true])
+    fun `JSON string skal ikke stoppe prosessering`(enriched: Boolean) {
+        val sakId = "sak-\"quoted\"\\path\nnext"
+        val payload = if (enriched) event(sakId) else event().copy(buctype = null)
+        justRun { storage.store(any()) }
+
+        listener.consume("  ${payload.toJson().toJson()}  ", acknowledgment)
+
+        if (enriched) {
+            verifyOrder {
+                storage.store(SedCreatedRecord(BucType.P_BUC_01, SedType.P2000, "case-id", "document-id", sakId))
+                acknowledgment.acknowledge()
+            }
+        } else {
+            verify(exactly = 0) { storage.store(any()) }
+            verify(exactly = 1) { acknowledgment.acknowledge() }
+        }
+    }
+
     @Test
-    fun `failed storage is not acknowledged and redelivery can succeed`() {
+    fun `JSON string format skal ikke stoppe prosessering`() {
+        val legacyEvent = """{\n \"opprettelseType\": \"SED\", \"rinaId\": \"case-id\", \"dokumentId\": \"document-id\", \"sedtype\": \"P2000\"\n}"""
+
+        listener.consume(legacyEvent.toJson(), acknowledgment)
+
+        verify(exactly = 0) { storage.store(any()) }
+        verify(exactly = 1) { acknowledgment.acknowledge() }
+    }
+
+    @Test
+    fun `meldinger med feil format skal skal ikke faa ack`() {
+        assertThrows<RuntimeException> {
+            listener.consume("not an event".toJson(), acknowledgment)
+        }
+
+        verify(exactly = 0) { storage.store(any()) }
+        verify(exactly = 0) { acknowledgment.acknowledge() }
+    }
+
+    @Test
+    fun `feil i gcp skal kaste exception`() {
         every { storage.store(any()) } throws IllegalStateException("Storage unavailable") andThen Unit
         val payload = event().toJson()
 
@@ -85,7 +125,7 @@ class SedCreatedListenerTest {
     }
 
     @Test
-    fun `new events with missing document IDs fail without acknowledgment`() {
+    fun `nye hendelser med manglende dokument-IDer feiler uten acknowledgment`() {
         assertThrows<IllegalArgumentException> {
             listener.consume(event().copy(dokumentId = null).toJson(), acknowledgment)
         }

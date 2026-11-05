@@ -4,6 +4,7 @@ import no.nav.eessi.pensjon.gcp.SedCreatedRecord
 import no.nav.eessi.pensjon.gcp.SedCreatedStorage
 import no.nav.eessi.pensjon.metrics.MetricsHelper
 import no.nav.eessi.pensjon.statistikk.models.OpprettelseType
+import no.nav.eessi.pensjon.utils.JsonException
 import no.nav.eessi.pensjon.utils.mapJsonToAny
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
@@ -26,10 +27,14 @@ class SedCreatedListener(
     )
     fun consume(hendelse: String, acknowledgment: Acknowledgment) {
         storeMetric.measure {
+            val json = hendelse.trim()
+            val decodedJson = if (json.startsWith('"')) mapJsonToAny<String>(json) else json
             val melding = try {
-                mapJsonToAny<OpprettelseMelding>(hendelse)
-            } catch (_: Exception) {
-                mapJsonToAny<OpprettelseMelding>(hendelse.replace("\\n", "").replace("\\", ""))
+                mapJsonToAny<OpprettelseMelding>(decodedJson)
+            } catch (e: JsonException) {
+                metricsHelper.registry.counter("sed.created.tracking", "result", "malformed").increment()
+                throw e
+
             }
             if (melding.opprettelseType == OpprettelseType.SED) {
                 if (melding.buctype == null) {
