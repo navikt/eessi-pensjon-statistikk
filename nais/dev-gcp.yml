@@ -24,8 +24,8 @@ spec:
     - name: GCP_BUCKET_NAME
       value: eessi-pensjon-statistikk-dev
 
-    - name: GCP_BUCKET_SED_CREATED
-      value: eessi-pensjon-sed-created-dev
+    - name: GCP_BUCKET_SED_OPPRETTET
+      value: eessi-pensjon-sed-opprettet-dev
     - name: SED_CREATED_TRACKING_ENABLED
       value: "true"
 
@@ -55,7 +55,7 @@ spec:
         lifecycleCondition:
           age: 60
           withState: ANY
-      - name: eessi-pensjon-sed-created-dev
+      - name: eessi-pensjon-sed-opprettet-dev
         retentionPeriodDays: 30
         lifecycleCondition:
           age: 60
