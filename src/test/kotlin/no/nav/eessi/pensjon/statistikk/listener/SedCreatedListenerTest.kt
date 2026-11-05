@@ -60,16 +60,6 @@ class SedCreatedListenerTest {
         verify(exactly = 1) { acknowledgment.acknowledge() }
     }
 
-    @Test
-    fun `json format skal ikke stoppe prosessering`() {
-        val legacyEvent = """{\n \"opprettelseType\": \"SED\", \"rinaId\": \"case-id\", \"dokumentId\": \"document-id\", \"sedtype\": \"P2000\"\n}"""
-
-        listener.consume(legacyEvent, acknowledgment)
-
-        verify(exactly = 0) { storage.store(any()) }
-        verify(exactly = 1) { acknowledgment.acknowledge() }
-    }
-
     @ParameterizedTest
     @ValueSource(booleans = [false, true])
     fun `JSON string skal ikke stoppe prosessering`(enriched: Boolean) {
@@ -88,16 +78,6 @@ class SedCreatedListenerTest {
             verify(exactly = 0) { storage.store(any()) }
             verify(exactly = 1) { acknowledgment.acknowledge() }
         }
-    }
-
-    @Test
-    fun `JSON string format skal ikke stoppe prosessering`() {
-        val legacyEvent = """{\n \"opprettelseType\": \"SED\", \"rinaId\": \"case-id\", \"dokumentId\": \"document-id\", \"sedtype\": \"P2000\"\n}"""
-
-        listener.consume(legacyEvent.toJson(), acknowledgment)
-
-        verify(exactly = 0) { storage.store(any()) }
-        verify(exactly = 1) { acknowledgment.acknowledge() }
     }
 
     @Test
