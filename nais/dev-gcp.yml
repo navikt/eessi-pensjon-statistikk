@@ -55,7 +55,7 @@ spec:
         lifecycleCondition:
           age: 60
           withState: ANY
-      - name: eessi-pensjon-sed-created-dev
+      - name: eessi-pensjon-sed-opprettet-dev
         retentionPeriodDays: 30
         lifecycleCondition:
           age: 60
