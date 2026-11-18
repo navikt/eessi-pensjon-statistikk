@@ -1,6 +1,7 @@
 package no.nav.eessi.pensjon.statistikk.listener
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+import no.nav.eessi.pensjon.eux.model.BucType
 import no.nav.eessi.pensjon.eux.model.SedType
 import no.nav.eessi.pensjon.statistikk.models.OpprettelseType
 
@@ -10,6 +11,7 @@ data class OpprettelseMelding(
     val rinaId: String,
     val dokumentId: String?,
     val vedtaksId: String?,
-    val sedtype: SedType? = null
+    val sedtype: SedType? = null,
+    val buctype: BucType? = null,
+    val sakId: String? = null
 )
-

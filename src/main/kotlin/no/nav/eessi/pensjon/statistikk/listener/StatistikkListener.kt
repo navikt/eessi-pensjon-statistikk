@@ -63,7 +63,7 @@ class StatistikkListener(
             opprettMeldingMetric.measure {
                 try {
                     val melding = meldingsMapping(hendelse)
-                    logger.info("Oppretter melding av type: $hendelse")
+                    logger.info("Oppretter melding av type: ${melding.opprettelseType}")
 
                     val hopperOverOffset = listOf<Long>(157817, 157529, 157838, 157561, 157569, 157606, 157620, 176192, 178243, 178245, 178249)
                     if (MissingBuc.checkForMissingBuc(melding.rinaId) || cr.offset() in hopperOverOffset) {
